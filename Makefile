@@ -17,7 +17,8 @@ SRC		=	main.cpp					\
 			src/shapes/Sphere.cpp		\
 			src/shapes/HitRecord.cpp	\
 			src/materials/AMaterial.cpp	\
-			src/materials/Matte.cpp\
+			src/materials/Matte.cpp		\
+			src/materials/Dielectric.cpp\
 			src/materials/Metal.cpp
 
 OBJ		=	$(SRC:.cpp=.o)

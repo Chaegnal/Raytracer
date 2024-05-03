@@ -51,3 +51,22 @@ bool rtx::Vector3D::closeToZero() const
 
     return (fabs(x) < tolerance) && (fabs(y) < tolerance) && (fabs(z) < tolerance);
 }
+
+rtx::Vector3D rtx::Vector3D::refract(const rtx::Vector3D &other, double etaIOverEtaT)
+{
+    double cosTheta = fmin((*this * (-1.0)).dot(other), 1.0);
+    rtx::Vector3D rayOutPerPoint = ((other * cosTheta) + *this) * etaIOverEtaT;
+    rtx::Vector3D rayOutParallel = other * (-sqrt(fabs(rayOutPerPoint.lengthSquared() - 1.0)));
+
+    return rayOutPerPoint + rayOutParallel;
+}
+
+rtx::Vector3D rtx::Vector3D::randomInUnitDisk()
+{
+    while (true) {
+        rtx::Vector3D vect = rtx::Vector3D(randomValue(-1.0, 1.0), randomValue(-1.0, 1.0), 0.0);
+
+        if (vect.lengthSquared() < 1.0)
+            return vect;
+    }
+}

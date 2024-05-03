@@ -12,6 +12,7 @@
 #include "macros.hpp"
 #include "Metal.hpp"
 #include "Matte.hpp"
+#include "Dielectric.hpp"
 #include <memory>
 #include <string>
 #include <iostream>
@@ -28,37 +29,73 @@ static void displayUsage()
               << "\t\033[1m-g\033[m\tdisplays in real time the pixels drawing (slows the process)\n";
 }
 
-int main(int ac, const char *av[])
+static rtx::Scene getScene()
 {
-    rtx::Scene scene;
-    rtx::Camera cam(300, 255);
-
-    srand(time(NULL));
+    rtx::Scene world;
 
     auto ground_material = std::make_shared<rtx::Matte>(rtx::Color(0.5, 0.5, 0.5));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0,-1000,0), 1000, ground_material));
+    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0,-1000,0), 1000, ground_material));
 
+    for (int a = -11; a < 11; a++) {
+        for (int b = -11; b < 11; b++) {
+            auto choose_mat = randomValue();
+            rtx::Point3D center(a + 0.9*randomValue(), 0.2, b + 0.9*randomValue());
 
-    auto material1 = std::make_shared<rtx::Matte>(rtx::Color(0.4, 0.2, 0.1));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material1));
+            if ((center - rtx::Point3D(4, 0.2, 0)).length() > 0.9) {
+                std::shared_ptr<rtx::IMaterial> sphere_material;
+
+                if (choose_mat < 0.8) {
+                    // diffuse
+                    auto albedo = rtx::Color::random() * rtx::Color::random();
+                    sphere_material = std::make_shared<rtx::Matte>(albedo);
+                    world.add(std::make_shared<rtx::Sphere>(center, 0.2, sphere_material));
+                } else if (choose_mat < 0.95) {
+                    // metal
+                    auto albedo = rtx::Color::random(0.5, 1);
+                    auto fuzz = randomValue(0, 0.5);
+                    sphere_material = std::make_shared<rtx::Metal>(albedo, fuzz);
+                    world.add(std::make_shared<rtx::Sphere>(center, 0.2, sphere_material));
+                } else {
+                    // glass
+                    sphere_material = std::make_shared<rtx::Dielectric>(1.5);
+                    world.add(std::make_shared<rtx::Sphere>(center, 0.2, sphere_material));
+                }
+            }
+        }
+    }
+
+    auto material1 = std::make_shared<rtx::Dielectric>(1.5);
+    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0, 1, 0), 1.0, material1));
 
     auto material2 = std::make_shared<rtx::Matte>(rtx::Color(0.4, 0.2, 0.1));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material2));
+    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material2));
 
     auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.7, 0.6, 0.5), 0.0);
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
+    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
+    return world;
+}
 
-    cam.vfov = 20;
-
-    cam.lookfrom = rtx::Point3D(13, 2,3);
-    cam.lookat   = rtx::Point3D(0, 0, 0);
-    cam.vup      = rtx::Vector3D(0,1,0);
+static rtx::Camera getCam()
+{
+    rtx::Camera cam(1200, 800);
 
     cam.samplesPerPixel = 500;
-    cam.maxDepth = 50;
+    cam.maxDepth         = 50;
+    cam.vfov     = 20;
+    cam.lookfrom = rtx::Point3D(13,2,3);
+    cam.lookat   = rtx::Point3D(0,0,0);
+    cam.vup      = rtx::Vector3D(0,1,0);
+    cam.defocusAngle = 0.6;
+    cam.focusDist    = 10.0;
+    return cam;
+}
 
-    cam.defocus_angle = 0.8;
-    cam.focus_dist = 15;
+int main(int ac, const char *av[])
+{
+    srand(time(NULL));
+
+    rtx::Scene scene = getScene();
+    rtx::Camera cam = getCam();
 
     if (ac == 2 && std::string(av[1]) == "--help") {
         displayUsage();

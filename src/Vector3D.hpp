@@ -23,7 +23,7 @@ namespace rtx
         Vector3D(Vector3D &&other) = default;
         ~Vector3D() = default;
 
-        Vector3D operator-() const { return Vector3D(-x, -y, -z); }
+        Vector3D operator-() const {return Vector3D(-x, -y, -z);}
         Vector3D &operator=(const Vector3D &other)
         {
             x = other.x;
@@ -121,15 +121,9 @@ namespace rtx
         rtx::Vector3D unitVector() const {return *this / length();}
         bool closeToZero() const;
         rtx::Vector3D reflect(const rtx::Vector3D &other) const {return *this - (other * (2 * dot(other)));}
+        rtx::Vector3D refract(const rtx::Vector3D &other, double etaIOverEtaT);
 
-        static rtx::Vector3D random_in_unit_disk() {
-            while (true) {
-                auto p = rtx::Vector3D(randomValue(-1,1), randomValue(-1,1), 0);
-                if (p.lengthSquared() < 1)
-                    return p;
-            }
-        }
-
+        static rtx::Vector3D randomInUnitDisk();
         static rtx::Vector3D randomVectInSphere();
         static rtx::Vector3D randomVectOnSphere(const rtx::Vector3D &normal);
         static rtx::Vector3D randomUnitVector() {return rtx::Vector3D::randomVectInSphere().unitVector();}
