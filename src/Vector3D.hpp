@@ -112,6 +112,8 @@ namespace rtx
         double lengthSquared() const {return dot(*this);}
         double dot(const rtx::Vector3D &other) const {return x * other.x + y * other.y + z * other.z;}
         rtx::Vector3D unitVector() const {return *this / length();}
+        bool closeToZero() const;
+        rtx::Vector3D reflect(const rtx::Vector3D &other) const {return *this - (other * (2 * dot(other)));}
 
         static rtx::Vector3D randomVectInSphere();
         static rtx::Vector3D randomVectOnSphere(const rtx::Vector3D &normal);

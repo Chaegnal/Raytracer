@@ -10,6 +10,8 @@
 #include "Sphere.hpp"
 #include "memes.hpp"
 #include "macros.hpp"
+#include "Metal.hpp"
+#include "Matte.hpp"
 #include <memory>
 #include <string>
 #include <iostream>
@@ -32,8 +34,12 @@ int main(int ac, const char *av[])
     rtx::Camera cam(256, 256);
 
     srand(time(NULL));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Vector3D(0.0, 0.0, -1.0), 0.5));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Vector3D(0.0, -100.5, -1.0), 100.0));
+
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0.0, -100.5, -1.0), 100.0, std::make_shared<rtx::Matte>(rtx::Color(0.8, 0.8, 0.0))));
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0.0, 0.0, -1.2), 0.5, std::make_shared<rtx::Matte>(rtx::Color(0.1, 0.2, 0.5))));
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-1.0, 0.0, -1.0), 0.5, std::make_shared<rtx::Metal>(rtx::Color(0.8, 0.8, 0.8), 0.3)));
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(1.0, 0.0, -1.0), 0.5, std::make_shared<rtx::Metal>(rtx::Color(0.8, 0.6, 0.2), 1.0)));
+
     if (ac == 2 && std::string(av[1]) == "--help") {
         displayUsage();
         return 0;

@@ -8,8 +8,15 @@
 #ifndef HITRECORD_HPP_
     #define HITRECORD_HPP_
 
+namespace rtx
+{
+    class IMaterial;
+}
+
     #include "Vector3D.hpp"
     #include "Ray.hpp"
+    #include "IMaterial.hpp"
+    #include <memory>
 
 namespace rtx
 {
@@ -18,6 +25,7 @@ namespace rtx
     public:
         rtx::Point3D point;
         rtx::Vector3D normal;
+        std::shared_ptr<rtx::IMaterial> material;
         double t;
         bool frontFace;
 

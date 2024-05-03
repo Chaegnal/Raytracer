@@ -58,8 +58,13 @@ rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::I
 
     rtx::HitRecord rec;
     if (shape.hits(ray, rtx::Interval(0.001, infinity), rec)) {
-        rtx::Vector3D dir = rec.normal + rtx::Vector3D::randomUnitVector();
-        return getRayColor(rtx::Ray(rec.point, dir), depth - 1, shape) * 0.5;
+        rtx::Ray reflected;
+        rtx::Color attenuation;
+        if (rec.material->reflect(ray, rec, attenuation, reflected))
+            return attenuation * getRayColor(reflected, depth - 1, shape);
+        return rtx::Color();
+        //rtx::Vector3D dir = rec.normal + rtx::Vector3D::randomUnitVector();
+        //return getRayColor(rtx::Ray(rec.point, dir), depth - 1, shape) * 0.5;
         //return (rec.normal + rtx::Vector3D(1.0, 1.0, 1.0)) * 0.5;
     }
 
@@ -79,6 +84,7 @@ rtx::Ray rtx::Camera::getRay(double u, double v) const
 
 void rtx::Camera::render(const rtx::IShape &shape)
 {
+    initialize();
     std::cout << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     for (std::size_t y = 0; y < imageSize.second; ++y) {
         for (std::size_t x = 0; x < imageSize.first; ++x) {
@@ -97,6 +103,8 @@ void rtx::Camera::render(const rtx::IShape &shape)
 
 void rtx::Camera::renderGraphical(const rtx::IShape &shape)
 {
+    initialize();
+
     sf::RenderWindow win(sf::VideoMode(imageSize.first, imageSize.second), "Raytracer", sf::Style::Titlebar | sf::Style::Close);
     sf::VertexArray pixels(sf::Points, imageSize.first * imageSize.second);
 

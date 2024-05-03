@@ -8,6 +8,11 @@
 #ifndef IMATERIAL_HPP_
     #define IMATERIAL_HPP_
 
+namespace rtx
+{
+    class HitRecord;
+}
+
     #include "Ray.hpp"
     #include "HitRecord.hpp"
     #include "Vector3D.hpp"

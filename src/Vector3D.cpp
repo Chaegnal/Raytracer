@@ -44,3 +44,10 @@ rtx::Vector3D rtx::Vector3D::randomVectOnSphere(const rtx::Vector3D &normal)
         return randomUnitVect;
     return randomUnitVect * -1.0;
 }
+
+bool rtx::Vector3D::closeToZero() const
+{
+    double tolerance = 0.00000001;
+
+    return (fabs(x) < tolerance) && (fabs(y) < tolerance) && (fabs(z) < tolerance);
+}

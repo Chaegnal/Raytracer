@@ -12,17 +12,21 @@
     #include "Ray.hpp"
     #include "AShape.hpp"
     #include "Interval.hpp"
+    #include "IMaterial.hpp"
+    #include <memory>
 
 namespace rtx
 {
     class Sphere : public virtual rtx::AShape
     {
+    private:
+        double _radius;
+        std::shared_ptr<rtx::IMaterial> _material;
+
     public:
         Sphere();
-        Sphere(rtx::Point3D center, double radius);
+        Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IMaterial> material);
         ~Sphere() = default;
-
-        double radius;
 
         bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
     };
