@@ -77,9 +77,22 @@ rtx::Ray rtx::Camera::getRay(double u, double v) const
 {
     auto offset = getSampleSquare();
     rtx::Point3D pixelSample = _pixelOrigin + (_pixelU * (offset.x + u)) + (_pixelV * (offset.y + v));
+
+    rtx::Point3D ray_origin;
+    if (defocus_angle <= 0) {
+        ray_origin = _origin;
+    } else {
+        ray_origin = defocus_disk_sample();
+    }
     rtx::Vector3D rayDirection = pixelSample - _origin;
 
     return rtx::Ray(_origin, rayDirection);
+}
+
+rtx::Point3D rtx::Camera::defocus_disk_sample() const
+{
+    auto p = rtx::Vector3D::random_in_unit_disk();
+    return _origin + (defocus_disk_u * p.x) + (defocus_disk_v * p.y);
 }
 
 void rtx::Camera::render(const rtx::IShape &shape)
@@ -150,13 +163,25 @@ void rtx::Camera::renderGraphical(const rtx::IShape &shape)
 void rtx::Camera::initialize()
 {
     _pixelSampleScale = 1.0 / double(samplesPerPixel);
-    _origin = rtx::Point3D();
-    double viewHeight = 2.0;
-    double viewWidth = viewHeight * (double(imageSize.first) / imageSize.second);
-    rtx::Vector3D u = rtx::Vector3D(viewWidth, 0.0, 0.0);
-    _pixelU = u / double(imageSize.first);
-    rtx::Vector3D v = rtx::Vector3D(0.0, -viewHeight, 0.0);
-    _pixelV = v / double(imageSize.second);
-    rtx::Point3D viewportOrigin = _origin - rtx::Vector3D(0.0, 0.0, 1.0) - (u / 2.0) - (v / 2.0);
+    _origin = lookfrom;
+
+    auto focal_length = (lookfrom - lookat).length();
+    auto theta = degToRad(vfov);
+    auto h = tan(theta/2);
+    auto viewport_height = 2 * h * focus_dist;
+    double viewWidth = viewport_height * (double(imageSize.first) / imageSize.second);
+
+    w = (lookfrom - lookat).unitVector();
+    u = (vup).cross(w).unitVector();
+    v = w.cross(u);
+
+    rtx::Vector3D view_u = u * viewWidth;
+    _pixelU = view_u / double(imageSize.first);
+    rtx::Vector3D view_v = -v * viewport_height;
+    _pixelV = view_v / double(imageSize.second);
+    rtx::Point3D viewportOrigin = _origin - (w * (focus_dist)) - view_u/2 - view_v/2;
     _pixelOrigin = viewportOrigin + ((_pixelU + _pixelV) * 0.5);
+    auto defocus_radius = focus_dist * tan(degToRad(defocus_angle / 2));
+    defocus_disk_u = u * defocus_radius;
+    defocus_disk_v = v * defocus_radius;
 }

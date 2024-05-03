@@ -31,14 +31,34 @@ static void displayUsage()
 int main(int ac, const char *av[])
 {
     rtx::Scene scene;
-    rtx::Camera cam(256, 256);
+    rtx::Camera cam(300, 255);
 
     srand(time(NULL));
 
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0.0, -100.5, -1.0), 100.0, std::make_shared<rtx::Matte>(rtx::Color(0.8, 0.8, 0.0))));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0.0, 0.0, -1.2), 0.5, std::make_shared<rtx::Matte>(rtx::Color(0.1, 0.2, 0.5))));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-1.0, 0.0, -1.0), 0.5, std::make_shared<rtx::Metal>(rtx::Color(0.8, 0.8, 0.8), 0.3)));
-    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(1.0, 0.0, -1.0), 0.5, std::make_shared<rtx::Metal>(rtx::Color(0.8, 0.6, 0.2), 1.0)));
+    auto ground_material = std::make_shared<rtx::Matte>(rtx::Color(0.5, 0.5, 0.5));
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0,-1000,0), 1000, ground_material));
+
+
+    auto material1 = std::make_shared<rtx::Matte>(rtx::Color(0.4, 0.2, 0.1));
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material1));
+
+    auto material2 = std::make_shared<rtx::Matte>(rtx::Color(0.4, 0.2, 0.1));
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material2));
+
+    auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.7, 0.6, 0.5), 0.0);
+    scene.add(std::make_shared<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
+
+    cam.vfov = 20;
+
+    cam.lookfrom = rtx::Point3D(13, 2,3);
+    cam.lookat   = rtx::Point3D(0, 0, 0);
+    cam.vup      = rtx::Vector3D(0,1,0);
+
+    cam.samplesPerPixel = 500;
+    cam.maxDepth = 50;
+
+    cam.defocus_angle = 0.8;
+    cam.focus_dist = 15;
 
     if (ac == 2 && std::string(av[1]) == "--help") {
         displayUsage();
