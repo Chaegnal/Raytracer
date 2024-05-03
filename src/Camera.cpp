@@ -46,9 +46,9 @@ void rtx::Camera::addGamma(rtx::Color &color)
     color.z = toGamma(color.z);
 }
 
-void rtx::Camera::writeColor(const rtx::Color &color) const
+void rtx::Camera::writeColor(const rtx::Color &color, std::ofstream &ppmFile) const
 {
-    std::cout << short(color.x) << ' ' << short(color.y) << ' ' << short(color.z) << '\n';
+    ppmFile << short(color.x) << ' ' << short(color.y) << ' ' << short(color.z) << '\n';
 }
 
 rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::IShape &shape) const
@@ -94,10 +94,13 @@ rtx::Point3D rtx::Camera::defocusDiskSample() const
     return _origin + (defocusDiskU * vect.x) + (defocusDiskV * vect.y);
 }
 
-void rtx::Camera::render(const rtx::IShape &shape)
+void rtx::Camera::render(const rtx::IShape &shape, const std::string& sceneFileName)
 {
+    std::ofstream ppmFile;
+
     initialize();
-    std::cout << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
+    ppmFile.open(sceneFileName + ".ppm", std::ios::trunc);
+    ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     for (std::size_t y = 0; y < imageSize.second; ++y) {
         for (std::size_t x = 0; x < imageSize.first; ++x) {
             rtx::Color pixelColor;
@@ -108,19 +111,21 @@ void rtx::Camera::render(const rtx::IShape &shape)
             pixelColor *= _pixelSampleScale;
             addGamma(pixelColor);
             smoothenPixels(pixelColor);
-            writeColor(pixelColor);
+            writeColor(pixelColor, ppmFile);
         }
     }
 }
 
-void rtx::Camera::renderGraphical(const rtx::IShape &shape)
+void rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName)
 {
     initialize();
 
     sf::RenderWindow win(sf::VideoMode(imageSize.first, imageSize.second), "Raytracer", sf::Style::Titlebar | sf::Style::Close);
     sf::VertexArray pixels(sf::Points, imageSize.first * imageSize.second);
+    std::ofstream ppmFile;
 
-    std::cout << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
+    ppmFile.open(sceneFileName + ".ppm", std::ios::trunc);
+    ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     while (win.isOpen()) {
         for (std::size_t y = 0; y < imageSize.second; ++y) {
             for (std::size_t x = 0; x < imageSize.first; ++x) {
@@ -138,7 +143,7 @@ void rtx::Camera::renderGraphical(const rtx::IShape &shape)
                 }
                 pixelColor *= _pixelSampleScale;
                 smoothenPixels(pixelColor);
-                writeColor(pixelColor);
+                writeColor(pixelColor, ppmFile);
                 pixels[y * imageSize.first + x].position = sf::Vector2f(x, y);
                 pixels[y * imageSize.first + x].color = sf::Color(pixelColor.x, pixelColor.y, pixelColor.z, 255);
             }

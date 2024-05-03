@@ -14,6 +14,7 @@
     #include "macros.hpp"
     #include <vector>
     #include <mutex>
+    #include <fstream>
 
 namespace rtx
 {
@@ -36,7 +37,7 @@ namespace rtx
         double toGamma(double linear);
         void addGamma(rtx::Color &color);
         void smoothenPixels(rtx::Color &color);
-        void writeColor(const rtx::Color &color) const;
+        void writeColor(const rtx::Color &color, std::ofstream &ppmFile) const;
         rtx::Color getRayColor(const rtx::Ray &ray, int depth, const rtx::IShape &shape) const;
         rtx::Vector3D getSampleSquare() const {return rtx::Vector3D(randomValue() - 0.5, randomValue() - 0.5, 0.0);}
         rtx::Point3D defocusDiskSample() const;
@@ -57,8 +58,8 @@ namespace rtx
         double focusDist = 10.0;
 
         rtx::Ray getRay(double u, double v) const;
-        void render(const rtx::IShape &shape);
-        void renderGraphical(const rtx::IShape &shape);
+        void render(const rtx::IShape &shape, const std::string& sceneFileName);
+        void renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName);
     };
 }
 

@@ -101,10 +101,10 @@ int main(int ac, const char *av[])
         displayUsage();
         return 0;
     }
-    if (ac == 2 && std::string(av[1]) == "-g")
-        cam.renderGraphical(scene);
-    else if (ac == 1)
-        cam.render(scene);
+    if (ac == 3 && std::string(av[1]) == "-g")
+        cam.renderGraphical(scene, av[2]);
+    else if (ac == 2)
+        cam.render(scene, av[1]);
     else {
         displayUsage();
         return 84;
