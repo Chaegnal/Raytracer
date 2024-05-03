@@ -10,7 +10,6 @@ CC		=	g++
 SRC		=	main.cpp				\
 			src/Camera.cpp			\
 			src/Ray.cpp				\
-			src/Rectangle3D.cpp		\
 			src/Vector3D.cpp		\
 			src/Interval.cpp		\
 			src/shapes/Scene.cpp	\

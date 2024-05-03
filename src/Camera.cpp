@@ -6,7 +6,6 @@
 */
 
 #include "Camera.hpp"
-#include "Rectangle3D.hpp"
 #include "Ray.hpp"
 #include "Vector3D.hpp"
 #include "macros.hpp"

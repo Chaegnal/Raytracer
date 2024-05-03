@@ -8,7 +8,6 @@
 #ifndef CAMERA_HPP_
     #define CAMERA_HPP_
 
-    #include "Rectangle3D.hpp"
     #include "Ray.hpp"
     #include "Vector3D.hpp"
     #include "IShape.hpp"
@@ -39,14 +38,11 @@ namespace rtx
     public:
         Camera();
         Camera(std::size_t imageWidth, std::size_t imageHeight);
-        //Camera(rtx::Rectangle3D screen);
         ~Camera() = default;
 
         std::size_t samplesPerPixel = 250;
         std::size_t maxDepth = 50;
         std::pair<std::size_t, std::size_t> imageSize = std::make_pair(256, 256);
-        /*rtx::Point3D origin;
-        rtx::Rectangle3D screen;*/
 
         rtx::Ray getRay(double u, double v) const;
         void render(const rtx::IShape &shape);
