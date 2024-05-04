@@ -27,11 +27,8 @@ namespace rtx
         rtx::Vector3D _pixelV;
         rtx::Point3D _origin;
         double _pixelSampleScale;
-        rtx::Vector3D u;
-        rtx::Vector3D v;
-        rtx::Vector3D w;
-        rtx::Vector3D defocusDiskU;
-        rtx::Vector3D defocusDiskV;
+        rtx::Vector3D _defocusX;
+        rtx::Vector3D _defocusY;
 
         void initialize();
         double toGamma(double linear);
@@ -50,12 +47,12 @@ namespace rtx
         std::size_t samplesPerPixel = 250;
         std::size_t maxDepth = 50;
         std::pair<std::size_t, std::size_t> imageSize = std::make_pair(256, 256);
-        double vfov = 90.0;
-        rtx::Point3D lookfrom = rtx::Point3D();
-        rtx::Point3D lookat = rtx::Point3D(0.0, 0.0, -1.0);
-        rtx::Vector3D vup = rtx::Vector3D(0.0, 1.0, 0.0);
-        double defocusAngle = 0.0;
-        double focusDist = 10.0;
+        double _fov = 90.0;
+        rtx::Point3D _cameraPosition = rtx::Point3D();
+        rtx::Point3D _lookAt = rtx::Point3D(0.0, 0.0, -1.0);
+        rtx::Vector3D _cameraAngle = rtx::Vector3D(0.0, 1.0, 0.0);
+        double _defocusAngle = 0.0;
+        double _focusDist = 10.0;
 
         rtx::Ray getRay(double u, double v) const;
         void render(const rtx::IShape &shape, const std::string& sceneFileName);

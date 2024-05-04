@@ -77,16 +77,16 @@ static rtx::Scene getScene()
 
 static rtx::Camera getCam()
 {
-    rtx::Camera cam(1200, 800);
+    rtx::Camera cam(200, 200);
 
-    cam.samplesPerPixel = 500;
-    cam.maxDepth         = 50;
-    cam.vfov     = 20;
-    cam.lookfrom = rtx::Point3D(13,2,3);
-    cam.lookat   = rtx::Point3D(0,0,0);
-    cam.vup      = rtx::Vector3D(0,1,0);
-    cam.defocusAngle = 0.6;
-    cam.focusDist    = 10.0;
+    cam.samplesPerPixel = 5;
+    cam.maxDepth         = 500;
+    cam._fov     = 20;
+    cam._cameraPosition = rtx::Point3D(13,2,3);
+    cam._lookAt   = rtx::Point3D(0,0,0);
+    cam._cameraAngle      = rtx::Vector3D(0,1,0);
+    cam._defocusAngle = 0.6;
+    cam._focusDist    = 10.0;
     return cam;
 }
 
