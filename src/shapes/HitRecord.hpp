@@ -27,6 +27,8 @@ namespace rtx
         rtx::Vector3D normal;
         std::shared_ptr<rtx::IMaterial> material;
         double t;
+        double u;
+        double v;
         bool frontFace;
 
         void setFaceNormal(const rtx::Ray &ray, const rtx::Vector3D &outwardNormal);

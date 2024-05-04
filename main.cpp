@@ -13,6 +13,7 @@
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "Sphere.hpp"
+#include "Plan.hpp"
 #include "memes.hpp"
 #include "macros.hpp"
 #include "Metal.hpp"
@@ -74,6 +75,12 @@ static rtx::Scene getScene()
 
     auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.7, 0.6, 0.5), 0.0);
     world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
+
+    auto matteRed = std::make_shared<rtx::Matte>(rtx::Color(1.0, 0.2, 0.2));
+    auto matteRed2 = std::make_shared<rtx::Metal>(rtx::Color(1, 0.078, 0.576), 0.1);
+    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(2.5, 0, 2), rtx::Vector3D(1.5, 0, 0), rtx::Vector3D(0, 2, 0), matteRed));
+    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(1, 0, 1), rtx::Vector3D(0, 0, 1), rtx::Vector3D(0, 1, 0), matteRed2));
+
     return world;
 }
 
@@ -81,8 +88,8 @@ static rtx::Camera getCam()
 {
     rtx::Camera cam(200, 200);
 
-    cam.samplesPerPixel = 5;
-    cam.maxDepth         = 500;
+    cam.samplesPerPixel = 50;
+    cam.maxDepth         = 50;
     cam._fov     = 20;
     cam._cameraPosition = rtx::Point3D(13,2,3);
     cam._lookAt   = rtx::Point3D(0,0,0);
