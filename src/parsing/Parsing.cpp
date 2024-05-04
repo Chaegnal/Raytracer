@@ -176,7 +176,6 @@ void Parsing::parseAmbientDiffuse(libconfig::Config &conf)
         diffuse = lights.lookup("diffuse");
         std::cout << "Ligths: " << "ambient = " << ambient << " diffuse =" << diffuse << std::endl;
     } catch (const libconfig::SettingNotFoundException &) {
-        //idk
     }
 }
 

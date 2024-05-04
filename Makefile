@@ -20,13 +20,14 @@ SRC		=	main.cpp					\
 			src/materials/Matte.cpp		\
 			src/materials/Dielectric.cpp\
 			src/materials/Metal.cpp		\
-			src/parsing/Parsing.cpp
+			src/parsing/Parsing.cpp		\
+			src/factory/Factory.cpp
 
 OBJ		=	$(SRC:.cpp=.o)
 
 NAME	=	raytracer
 
-CPPFLAGS	=	-std=c++20 -iquote ./interfaces -iquote ./src -iquote ./src/shapes -iquote ./include -iquote ./src/materials
+CPPFLAGS	=	-std=c++20 -iquote ./interfaces -iquote ./src -iquote ./src/shapes -iquote ./include -iquote ./src/materials -iquote ./src/factory
 
 LIBS	=	-lsfml-window -lsfml-system -lsfml-graphics -lconfig++
 

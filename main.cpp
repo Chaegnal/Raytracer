@@ -5,6 +5,11 @@
 ** main
 */
 
+#include <memory>
+#include <string>
+#include <iostream>
+#include <random>
+#include <ctime>
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "Sphere.hpp"
@@ -13,11 +18,7 @@
 #include "Metal.hpp"
 #include "Matte.hpp"
 #include "Dielectric.hpp"
-#include <memory>
-#include <string>
-#include <iostream>
-#include <random>
-#include <ctime>
+#include "Factory.hpp"
 
 static void displayUsage()
 {
@@ -32,9 +33,10 @@ static void displayUsage()
 static rtx::Scene getScene()
 {
     rtx::Scene world;
+    rtx::Factory factory;
 
     auto ground_material = std::make_shared<rtx::Matte>(rtx::Color(0.5, 0.5, 0.5));
-    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0,-1000,0), 1000, ground_material));
+    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(0,-1000,0), 1000, ground_material));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
@@ -48,30 +50,30 @@ static rtx::Scene getScene()
                     // diffuse
                     auto albedo = rtx::Color::random() * rtx::Color::random();
                     sphere_material = std::make_shared<rtx::Matte>(albedo);
-                    world.add(std::make_shared<rtx::Sphere>(center, 0.2, sphere_material));
+                    world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
                 } else if (choose_mat < 0.95) {
                     // metal
                     auto albedo = rtx::Color::random(0.5, 1);
                     auto fuzz = randomValue(0, 0.5);
                     sphere_material = std::make_shared<rtx::Metal>(albedo, fuzz);
-                    world.add(std::make_shared<rtx::Sphere>(center, 0.2, sphere_material));
+                    world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
                 } else {
                     // glass
                     sphere_material = std::make_shared<rtx::Dielectric>(1.5);
-                    world.add(std::make_shared<rtx::Sphere>(center, 0.2, sphere_material));
+                    world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
                 }
             }
         }
     }
 
     auto material1 = std::make_shared<rtx::Dielectric>(1.5);
-    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(0, 1, 0), 1.0, material1));
+    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(0, 1, 0), 1.0, material1));
 
     auto material2 = std::make_shared<rtx::Matte>(rtx::Color(0.4, 0.2, 0.1));
-    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material2));
+    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material2));
 
     auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.7, 0.6, 0.5), 0.0);
-    world.add(std::make_shared<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
+    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
     return world;
 }
 
