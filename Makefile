@@ -16,12 +16,13 @@ SRC		=	main.cpp					\
 			src/shapes/AShape.cpp		\
 			src/shapes/Sphere.cpp		\
 			src/shapes/HitRecord.cpp	\
+			src/shapes/Cylinder.cpp 	\
 			src/materials/AMaterial.cpp	\
 			src/materials/Matte.cpp		\
 			src/materials/Dielectric.cpp\
 			src/materials/Metal.cpp		\
 			src/parsing/Parsing.cpp		\
-			src/factory/Factory.cpp
+			src/factory/Factory.cpp		\
 
 OBJ		=	$(SRC:.cpp=.o)
 
