@@ -20,7 +20,7 @@ namespace rtx {
 
             template<typename Shape, typename ...Argument>
             std::shared_ptr<rtx::IShape>createShape(Argument... args) {
-                return std::make_shared<Shape>(std::forward<Argument>(args)...);
+                return std::make_unique<Shape>(std::forward<Argument>(args)...);
             }
 
         protected:

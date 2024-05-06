@@ -29,7 +29,7 @@ OBJ		=	$(SRC:.cpp=.o)
 
 NAME	=	raytracer
 
-CPPFLAGS	=	-std=c++20 -iquote ./interfaces -iquote ./src -iquote ./src/shapes -iquote ./include -iquote ./src/materials -iquote ./src/factory
+CPPFLAGS	=	-std=c++20 -iquote ./interfaces -iquote ./src -iquote ./src/shapes -iquote ./include -iquote ./src/materials -iquote ./src/factory -iquote ./src/parsing
 
 LIBS	=	-lsfml-window -lsfml-system -lsfml-graphics -lconfig++
 

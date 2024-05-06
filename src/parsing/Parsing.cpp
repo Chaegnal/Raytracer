@@ -15,60 +15,72 @@ Parsing::~Parsing()
 {
 }
 
-void Parsing::parseCamFOV(libconfig::Config &conf)
+//cam
+
+double Parsing::parseCamFOV(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     const libconfig::Setting &camera = root["camera"];
-    float fov = 0;
 
     try {
-        fov = camera.lookup("fieldOfView");
-        std::cout << "FieldofView: " << "fov = " << fov << std::endl;
+        return camera.lookup("fieldOfView");
     } catch (const libconfig::SettingNotFoundException &) {
     }
+    return 0;
 }
 
-void Parsing::parseCamRotation(libconfig::Config &conf)
+int Parsing::parseCamSample(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
-    int x = 0;
-    int y = 0;
-    int z = 0;
+    const libconfig::Setting &camera = root["camera"];
 
     try {
-        const libconfig::Setting &camera = root["camera"]["rotation"];
-
-        if(!(camera.lookupValue("x", x)
-               && camera.lookupValue("y", y)
-               && camera.lookupValue("z", z)))
-            return;
-
-          std::cout << "Camera Rotation: " << "x = " << x << " y = " << y << " z = " << z << std::endl;
+        return camera.lookup("sample");
     } catch (const libconfig::SettingNotFoundException &) {
     }
+    return 0;
 }
 
-void Parsing::parseCamResolution(libconfig::Config &conf)
+int Parsing::parseCamDepth(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
-    int width;
-    int height;
+    const libconfig::Setting &camera = root["camera"];
 
     try {
-        const libconfig::Setting &camera = root["camera"]["resolution"];
-
-        if(!(camera.lookupValue("width", width)
-               && camera.lookupValue("height", height)))
-            return;
-
-          std::cout << "Camera Res: " << "width = " << width << " height =  " << height << std::endl;
+        return camera.lookup("maxDepth");
     } catch (const libconfig::SettingNotFoundException &) {
     }
+    return 0;
 }
 
-void Parsing::parseCamPosition(libconfig::Config &conf)
+float Parsing::parseCamDefocus(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
+    const libconfig::Setting &camera = root["camera"];
+
+    try {
+        return camera.lookup("defocusAngle");
+    } catch (const libconfig::SettingNotFoundException &) {
+    }
+    return 0;
+}
+
+float Parsing::parseCamFocus(libconfig::Config &conf)
+{
+    const libconfig::Setting &root = conf.getRoot();
+    const libconfig::Setting &camera = root["camera"];
+
+    try {
+        return camera.lookup("focusDist");
+    } catch (const libconfig::SettingNotFoundException &) {
+    }
+    return 0;
+}
+
+std::tuple<int, int, int> Parsing::parseCamPosition(libconfig::Config &conf)
+{
+    const libconfig::Setting &root = conf.getRoot();
+    std::tuple<int, int, int> pos;
     int x = 0;
     int y = 0;
     int z = 0;
@@ -77,27 +89,60 @@ void Parsing::parseCamPosition(libconfig::Config &conf)
         const libconfig::Setting &camera = root["camera"]["position"];
 
         if(!(camera.lookupValue("x", x)
-               && camera.lookupValue("y", y)
-               && camera.lookupValue("z", z)))
-            return;
-
-          std::cout << "Camera Pos: " << "x = " << x << " y = " << y << " z = " << z << std::endl;
+            && camera.lookupValue("y", y)
+            && camera.lookupValue("z", z)))
+                return std::make_tuple(0, 0, 0);
     } catch (const libconfig::SettingNotFoundException &) {
     }
+    return std::make_tuple(x, y, z);
 }
 
-void Parsing::parseCamera(libconfig::Config &conf)
+std::tuple<int, int, int> Parsing::parseCamLookAt(libconfig::Config &conf)
 {
-    parseCamResolution(conf);
-    parseCamPosition(conf);
-    parseCamRotation(conf);
-    parseCamFOV(conf);
+    const libconfig::Setting &root = conf.getRoot();
+    std::tuple<int, int, int> pos;
+    int x = 0;
+    int y = 0;
+    int z = 0;
+
+    try {
+        const libconfig::Setting &camera = root["camera"]["lookAt"];
+
+        if(!(camera.lookupValue("x", x)
+            && camera.lookupValue("y", y)
+            && camera.lookupValue("z", z)))
+                return std::make_tuple(0, 0, 0);
+    } catch (const libconfig::SettingNotFoundException &) {
+    }
+    return std::make_tuple(x, y, z);
 }
 
-void Parsing::parseSphere(libconfig::Config &conf)
+std::tuple<int, int, int> Parsing::parseCamAngle(libconfig::Config &conf)
 {
-    int x, y, z, radius, r, g, b;
-    float grain;
+    const libconfig::Setting &root = conf.getRoot();
+    std::tuple<int, int, int> pos;
+    int x = 0;
+    int y = 0;
+    int z = 0;
+
+    try {
+        const libconfig::Setting &camera = root["camera"]["angle"];
+
+        if(!(camera.lookupValue("x", x)
+            && camera.lookupValue("y", y)
+            && camera.lookupValue("z", z)))
+                return std::make_tuple(0, 0, 0);
+    } catch (const libconfig::SettingNotFoundException &) {
+    }
+    return std::make_tuple(x, y, z);
+}
+
+
+//sphere
+
+std::vector<Parsing::SphereInfo> Parsing::parseSphere(libconfig::Config &conf)
+{
+    std::vector<SphereInfo> sphereParsed;
     const libconfig::Setting &root = conf.getRoot();
 
     try {
@@ -108,60 +153,103 @@ void Parsing::parseSphere(libconfig::Config &conf)
         {
             const libconfig::Setting &oneSphere = sphere[i];
             const libconfig::Setting &color = oneSphere["color"];
+            SphereInfo infoSphere;
 
-            if(!(oneSphere.lookupValue("x", x)
-                && oneSphere.lookupValue("y", y)
-                && oneSphere.lookupValue("z", z)
-                && oneSphere.lookupValue("r", radius)
-                && color.lookupValue("r", r)
-                && color.lookupValue("g", g)
-                && color.lookupValue("b", b)
-                && oneSphere.lookupValue("grain", grain)))
+            if(!(oneSphere.lookupValue("x", infoSphere.x)
+                && oneSphere.lookupValue("y", infoSphere.y)
+                && oneSphere.lookupValue("z", infoSphere.z)
+                && color.lookupValue("r", infoSphere.r)
+                && color.lookupValue("g", infoSphere.g)
+                && color.lookupValue("b", infoSphere.b)
+                && oneSphere.lookupValue("radius", infoSphere.radius)
+                && oneSphere.lookupValue("material", infoSphere.material)
+                && oneSphere.lookupValue("extra", infoSphere.extra)))
                 continue;
 
-
-            std::cout << "Sphere " << i << ": " << "x = " << x << " y =  " << y << "  "
-                << "z = " << z << "  "
-                << "radius = " << radius << " {color: r = " << r << " g = " << g << " b = " << b << "}" << " grain = " << grain << std::endl;
+            sphereParsed.push_back(infoSphere);
         }
-
     } catch(const libconfig::SettingNotFoundException &) {
     }
+
+    return sphereParsed;
 }
 
-void Parsing::parsePlane(libconfig::Config &conf)
+//cylinder
+
+std::vector<Parsing::CylinderInfo> Parsing::parseCylinder(libconfig::Config &conf)
 {
-    std::string axis;
-    int position, r, g, b;
+    std::vector<CylinderInfo> cylinderParsed;
+    const libconfig::Setting &root = conf.getRoot();
+
+    try {
+        const libconfig::Setting &cylinder = root["primitives"]["cylinder"];
+        int count = cylinder.getLength();
+
+        for(int i = 0; i < count; ++i)
+        {
+            const libconfig::Setting &oneCylinder = cylinder[i];
+            const libconfig::Setting &color = oneCylinder["color"];
+            CylinderInfo infoCylinder;
+
+            if(!(oneCylinder.lookupValue("x", infoCylinder.x)
+                && oneCylinder.lookupValue("y", infoCylinder.y)
+                && oneCylinder.lookupValue("z", infoCylinder.z)
+                && color.lookupValue("r", infoCylinder.r)
+                && color.lookupValue("g", infoCylinder.g)
+                && color.lookupValue("b", infoCylinder.b)
+                && oneCylinder.lookupValue("radius", infoCylinder.radius)
+                && oneCylinder.lookupValue("material", infoCylinder.material)
+                && oneCylinder.lookupValue("extra", infoCylinder.extra)
+                && oneCylinder.lookupValue("extra", infoCylinder.height)))
+                continue;
+
+            cylinderParsed.push_back(infoCylinder);
+        }
+    } catch(const libconfig::SettingNotFoundException &) {
+    }
+
+    return cylinderParsed;
+}
+
+std::vector<Parsing::PlaneInfo> Parsing::parsePlane(libconfig::Config &conf)
+{
+    std::vector<PlaneInfo> planeParsed;
     const libconfig::Setting &root = conf.getRoot();
 
     try {
         const libconfig::Setting &planes = root["primitives"]["planes"];
+
         int count = planes.getLength();
 
         for(int i = 0; i < count; ++i)
         {
             const libconfig::Setting &onePlane = planes[i];
-            const libconfig::Setting &color = onePlane["color"];
+            const libconfig::Setting &sizePlane = onePlane["size"];
+            const libconfig::Setting &anglePlane = onePlane["angle"];
+            const libconfig::Setting &colorPlane = onePlane["color"];
+            PlaneInfo infoPlane;
 
-            if(!(onePlane.lookupValue("axis", axis)
-                && onePlane.lookupValue("position", position)
-                && color.lookupValue("r", r)
-                && color.lookupValue("g", g)
-                && color.lookupValue("b", b)))
+            if(!(onePlane.lookupValue("x", infoPlane.x)
+                && onePlane.lookupValue("y", infoPlane.y)
+                && onePlane.lookupValue("z", infoPlane.z)
+                && onePlane.lookupValue("extra", infoPlane.extra)
+                && onePlane.lookupValue("material", infoPlane.material)
+                && sizePlane.lookupValue("x", infoPlane.size_x)
+                && sizePlane.lookupValue("y", infoPlane.size_y)
+                && sizePlane.lookupValue("z", infoPlane.size_z)
+                && anglePlane.lookupValue("x", infoPlane.height_x)
+                && anglePlane.lookupValue("y", infoPlane.height_y)
+                && anglePlane.lookupValue("z", infoPlane.height_z)
+                && colorPlane.lookupValue("r", infoPlane.r)
+                && colorPlane.lookupValue("g", infoPlane.g)
+                && colorPlane.lookupValue("b", infoPlane.b)))
                 continue;
 
-            std::cout << "Plane " << i << ": " << "x = " << axis << " y =  " << position << " {color: r = " << r << " g = " << g << " b = " << b << "}" << std::endl;
+            planeParsed.push_back(infoPlane);
         }
-
     } catch(const libconfig::SettingNotFoundException &) {
     }
-}
-
-void Parsing::parsePrimitive(libconfig::Config &conf)
-{
-    parseSphere(conf);
-    parsePlane(conf);
+    return planeParsed;
 }
 
 void Parsing::parseAmbientDiffuse(libconfig::Config &conf)
@@ -207,27 +295,3 @@ void Parsing::parseLights(libconfig::Config &conf)
     parseAmbientDiffuse(conf);
     parsePointLight(conf);
 }
-
-int Parsing::parsingFile(int ac, char **av)
-{
-    libconfig::Config conf;
-
-    if (av[1] == NULL)
-        return 84;
-    try {
-        conf.readFile(av[1]);
-    } catch (const libconfig::FileIOException &) {
-        std::cerr << "Could not open the file" << std::endl;
-        return (EXIT_FAILURE);
-    }
-    catch(const libconfig::ParseException &err) {
-        std::cerr << "Parse error at " << err.getFile() << ":" << err.getLine()
-              << " - " << err.getError() << std::endl;
-        return(EXIT_FAILURE);
-    }
-    parseCamera(conf);
-    parsePrimitive(conf);
-    parseLights(conf);
-    return(EXIT_SUCCESS);
-}
-

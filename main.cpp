@@ -13,6 +13,8 @@
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "Sphere.hpp"
+#include "Cylinder.hpp"
+#include "Cone.hpp"
 #include "memes.hpp"
 #include "macros.hpp"
 #include "Metal.hpp"
@@ -20,6 +22,7 @@
 #include "Dielectric.hpp"
 #include "Factory.hpp"
 #include "Plan.hpp"
+#include "Parsing.hpp"
 
 static void displayUsage()
 {
@@ -31,72 +34,97 @@ static void displayUsage()
               << "\t\033[1m-g\033[m\tdisplays in real time the pixels drawing (slows the process)\n";
 }
 
-static rtx::Scene getScene()
+static rtx::Scene getSphere(libconfig::Config &conf, rtx::Scene world)
 {
-    rtx::Scene world;
+    Parsing parser;
     rtx::Factory factory;
+    std::vector<Parsing::SphereInfo> spheres = parser.parseSphere(conf);
 
-    auto ground_material = std::make_shared<rtx::Matte>(rtx::Color(0.5, 0.5, 0.5));
-    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(-500, 0, -500), rtx::Vector3D(1000, 0, 0), rtx::Vector3D(0, 0, 1000), ground_material));
-
-    // for (int a = -11; a < 11; a++) {
-    //     for (int b = -11; b < 11; b++) {
-    //         auto choose_mat = randomValue();
-    //         rtx::Point3D center(a + 0.9*randomValue(), 0.2, b + 0.9*randomValue());
-
-    //         if ((center - rtx::Point3D(4, 0.2, 0)).length() > 0.9) {
-    //             std::shared_ptr<rtx::IMaterial> sphere_material;
-
-    //             if (choose_mat < 0.8) {
-    //                 // diffuse
-    //                 auto albedo = rtx::Color::random() * rtx::Color::random();
-    //                 sphere_material = std::make_shared<rtx::Matte>(albedo);
-    //                 world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
-    //             } else if (choose_mat < 0.95) {
-    //                 // metal
-    //                 auto albedo = rtx::Color::random(0.5, 1);
-    //                 auto fuzz = randomValue(0, 0.5);
-    //                 sphere_material = std::make_shared<rtx::Metal>(albedo, fuzz);
-    //                 world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
-    //             } else {
-    //                 // glass
-    //                 sphere_material = std::make_shared<rtx::Dielectric>(1.5);
-    //                 world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
-    //             }
-    //         }
-    //     }
-    // }
-
-    auto material1 = std::make_shared<rtx::Dielectric>(1.5);
-    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(0, 1, 0), 1.0, material1));
-
-    auto material2 = std::make_shared<rtx::Matte>(rtx::Color(0.4, 0.2, 0.1));
-    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(-4, 1, 0), 1.0, material2));
-
-    auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.7, 0.6, 0.5), 0.0);
-    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
-
-    auto matteRed = std::make_shared<rtx::Matte>(rtx::Color(1.0, 0.2, 0.2));
-    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(2.5, 0, 2), rtx::Vector3D(1.5, 0, 0), rtx::Vector3D(0, 2, 0), matteRed));
-    
-    auto matteRed2 = std::make_shared<rtx::Metal>(rtx::Color(1, 0.078, 0.576), 0.1);
-    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(1, 0, 1), rtx::Vector3D(0, 0, 1), rtx::Vector3D(0, 1, 0), matteRed2));
-
+    for (int i = 0; i != spheres.size(); i++) {
+        auto material1 = std::make_shared<rtx::Dielectric>(spheres[i].extra);
+        auto material2 = std::make_shared<rtx::Matte>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b));
+        auto material3 = std::make_shared<rtx::Metal>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b), spheres[i].extra);
+        if (spheres[i].material == "Dielectric")
+            world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z), spheres[i].radius, material1));
+        if (spheres[i].material == "Matte")
+            world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z), spheres[i].radius, material2));
+        if (spheres[i].material == "Metal")
+            world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z), spheres[i].radius, material3));
+    }
     return world;
 }
 
-static rtx::Camera getCam()
+static rtx::Scene getCylinder(libconfig::Config &conf, rtx::Scene world)
 {
-    rtx::Camera cam(200, 200);
+    Parsing parser;
+    rtx::Factory factory;
+    std::vector<Parsing::CylinderInfo> cylinder = parser.parseCylinder(conf);
 
-    cam.samplesPerPixel = 250;
-    cam.maxDepth = 500;
-    cam._fov = 90;
-    cam._cameraPosition = rtx::Point3D(5,2,3);
-    cam._lookAt = rtx::Point3D(0,1,0);
-    cam._cameraAngle = rtx::Vector3D(0,1,0);
-    cam._defocusAngle = 0.6;
-    cam._focusDist = 10.0;
+        for (int i = 0; i != cylinder.size(); i++) {
+        auto material1 = std::make_shared<rtx::Dielectric>(cylinder[i].extra);
+        auto material2 = std::make_shared<rtx::Matte>(rtx::Color(cylinder[i].r, cylinder[i].g, cylinder[i].b));
+        auto material3 = std::make_shared<rtx::Metal>(rtx::Color(cylinder[i].r, cylinder[i].g, cylinder[i].b), cylinder[i].extra);
+        if (cylinder[i].material == "Dielectric")
+            world.add(factory.createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material1));
+        if (cylinder[i].material == "Matte")
+            world.add(factory.createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material2));
+        if (cylinder[i].material == "Metal")
+            world.add(factory.createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material3));
+    }
+    return world;
+}
+
+static rtx::Scene getPlane(libconfig::Config &conf, rtx::Scene world)
+{
+    Parsing parser;
+    rtx::Factory factory;
+    std::vector<Parsing::PlaneInfo> plane = parser.parsePlane(conf);
+
+    for (int i = 0; i != plane.size(); i++) {
+        auto material1 = std::make_shared<rtx::Dielectric>(plane[i].extra);
+        auto material2 = std::make_shared<rtx::Matte>(rtx::Color(plane[i].r, plane[i].g, plane[i].b));
+        auto material3 = std::make_shared<rtx::Metal>(rtx::Color(plane[i].r, plane[i].g, plane[i].b), plane[i].extra);
+        if (plane[i].material == "Dielectric")
+            world.add(factory.createShape<rtx::Plan>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z),material1));
+        if (plane[i].material == "Matte")
+            world.add(factory.createShape<rtx::Plan>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z),material2));
+        if (plane[i].material == "Metal")
+            world.add(factory.createShape<rtx::Plan>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z),material3));
+    }
+    return world;
+}
+
+static rtx::Scene getScene(libconfig::Config &conf)
+{
+    rtx::Scene world;
+    rtx::Factory factory;
+    Parsing parser;
+
+    world = getSphere(conf, world);
+    world = getCylinder(conf, world);
+    world = getPlane(conf, world);
+
+    auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.2, 0.2, 0.2), 0.2);
+    world.add(std::make_shared<rtx::Cone>(rtx::Point3D(2.0, 0.0, 0.0), 0.5, 0.5, material3));
+    return world;
+}
+
+static rtx::Camera getCam(libconfig::Config &conf)
+{
+    Parsing parser;
+    rtx::Camera cam(200, 200);
+    std::tuple<int, int, int> pos = parser.parseCamPosition(conf);
+    std::tuple<int, int, int> lookAt = parser.parseCamLookAt(conf);
+    std::tuple<int, int, int> angle = parser.parseCamAngle(conf);
+
+    cam.samplesPerPixel = parser.parseCamSample(conf);
+    cam.maxDepth = parser.parseCamDepth(conf);
+    cam._fov = parser.parseCamFOV(conf);
+    cam._cameraPosition = rtx::Point3D(std::get<0>(pos),std::get<1>(pos),std::get<2>(pos));
+    cam._lookAt = rtx::Point3D(std::get<0>(lookAt),std::get<1>(lookAt),std::get<2>(lookAt));
+    cam._cameraAngle = rtx::Vector3D(std::get<0>(angle),std::get<1>(angle),std::get<2>(angle));
+    cam._defocusAngle = parser.parseCamDefocus(conf);
+    cam._focusDist = parser.parseCamFocus(conf);
     return cam;
 }
 
@@ -104,8 +132,23 @@ int main(int ac, const char *av[])
 {
     srand(time(NULL));
 
-    rtx::Scene scene = getScene();
-    rtx::Camera cam = getCam();
+    libconfig::Config conf;
+
+    try {
+        conf.readFile(av[ac - 1]);
+    } catch (const libconfig::FileIOException &) {
+        std::cerr << "Could not open the file" << std::endl;
+        return 84;
+    }
+    catch(const libconfig::ParseException &err) {
+        std::cerr << "Parse error at " << err.getFile() << ":" << err.getLine()
+            << " - " << err.getError() << std::endl;
+        return 84;
+    }
+
+    rtx::Scene scene = getScene(conf);
+    rtx::Camera cam = getCam(conf);
+    Parsing parser;
 
     if (ac == 2 && std::string(av[1]) == "--help") {
         displayUsage();
