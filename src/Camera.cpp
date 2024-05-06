@@ -152,8 +152,17 @@ int rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileNa
             close(pipefd[i][1]);
         }
     }
+
+    std::size_t firstExtensionChar = sceneFileName.find(".cfg");
+    std::string configFileName = sceneFileName;
     std::ofstream ppmFile;
-    ppmFile.open(sceneFileName + ".ppm", std::ios::trunc);
+
+    if (firstExtensionChar == std::string::npos) {
+        std::cerr << "invalid file extension" << std::endl;
+        return 84;
+    }
+    configFileName.erase(firstExtensionChar, sceneFileName.length());
+    ppmFile.open(configFileName + ".ppm", std::ios::trunc);
     ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     for (int i = 0; i < nbProcesses; ++i) {
         int status;
@@ -169,15 +178,22 @@ int rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileNa
     return 0;
 }
 
-void rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName)
+int rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName)
 {
     initialize();
 
     sf::RenderWindow win(sf::VideoMode(imageSize.first, imageSize.second), "Raytracer", sf::Style::Titlebar | sf::Style::Close);
     sf::VertexArray pixels(sf::Points, imageSize.first * imageSize.second);
+    std::size_t firstExtensionChar = sceneFileName.find(".cfg");
+    std::string configFileName = sceneFileName;
     std::ofstream ppmFile;
 
-    ppmFile.open(sceneFileName + ".ppm", std::ios::trunc);
+    if (firstExtensionChar == std::string::npos) {
+        std::cerr << "invalid file extension" << std::endl;
+        return 84;
+    }
+    configFileName.erase(firstExtensionChar, sceneFileName.length());
+    ppmFile.open(configFileName + ".ppm", std::ios::trunc);
     ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     while (win.isOpen()) {
         for (std::size_t y = 0; y < imageSize.second; ++y) {
@@ -187,7 +203,7 @@ void rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& s
                 while (win.pollEvent(evt)) {
                     if (evt.type == sf::Event::Closed) {
                         win.close();
-                        return;
+                        return 0;
                     }
                 }
                 for (std::size_t sample = 0; sample < samplesPerPixel; ++sample) {
@@ -210,11 +226,12 @@ void rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& s
                 if (evt.type == sf::Event::Closed ||
                     evt.type == sf::Event::KeyPressed) {
                     win.close();
-                    return;
+                    return 0;
                 }
             }
         }
     }
+    return 0;
 }
 
 void rtx::Camera::initialize()

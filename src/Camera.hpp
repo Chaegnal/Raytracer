@@ -57,7 +57,7 @@ namespace rtx
 
         rtx::Ray getRay(double u, double v) const;
         int render(const rtx::IShape &shape, const std::string& sceneFileName);
-        void renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName);
+        int renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName);
     };
 }
 

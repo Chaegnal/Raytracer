@@ -174,9 +174,9 @@ int main(int ac, const char *av[])
         return 0;
     }
     if (ac == 3 && std::string(av[1]) == "-g")
-        cam.renderGraphical(scene, av[2]);
+        return cam.renderGraphical(scene, av[2]);
     else if (ac == 2)
-        cam.render(scene, av[1]);
+        return cam.render(scene, av[1]);
     else {
         displayUsage();
         return 84;
