@@ -27,7 +27,7 @@ class Parsing {
             std::string material;
         };
 
-        struct CylinderInfo {
+        struct CylinderConeInfo {
             int x, y, z;
             double height;
             float radius;
@@ -56,7 +56,8 @@ class Parsing {
 
         std::vector<SphereInfo> parseSphere(libconfig::Config &conf);
 
-        std::vector<CylinderInfo> parseCylinder(libconfig::Config &conf);
+        std::vector<CylinderConeInfo> parseCylinder(libconfig::Config &conf);
+        std::vector<CylinderConeInfo> parseCone(libconfig::Config &conf);
 
         std::vector<PlaneInfo> parsePlane(libconfig::Config &conf);
 

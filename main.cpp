@@ -58,7 +58,7 @@ static rtx::Scene getCylinder(libconfig::Config &conf, rtx::Scene world)
 {
     Parsing parser;
     rtx::Factory factory;
-    std::vector<Parsing::CylinderInfo> cylinder = parser.parseCylinder(conf);
+    std::vector<Parsing::CylinderConeInfo> cylinder = parser.parseCylinder(conf);
 
         for (int i = 0; i != cylinder.size(); i++) {
         auto material1 = std::make_shared<rtx::Dielectric>(cylinder[i].extra);
@@ -70,6 +70,26 @@ static rtx::Scene getCylinder(libconfig::Config &conf, rtx::Scene world)
             world.add(factory.createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material2));
         if (cylinder[i].material == "Metal")
             world.add(factory.createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material3));
+    }
+    return world;
+}
+
+static rtx::Scene getCones(libconfig::Config &conf, rtx::Scene world)
+{
+    Parsing parser;
+    rtx::Factory factory;
+    std::vector<Parsing::CylinderConeInfo> cone = parser.parseCone(conf);
+
+        for (int i = 0; i != cone.size(); i++) {
+        auto material1 = std::make_shared<rtx::Dielectric>(cone[i].extra);
+        auto material2 = std::make_shared<rtx::Matte>(rtx::Color(cone[i].r, cone[i].g, cone[i].b));
+        auto material3 = std::make_shared<rtx::Metal>(rtx::Color(cone[i].r, cone[i].g, cone[i].b), cone[i].extra);
+        if (cone[i].material == "Dielectric")
+            world.add(factory.createShape<rtx::Cone>(rtx::Point3D(cone[i].x, cone[i].y, cone[i].z), cone[i].radius, cone[i].height, material1));
+        if (cone[i].material == "Matte")
+            world.add(factory.createShape<rtx::Cone>(rtx::Point3D(cone[i].x, cone[i].y, cone[i].z), cone[i].radius, cone[i].height, material2));
+        if (cone[i].material == "Metal")
+            world.add(factory.createShape<rtx::Cone>(rtx::Point3D(cone[i].x, cone[i].y, cone[i].z), cone[i].radius, cone[i].height, material3));
     }
     return world;
 }
@@ -102,10 +122,9 @@ static rtx::Scene getScene(libconfig::Config &conf)
 
     world = getSphere(conf, world);
     world = getCylinder(conf, world);
+    world = getCones(conf, world);
     world = getPlane(conf, world);
 
-    auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.2, 0.2, 0.2), 0.2);
-    world.add(std::make_shared<rtx::Cone>(rtx::Point3D(2.0, 0.0, 0.0), 0.5, 0.5, material3));
     return world;
 }
 

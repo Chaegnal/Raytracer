@@ -174,11 +174,9 @@ std::vector<Parsing::SphereInfo> Parsing::parseSphere(libconfig::Config &conf)
     return sphereParsed;
 }
 
-//cylinder
-
-std::vector<Parsing::CylinderInfo> Parsing::parseCylinder(libconfig::Config &conf)
+std::vector<Parsing::CylinderConeInfo> Parsing::parseCylinder(libconfig::Config &conf)
 {
-    std::vector<CylinderInfo> cylinderParsed;
+    std::vector<CylinderConeInfo> cylinderParsed;
     const libconfig::Setting &root = conf.getRoot();
 
     try {
@@ -189,7 +187,42 @@ std::vector<Parsing::CylinderInfo> Parsing::parseCylinder(libconfig::Config &con
         {
             const libconfig::Setting &oneCylinder = cylinder[i];
             const libconfig::Setting &color = oneCylinder["color"];
-            CylinderInfo infoCylinder;
+            CylinderConeInfo infoCylinder;
+
+            if(!(oneCylinder.lookupValue("x", infoCylinder.x)
+                && oneCylinder.lookupValue("y", infoCylinder.y)
+                && oneCylinder.lookupValue("z", infoCylinder.z)
+                && color.lookupValue("r", infoCylinder.r)
+                && color.lookupValue("g", infoCylinder.g)
+                && color.lookupValue("b", infoCylinder.b)
+                && oneCylinder.lookupValue("radius", infoCylinder.radius)
+                && oneCylinder.lookupValue("material", infoCylinder.material)
+                && oneCylinder.lookupValue("extra", infoCylinder.extra)
+                && oneCylinder.lookupValue("extra", infoCylinder.height)))
+                continue;
+
+            cylinderParsed.push_back(infoCylinder);
+        }
+    } catch(const libconfig::SettingNotFoundException &) {
+    }
+
+    return cylinderParsed;
+}
+
+std::vector<Parsing::CylinderConeInfo> Parsing::parseCone(libconfig::Config &conf)
+{
+    std::vector<CylinderConeInfo> cylinderParsed;
+    const libconfig::Setting &root = conf.getRoot();
+
+    try {
+        const libconfig::Setting &cylinder = root["primitives"]["cones"];
+        int count = cylinder.getLength();
+
+        for(int i = 0; i < count; ++i)
+        {
+            const libconfig::Setting &oneCylinder = cylinder[i];
+            const libconfig::Setting &color = oneCylinder["color"];
+            CylinderConeInfo infoCylinder;
 
             if(!(oneCylinder.lookupValue("x", infoCylinder.x)
                 && oneCylinder.lookupValue("y", infoCylinder.y)
