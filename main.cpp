@@ -38,33 +38,33 @@ static rtx::Scene getScene()
     auto ground_material = std::make_shared<rtx::Matte>(rtx::Color(0.5, 0.5, 0.5));
     world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(0,-1000,0), 1000, ground_material));
 
-    for (int a = -11; a < 11; a++) {
-        for (int b = -11; b < 11; b++) {
-            auto choose_mat = randomValue();
-            rtx::Point3D center(a + 0.9*randomValue(), 0.2, b + 0.9*randomValue());
+    // for (int a = -11; a < 11; a++) {
+    //     for (int b = -11; b < 11; b++) {
+    //         auto choose_mat = randomValue();
+    //         rtx::Point3D center(a + 0.9*randomValue(), 0.2, b + 0.9*randomValue());
 
-            if ((center - rtx::Point3D(4, 0.2, 0)).length() > 0.9) {
-                std::shared_ptr<rtx::IMaterial> sphere_material;
+    //         if ((center - rtx::Point3D(4, 0.2, 0)).length() > 0.9) {
+    //             std::shared_ptr<rtx::IMaterial> sphere_material;
 
-                if (choose_mat < 0.8) {
-                    // diffuse
-                    auto albedo = rtx::Color::random() * rtx::Color::random();
-                    sphere_material = std::make_shared<rtx::Matte>(albedo);
-                    world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
-                } else if (choose_mat < 0.95) {
-                    // metal
-                    auto albedo = rtx::Color::random(0.5, 1);
-                    auto fuzz = randomValue(0, 0.5);
-                    sphere_material = std::make_shared<rtx::Metal>(albedo, fuzz);
-                    world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
-                } else {
-                    // glass
-                    sphere_material = std::make_shared<rtx::Dielectric>(1.5);
-                    world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
-                }
-            }
-        }
-    }
+    //             if (choose_mat < 0.8) {
+    //                 // diffuse
+    //                 auto albedo = rtx::Color::random() * rtx::Color::random();
+    //                 sphere_material = std::make_shared<rtx::Matte>(albedo);
+    //                 world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
+    //             } else if (choose_mat < 0.95) {
+    //                 // metal
+    //                 auto albedo = rtx::Color::random(0.5, 1);
+    //                 auto fuzz = randomValue(0, 0.5);
+    //                 sphere_material = std::make_shared<rtx::Metal>(albedo, fuzz);
+    //                 world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
+    //             } else {
+    //                 // glass
+    //                 sphere_material = std::make_shared<rtx::Dielectric>(1.5);
+    //                 world.add(factory.createShape<rtx::Sphere>(center, 0.2, sphere_material));
+    //             }
+    //         }
+    //     }
+    // }
 
     auto material1 = std::make_shared<rtx::Dielectric>(1.5);
     world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(0, 1, 0), 1.0, material1));
@@ -81,7 +81,7 @@ static rtx::Camera getCam()
 {
     rtx::Camera cam(200, 200);
 
-    cam.samplesPerPixel = 5;
+    cam.samplesPerPixel = 250;
     cam.maxDepth = 500;
     cam._fov = 20;
     cam._cameraPosition = rtx::Point3D(13,2,3);
