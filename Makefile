@@ -17,6 +17,7 @@ SRC		=	main.cpp					\
 			src/shapes/Sphere.cpp		\
 			src/shapes/HitRecord.cpp	\
 			src/shapes/Cylinder.cpp 	\
+			src/shapes/Cone.cpp 	\
 			src/shapes/Plan.cpp			\
 			src/materials/AMaterial.cpp	\
 			src/materials/Matte.cpp		\

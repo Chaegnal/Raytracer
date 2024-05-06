@@ -28,7 +28,7 @@ bool rtx::Cylinder::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord
     if (d < 0.0)
         return false;
 
-    double root = (-b - sqrt(d)) / (2 * a);
+    double root = (-b - std::sqrt(d)) / (2 * a);
 
     if (!rayT.surrounds(root)) {
         root = (- b + sqrt(d)) / (2 * a);
@@ -39,11 +39,11 @@ bool rtx::Cylinder::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord
     rec.t = root;
     rec.point = ray.at(rec.t);
 
-    double len_max = sqrt(pow(_height / 2, 2) + pow(_radius, 2));
+    double len_max = std::sqrt(std::pow(_height / 2, 2) + std::pow(_radius, 2));
     rtx::Vector3D distance = rec.point - center;
 
     if (distance.length() > len_max) {
-        root = (- b + sqrt(d)) / (2 * a);
+        root = (- b + std::sqrt(d)) / (2 * a);
         rec.t = root;
         rec.point = ray.at(rec.t);
         distance = rec.point - center;
