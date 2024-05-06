@@ -19,6 +19,7 @@
 #include "Matte.hpp"
 #include "Dielectric.hpp"
 #include "Factory.hpp"
+#include "Plan.hpp"
 
 static void displayUsage()
 {
@@ -36,7 +37,7 @@ static rtx::Scene getScene()
     rtx::Factory factory;
 
     auto ground_material = std::make_shared<rtx::Matte>(rtx::Color(0.5, 0.5, 0.5));
-    world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(0,-1000,0), 1000, ground_material));
+    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(-500, 0, -500), rtx::Vector3D(1000, 0, 0), rtx::Vector3D(0, 0, 1000), ground_material));
 
     // for (int a = -11; a < 11; a++) {
     //     for (int b = -11; b < 11; b++) {
@@ -74,6 +75,13 @@ static rtx::Scene getScene()
 
     auto material3 = std::make_shared<rtx::Metal>(rtx::Color(0.7, 0.6, 0.5), 0.0);
     world.add(factory.createShape<rtx::Sphere>(rtx::Point3D(4, 1, 0), 1.0, material3));
+
+    auto matteRed = std::make_shared<rtx::Matte>(rtx::Color(1.0, 0.2, 0.2));
+    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(2.5, 0, 2), rtx::Vector3D(1.5, 0, 0), rtx::Vector3D(0, 2, 0), matteRed));
+    
+    auto matteRed2 = std::make_shared<rtx::Metal>(rtx::Color(1, 0.078, 0.576), 0.1);
+    world.add(factory.createShape<rtx::Plan>(rtx::Point3D(1, 0, 1), rtx::Vector3D(0, 0, 1), rtx::Vector3D(0, 1, 0), matteRed2));
+
     return world;
 }
 
@@ -83,9 +91,9 @@ static rtx::Camera getCam()
 
     cam.samplesPerPixel = 250;
     cam.maxDepth = 500;
-    cam._fov = 20;
-    cam._cameraPosition = rtx::Point3D(13,2,3);
-    cam._lookAt = rtx::Point3D(0,0,0);
+    cam._fov = 90;
+    cam._cameraPosition = rtx::Point3D(5,2,3);
+    cam._lookAt = rtx::Point3D(0,1,0);
     cam._cameraAngle = rtx::Vector3D(0,1,0);
     cam._defocusAngle = 0.6;
     cam._focusDist = 10.0;
