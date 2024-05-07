@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** backup
 ** File description:
-** Plan
+** Plane
 */
 
 #ifndef PLAN_HPP_
@@ -12,9 +12,9 @@
 
 namespace rtx
 {
-    class Plan : public virtual rtx::AShape {
+    class Plane : public virtual rtx::AShape {
         public:
-            Plan(rtx::Point3D position, rtx::Vector3D xVector, rtx::Vector3D yVector, std::shared_ptr<rtx::IMaterial> mat);
+            Plane(rtx::Point3D position, rtx::Vector3D xVector, rtx::Vector3D yVector, std::shared_ptr<rtx::IMaterial> mat);
 
             bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
 

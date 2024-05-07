@@ -2,12 +2,12 @@
 ** EPITECH PROJECT, 2024
 ** backup
 ** File description:
-** Plan
+** Plane
 */
 
-#include "Plan.hpp"
+#include "Plane.hpp"
 
-rtx::Plan::Plan(rtx::Point3D position, rtx::Vector3D xVector, rtx::Vector3D yVector, std::shared_ptr<rtx::IMaterial> mat) : _position(position), _xVector(xVector), _yVector(yVector), _material(mat)
+rtx::Plane::Plane(rtx::Point3D position, rtx::Vector3D xVector, rtx::Vector3D yVector, std::shared_ptr<rtx::IMaterial> mat) : _position(position), _xVector(xVector), _yVector(yVector), _material(mat)
 {
     auto n = _xVector.cross(_yVector);
     normal = n.unitVector();
@@ -15,7 +15,7 @@ rtx::Plan::Plan(rtx::Point3D position, rtx::Vector3D xVector, rtx::Vector3D yVec
     _w = n / n.dot(n);
 }
 
-bool rtx::Plan::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
+bool rtx::Plane::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
 {
     double denom = normal.dot(ray.direction);
 

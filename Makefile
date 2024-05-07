@@ -19,7 +19,7 @@ SRC		=	main.cpp					\
 			src/shapes/HitRecord.cpp	\
 			src/shapes/Cylinder.cpp 	\
 			src/shapes/Cone.cpp 		\
-			src/shapes/Plan.cpp			\
+			src/shapes/Plane.cpp		\
 			src/materials/AMaterial.cpp	\
 			src/materials/Matte.cpp		\
 			src/materials/Dielectric.cpp\
