@@ -47,7 +47,17 @@ bool rtx::Sphere::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &
     rec.point = ray.at(rec.t);
     rtx::Vector3D outwardNormal = (rec.point - center) / _radius;
     rec.setFaceNormal(ray, outwardNormal);
+    sphereHitsAngle(outwardNormal, rec.u, rec.v);
     rec.material = _material;
     return true;
+}
+
+void rtx::Sphere::sphereHitsAngle(const rtx::Point3D& p, double& u, double& v)
+{
+    auto theta = acos(-p.y);
+    auto phi = atan2(-p.z, p.x) + M_PI;
+
+    u = phi / (2 * M_PI);
+    v = theta / M_PI;
 }
 

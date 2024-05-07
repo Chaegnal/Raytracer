@@ -23,6 +23,7 @@
 #include "Cone.hpp"
 #include "Cylinder.hpp"
 #include "Error.hpp"
+#include "Light.hpp"
 
 namespace rtx {
     class Factory {

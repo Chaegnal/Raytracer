@@ -61,20 +61,20 @@ rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::I
         return rtx::Color();
 
     rtx::HitRecord rec;
-    if (shape.hits(ray, rtx::Interval(0.001, infinity), rec)) {
-        rtx::Ray reflected;
-        rtx::Color attenuation;
-        if (rec.material->reflect(ray, rec, attenuation, reflected))
-            return attenuation * getRayColor(reflected, depth - 1, shape);
-        return rtx::Color();
-        //rtx::Vector3D dir = rec.normal + rtx::Vector3D::randomUnitVector();
-        //return getRayColor(rtx::Ray(rec.point, dir), depth - 1, shape) * 0.5;
-        //return (rec.normal + rtx::Vector3D(1.0, 1.0, 1.0)) * 0.5;
+
+    if (!shape.hits(ray, rtx::Interval(0.001, infinity), rec)) {
+        return backgroundColor;
     }
 
-    rtx::Vector3D dir = ray.direction.unitVector();
-    double a = 0.5 * (dir.y + 1.0);
-    return rtx::Vector3D(1.0, 1.0, 1.0) * (1.0 - a) + rtx::Vector3D(0.5, 0.7, 1.0) * a;
+    rtx::Ray reflected;
+    rtx::Color attenuation;
+    rtx::Color color_from_emission = rec.material->lightEmition(rec.u, rec.v, rec.point);
+
+    if (!rec.material->reflect(ray, rec, attenuation, reflected)) {
+        return color_from_emission;
+    }
+
+    return color_from_emission + (attenuation * getRayColor(reflected, depth - 1, shape));
 }
 
 rtx::Ray rtx::Camera::getRay(double u, double v) const

@@ -24,6 +24,9 @@ namespace rtx
             {
                 return false;
             }
+        virtual rtx::Color lightEmition(double u, double v, const rtx::Point3D& point) const {
+            return rtx::Color(0,0,0);
+        }
     };
 }
 

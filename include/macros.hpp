@@ -28,4 +28,9 @@ inline double randomValue(double min, double max)
     return min + (max - min) * randomValue();
 }
 
+inline int randomTwoInt(int min, int max)
+{
+    return int(randomValue(min, max+1));
+}
+
 #endif

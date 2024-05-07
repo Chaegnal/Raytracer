@@ -77,13 +77,13 @@ float Parsing::parseCamFocus(libconfig::Config &conf)
     return 0;
 }
 
-std::tuple<int, int, int> Parsing::parseCamPosition(libconfig::Config &conf)
+std::tuple<double, double, double> Parsing::parseCamPosition(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
-    std::tuple<int, int, int> pos;
-    int x = 0;
-    int y = 0;
-    int z = 0;
+    std::tuple<double, double, double> pos;
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
 
     try {
         const libconfig::Setting &camera = root["camera"]["position"];
@@ -97,13 +97,13 @@ std::tuple<int, int, int> Parsing::parseCamPosition(libconfig::Config &conf)
     return std::make_tuple(x, y, z);
 }
 
-std::tuple<int, int, int> Parsing::parseCamLookAt(libconfig::Config &conf)
+std::tuple<double, double, double> Parsing::parseCamLookAt(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
-    std::tuple<int, int, int> pos;
-    int x = 0;
-    int y = 0;
-    int z = 0;
+    std::tuple<double, double, double> pos;
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
 
     try {
         const libconfig::Setting &camera = root["camera"]["lookAt"];
@@ -117,13 +117,13 @@ std::tuple<int, int, int> Parsing::parseCamLookAt(libconfig::Config &conf)
     return std::make_tuple(x, y, z);
 }
 
-std::tuple<int, int, int> Parsing::parseCamAngle(libconfig::Config &conf)
+std::tuple<double, double, double> Parsing::parseCamAngle(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
-    std::tuple<int, int, int> pos;
-    int x = 0;
-    int y = 0;
-    int z = 0;
+    std::tuple<double, double, double> pos;
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
 
     try {
         const libconfig::Setting &camera = root["camera"]["angle"];
@@ -198,7 +198,7 @@ std::vector<Parsing::CylinderConeInfo> Parsing::parseCylinder(libconfig::Config 
                 && oneCylinder.lookupValue("radius", infoCylinder.radius)
                 && oneCylinder.lookupValue("material", infoCylinder.material)
                 && oneCylinder.lookupValue("extra", infoCylinder.extra)
-                && oneCylinder.lookupValue("extra", infoCylinder.height)))
+                && oneCylinder.lookupValue("heigt", infoCylinder.height)))
                 continue;
 
             cylinderParsed.push_back(infoCylinder);
@@ -233,7 +233,7 @@ std::vector<Parsing::CylinderConeInfo> Parsing::parseCone(libconfig::Config &con
                 && oneCylinder.lookupValue("radius", infoCylinder.radius)
                 && oneCylinder.lookupValue("material", infoCylinder.material)
                 && oneCylinder.lookupValue("extra", infoCylinder.extra)
-                && oneCylinder.lookupValue("extra", infoCylinder.height)))
+                && oneCylinder.lookupValue("heigt", infoCylinder.height)))
                 continue;
 
             cylinderParsed.push_back(infoCylinder);
@@ -302,7 +302,7 @@ void Parsing::parseAmbientDiffuse(libconfig::Config &conf)
 
 void Parsing::parsePointLight(libconfig::Config &conf)
 {
-    int x, y, z;
+    double x, y, z;
     const libconfig::Setting &root = conf.getRoot();
 
     try {

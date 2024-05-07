@@ -23,6 +23,7 @@ namespace rtx
         double _radius;
         std::shared_ptr<rtx::IMaterial> _material;
 
+        static void sphereHitsAngle(const rtx::Point3D& p, double& u, double& v);
     public:
         Sphere();
         Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IMaterial> material);

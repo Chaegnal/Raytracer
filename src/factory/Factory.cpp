@@ -33,12 +33,15 @@ void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
         auto material1 = std::make_shared<rtx::Dielectric>(spheres[i].extra);
         auto material2 = std::make_shared<rtx::Matte>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b));
         auto material3 = std::make_shared<rtx::Metal>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b), spheres[i].extra);
+        auto material4 = std::make_shared<rtx::Light>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b));
         if (spheres[i].material == "Dielectric")
             world.add(createShape<rtx::Sphere>(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z), spheres[i].radius, material1));
         if (spheres[i].material == "Matte")
             world.add(createShape<rtx::Sphere>(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z), spheres[i].radius, material2));
         if (spheres[i].material == "Metal")
             world.add(createShape<rtx::Sphere>(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z), spheres[i].radius, material3));
+        if (spheres[i].material == "Light")
+            world.add(createShape<rtx::Sphere>(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z), spheres[i].radius, material4));
     }
 }
 
@@ -51,12 +54,15 @@ void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
         auto material1 = std::make_shared<rtx::Dielectric>(cylinder[i].extra);
         auto material2 = std::make_shared<rtx::Matte>(rtx::Color(cylinder[i].r, cylinder[i].g, cylinder[i].b));
         auto material3 = std::make_shared<rtx::Metal>(rtx::Color(cylinder[i].r, cylinder[i].g, cylinder[i].b), cylinder[i].extra);
+        auto material4 = std::make_shared<rtx::Light>(rtx::Color(cylinder[i].r, cylinder[i].g, cylinder[i].b));
         if (cylinder[i].material == "Dielectric")
             world.add(createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material1));
         if (cylinder[i].material == "Matte")
             world.add(createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material2));
         if (cylinder[i].material == "Metal")
             world.add(createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material3));
+        if (cylinder[i].material == "Light")
+            world.add(createShape<rtx::Cylinder>(rtx::Point3D(cylinder[i].x, cylinder[i].y, cylinder[i].z), cylinder[i].radius, cylinder[i].height, material4));
     }
 }
 
@@ -69,12 +75,15 @@ void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
         auto material1 = std::make_shared<rtx::Dielectric>(cone[i].extra);
         auto material2 = std::make_shared<rtx::Matte>(rtx::Color(cone[i].r, cone[i].g, cone[i].b));
         auto material3 = std::make_shared<rtx::Metal>(rtx::Color(cone[i].r, cone[i].g, cone[i].b), cone[i].extra);
+        auto material4 = std::make_shared<rtx::Light>(rtx::Color(cone[i].r, cone[i].g, cone[i].b));
         if (cone[i].material == "Dielectric")
             world.add(createShape<rtx::Cone>(rtx::Point3D(cone[i].x, cone[i].y, cone[i].z), cone[i].radius, cone[i].height, material1));
         if (cone[i].material == "Matte")
             world.add(createShape<rtx::Cone>(rtx::Point3D(cone[i].x, cone[i].y, cone[i].z), cone[i].radius, cone[i].height, material2));
         if (cone[i].material == "Metal")
             world.add(createShape<rtx::Cone>(rtx::Point3D(cone[i].x, cone[i].y, cone[i].z), cone[i].radius, cone[i].height, material3));
+        if (cone[i].material == "Light")
+            world.add(createShape<rtx::Cone>(rtx::Point3D(cone[i].x, cone[i].y, cone[i].z), cone[i].radius, cone[i].height, material4));
     }
 }
 
@@ -87,11 +96,14 @@ void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
         auto material1 = std::make_shared<rtx::Dielectric>(plane[i].extra);
         auto material2 = std::make_shared<rtx::Matte>(rtx::Color(plane[i].r, plane[i].g, plane[i].b));
         auto material3 = std::make_shared<rtx::Metal>(rtx::Color(plane[i].r, plane[i].g, plane[i].b), plane[i].extra);
+        auto material4 = std::make_shared<rtx::Light>(rtx::Color(plane[i].r, plane[i].g, plane[i].b));
         if (plane[i].material == "Dielectric")
             world.add(createShape<rtx::Plane>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z),material1));
         if (plane[i].material == "Matte")
             world.add(createShape<rtx::Plane>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z),material2));
         if (plane[i].material == "Metal")
             world.add(createShape<rtx::Plane>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z),material3));
+        if (plane[i].material == "Light")
+            world.add(createShape<rtx::Plane>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z), material4));
     }
 }

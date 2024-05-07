@@ -47,10 +47,12 @@ static rtx::Scene getScene(libconfig::Config &conf)
 static rtx::Camera getCam(libconfig::Config &conf)
 {
     Parsing parser;
-    rtx::Camera cam(500, 500);
-    std::tuple<int, int, int> pos = parser.parseCamPosition(conf);
-    std::tuple<int, int, int> lookAt = parser.parseCamLookAt(conf);
-    std::tuple<int, int, int> angle = parser.parseCamAngle(conf);
+    rtx::Camera cam(1920/7, 1080/7);
+    //cam.backgroundColor = rtx::Color(0.70, 0.80, 1.00);
+    cam.backgroundColor = rtx::Color(0.01, 0.01, 0.01);
+    std::tuple<double, double, double> pos = parser.parseCamPosition(conf);
+    std::tuple<double, double, double> lookAt = parser.parseCamLookAt(conf);
+    std::tuple<double, double, double> angle = parser.parseCamAngle(conf);
 
     cam.samplesPerPixel = parser.parseCamSample(conf);
     cam.maxDepth = parser.parseCamDepth(conf);

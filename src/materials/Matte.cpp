@@ -10,7 +10,12 @@
 
 rtx::Matte::Matte(const rtx::Color &albedo)
 {
-    _albedo = albedo;
+    texture = std::make_shared<SolidColor>(albedo);
+}
+
+rtx::Matte::Matte(std::shared_ptr<ITextures> tex)
+{
+    texture = tex;
 }
 
 bool rtx::Matte::reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const
@@ -20,6 +25,6 @@ bool rtx::Matte::reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::
     if (reflectDir.closeToZero())
         reflectDir = rec.normal;
     reflected = rtx::Ray(rec.point, reflectDir);
-    attenuation = _albedo;
+    attenuation = texture->textureColor(rec.u, rec.v, rec.point);
     return true;
 }

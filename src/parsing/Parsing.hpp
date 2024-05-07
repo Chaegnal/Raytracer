@@ -21,19 +21,19 @@ class Parsing {
         ~Parsing();
 
         struct SphereInfo {
-            int x, y, z;
-            float radius;
-            float extra;
-            float r, g, b;
+            double x, y, z;
+            double radius;
+            double extra;
+            double r, g, b;
             std::string material;
         };
 
         struct CylinderConeInfo {
-            int x, y, z;
+            double x, y, z;
             double height;
-            float radius;
-            float extra;
-            float r, g, b;
+            double radius;
+            double extra;
+            double r, g, b;
             std::string material;
         };
 
@@ -41,17 +41,17 @@ class Parsing {
             double x, y, z;
             double size_x, size_y, size_z;
             double height_x, height_y, height_z;
-            float r, g, b;
-            float extra;
+            double r, g, b;
+            double extra;
             std::string material;
         };
 
         double parseCamFOV(libconfig::Config &conf);
-        std::tuple<int, int, int> parseCamPosition(libconfig::Config &conf);
+        std::tuple<double, double, double> parseCamPosition(libconfig::Config &conf);
         int parseCamSample(libconfig::Config &conf);
         int parseCamDepth(libconfig::Config &conf);
-        std::tuple<int, int, int> parseCamLookAt(libconfig::Config &conf);
-        std::tuple<int, int, int> parseCamAngle(libconfig::Config &conf);
+        std::tuple<double, double, double> parseCamLookAt(libconfig::Config &conf);
+        std::tuple<double, double, double> parseCamAngle(libconfig::Config &conf);
         float parseCamFocus(libconfig::Config &conf);
         float parseCamDefocus(libconfig::Config &conf);
 
