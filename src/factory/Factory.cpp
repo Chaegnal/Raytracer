@@ -6,16 +6,7 @@
 */
 
 #include "Factory.hpp"
-#include "Scene.hpp"
 #include "Parsing.hpp"
-#include "Matte.hpp"
-#include "Dielectric.hpp"
-#include "Metal.hpp"
-#include "IMaterial.hpp"
-#include "Sphere.hpp"
-#include "Plane.hpp"
-#include "Cone.hpp"
-#include "Cylinder.hpp"
 #include "Vector3D.hpp"
 #include "macros.hpp"
 #include <vector>

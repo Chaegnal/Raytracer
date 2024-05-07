@@ -27,6 +27,7 @@ namespace rtx
 
         void clear() {shapes.clear();}
         void add(std::shared_ptr<rtx::IShape> shape) {shapes.push_back(shape);}
+        void add(rtx::Scene &scene);
 
         bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
     };

@@ -33,3 +33,9 @@ bool rtx::Scene::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &r
     }
     return hitsShape;
 }
+
+void rtx::Scene::add(rtx::Scene &scene)
+{
+    for (auto &shape : scene.shapes)
+        add(shape);
+}
