@@ -11,6 +11,7 @@
 #include <libconfig.h++>
 #include <iostream>
 #include <vector>
+#include <tuple>
 
 class Parsing {
 

@@ -12,12 +12,13 @@ SRC		=	main.cpp					\
 			src/Ray.cpp					\
 			src/Vector3D.cpp			\
 			src/Interval.cpp			\
+			src/IPC.cpp					\
 			src/shapes/Scene.cpp		\
 			src/shapes/AShape.cpp		\
 			src/shapes/Sphere.cpp		\
 			src/shapes/HitRecord.cpp	\
 			src/shapes/Cylinder.cpp 	\
-			src/shapes/Cone.cpp 	\
+			src/shapes/Cone.cpp 		\
 			src/shapes/Plan.cpp			\
 			src/materials/AMaterial.cpp	\
 			src/materials/Matte.cpp		\
