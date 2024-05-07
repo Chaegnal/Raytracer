@@ -124,11 +124,18 @@ int rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileNa
 {
     initialize();
 
+    std::size_t firstExtensionChar = sceneFileName.find(".cfg");
+    std::string configFileName = sceneFileName;
     std::ofstream ppmFile;
     rtx::IPC process(std::thread::hardware_concurrency() * 3);
 
+    if (firstExtensionChar == std::string::npos) {
+        std::cerr << "invalid file extension" << std::endl;
+        return 84;
+    }
+    configFileName.erase(firstExtensionChar, configFileName.length());
     process.launch<rtx::Camera>(&rtx::Camera::processPixels, *this, shape, imageSize.second);
-    ppmFile.open(sceneFileName + ".ppm", std::ios::trunc);
+    ppmFile.open(configFileName + ".ppm", std::ios::trunc);
     ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     ppmFile << process.recoverValues(BUFSIZ).str();
     return 0;
@@ -148,7 +155,7 @@ int rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sc
         std::cerr << "invalid file extension" << std::endl;
         return 84;
     }
-    configFileName.erase(firstExtensionChar, sceneFileName.length());
+    configFileName.erase(firstExtensionChar, configFileName.length());
     ppmFile.open(configFileName + ".ppm", std::ios::trunc);
     ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     while (win.isOpen()) {
