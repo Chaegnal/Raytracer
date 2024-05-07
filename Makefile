@@ -20,6 +20,7 @@ SRC		=	main.cpp					\
 			src/shapes/Cylinder.cpp 	\
 			src/shapes/Cone.cpp 		\
 			src/shapes/Plane.cpp		\
+			src/shapes/Triangle.cpp 	\
 			src/materials/AMaterial.cpp	\
 			src/materials/Matte.cpp		\
 			src/materials/Dielectric.cpp\

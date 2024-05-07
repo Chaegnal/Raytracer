@@ -23,6 +23,7 @@
 #include "Factory.hpp"
 #include "Plane.hpp"
 #include "Parsing.hpp"
+#include "Triangle.hpp"
 
 static void displayUsage()
 {
