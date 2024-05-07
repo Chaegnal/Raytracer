@@ -18,6 +18,7 @@
     #include <cstring>
     #include <cerrno>
     #include <iomanip>
+    #include <thread>
 
 namespace rtx
 {
@@ -52,7 +53,7 @@ namespace rtx
         std::vector<pid_t> _pids;
 
     public:
-        IPC(std::size_t nbProcesses);
+        IPC(std::size_t nbProcesses = std::thread::hardware_concurrency());
         ~IPC() = default;
 
         template<class T>
