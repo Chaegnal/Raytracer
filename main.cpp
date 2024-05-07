@@ -67,6 +67,14 @@ int main(int ac, const char *av[])
 {
     srand(time(NULL));
 
+    if (ac == 2 && std::string(av[1]) == "--help") {
+        displayUsage();
+        return 0;
+    } else if (ac != 2 && !(ac == 3 && std::string(av[1]) == "-g")) {
+        displayUsage();
+        return 84;
+    }
+
     libconfig::Config conf;
 
     try {
@@ -74,8 +82,7 @@ int main(int ac, const char *av[])
     } catch (const libconfig::FileIOException &) {
         std::cerr << "Could not open the file" << std::endl;
         return 84;
-    }
-    catch(const libconfig::ParseException &err) {
+    } catch(const libconfig::ParseException &err) {
         std::cerr << "Parse error at " << err.getFile() << ":" << err.getLine()
             << " - " << err.getError() << std::endl;
         return 84;
@@ -84,17 +91,7 @@ int main(int ac, const char *av[])
     rtx::Scene scene = getScene(conf);
     rtx::Camera cam = getCam(conf);
 
-    if (ac == 2 && std::string(av[1]) == "--help") {
-        displayUsage();
-        return 0;
-    }
     if (ac == 3 && std::string(av[1]) == "-g")
         return cam.renderGraphical(scene, av[2]);
-    else if (ac == 2)
-        return cam.render(scene, av[1]);
-    else {
-        displayUsage();
-        return 84;
-    }
-    return 0;
+    return cam.render(scene, av[1]);
 }
