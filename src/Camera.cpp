@@ -10,14 +10,12 @@
 #include "Vector3D.hpp"
 #include "macros.hpp"
 #include "IShape.hpp"
+#include "IPC.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iomanip>
-#include <unistd.h>
-#include <cstring>
 #include <thread>
-#include <sys/wait.h>
 
 rtx::Camera::Camera(std::size_t imageWidth, std::size_t imageHeight)
     : imageSize(std::make_pair(imageWidth, imageHeight))
@@ -100,7 +98,7 @@ rtx::Point3D rtx::Camera::defocusDiskSample() const
     return _origin + (_defocusX * vect.x) + (_defocusY * vect.y);
 }
 
-void rtx::Camera::processPixels(const rtx::IShape &shape, std::size_t yMin, std::size_t yMax, std::stringstream &str)
+void rtx::Camera::processPixels(std::stringstream &str, std::size_t yMin, std::size_t yMax, const rtx::IShape &shape)
 {
     for (std::size_t y = yMin; y < yMax; ++y) {
         for (std::size_t x = 0; x < imageSize.first; ++x) {
@@ -117,64 +115,22 @@ void rtx::Camera::processPixels(const rtx::IShape &shape, std::size_t yMin, std:
     }
 }
 
+void test(std::stringstream &str, std::size_t yMin, std::size_t yMax, const rtx::IShape &shape, rtx::Camera &cam)
+{
+    cam.processPixels(str, yMin, yMax, shape);
+}
+
 int rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileName)
 {
     initialize();
 
-    std::size_t nbProcesses = std::thread::hardware_concurrency() * 3;
-    std::size_t range = imageSize.second / nbProcesses;
-    std::vector<std::stringstream> strs(nbProcesses);
-    std::vector<pid_t> pids(nbProcesses);
-    std::vector<int[2]> pipefd(nbProcesses);
-
-    for (int i = 0; i < nbProcesses; ++i) {
-        if (pipe(pipefd[i])) {
-            std::cerr << "Pipe error\n";
-            return 84;
-        }
-        pid_t pid = fork();
-        if (pid < 0) {
-            std::cerr << "Fork error\n";
-            close(pipefd[i][0]);
-            close(pipefd[i][1]);
-            return 84;
-        }
-        if (pid == 0) {
-            close(pipefd[i][0]);
-            std::size_t yMin = i * range;
-            std::size_t yMax = (i + 1 >= nbProcesses) ? imageSize.second : (i + 1) * range;
-            processPixels(shape, yMin, yMax, strs[i]);
-            write(pipefd[i][1], strs[i].str().c_str(), strs[i].str().length());
-            close(pipefd[i][1]);
-            exit(0);
-        } else {
-            pids[i] = pid;
-            close(pipefd[i][1]);
-        }
-    }
-
-    std::size_t firstExtensionChar = sceneFileName.find(".cfg");
-    std::string configFileName = sceneFileName;
     std::ofstream ppmFile;
+    rtx::IPC process(std::thread::hardware_concurrency() * 3);
 
-    if (firstExtensionChar == std::string::npos) {
-        std::cerr << "invalid file extension" << std::endl;
-        return 84;
-    }
-    configFileName.erase(firstExtensionChar, sceneFileName.length());
-    ppmFile.open(configFileName + ".ppm", std::ios::trunc);
+    process.launch<rtx::Camera>(&rtx::Camera::processPixels, *this, shape, imageSize.second);
+    ppmFile.open(sceneFileName + ".ppm", std::ios::trunc);
     ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
-    for (int i = 0; i < nbProcesses; ++i) {
-        int status;
-        char buffer[4096] = {0};
-        while (read(pipefd[i][0], buffer, sizeof(buffer)) > 0) {
-            strs[i] << buffer;
-            memset(buffer, 0, sizeof(buffer));
-        }
-        close(pipefd[i][0]);
-        ppmFile << strs[i].str();
-        waitpid(pids[i], &status, 0);
-    }
+    ppmFile << process.recoverValues(BUFSIZ).str();
     return 0;
 }
 
