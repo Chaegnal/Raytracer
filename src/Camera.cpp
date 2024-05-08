@@ -17,7 +17,7 @@
 #include <iomanip>
 #include <thread>
 
-rtx::Camera::Camera(std::size_t imageWidth, std::size_t imageHeight)
+rtx::Camera::Camera(int imageWidth, int imageHeight)
     : imageSize(std::make_pair(imageWidth, imageHeight))
     , _intensity(rtx::Interval(0.0, 0.9))
 {
@@ -63,7 +63,7 @@ rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::I
     rtx::HitRecord rec;
 
     if (!shape.hits(ray, rtx::Interval(0.001, infinity), rec)) {
-        return backgroundColor;
+        return _backgroundColor;
     }
 
     rtx::Ray reflected;

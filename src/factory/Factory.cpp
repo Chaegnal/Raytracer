@@ -22,12 +22,13 @@ void rtx::Factory::createWorldFromConfFile(rtx::Scene &world)
     createConeFromConfFile(world);
     createCylinderFromConfFile(world);
     createPlaneFromConfFile(world);
+    createTriangleFromConfFile(world);
 }
 
 void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
 {
-    Parsing parser;
-    std::vector<Parsing::SphereInfo> spheres = parser.parseSphere(_conf);
+    rtx::Parsing parser;
+    std::vector<rtx::Parsing::SphereInfo> spheres = parser.parseSphere(_conf);
 
     for (int i = 0; i != spheres.size(); i++) {
         auto material1 = std::make_shared<rtx::Dielectric>(spheres[i].extra);
@@ -47,8 +48,8 @@ void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
 
 void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
 {
-    Parsing parser;
-    std::vector<Parsing::CylinderConeInfo> cylinder = parser.parseCylinder(_conf);
+    rtx::Parsing parser;
+    std::vector<rtx::Parsing::CylinderConeInfo> cylinder = parser.parseCylinder(_conf);
 
         for (int i = 0; i != cylinder.size(); i++) {
         auto material1 = std::make_shared<rtx::Dielectric>(cylinder[i].extra);
@@ -68,8 +69,8 @@ void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
 
 void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
 {
-    Parsing parser;
-    std::vector<Parsing::CylinderConeInfo> cone = parser.parseCone(_conf);
+    rtx::Parsing parser;
+    std::vector<rtx::Parsing::CylinderConeInfo> cone = parser.parseCone(_conf);
 
         for (int i = 0; i != cone.size(); i++) {
         auto material1 = std::make_shared<rtx::Dielectric>(cone[i].extra);
@@ -89,8 +90,8 @@ void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
 
 void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
 {
-    Parsing parser;
-    std::vector<Parsing::PlaneInfo> plane = parser.parsePlane(_conf);
+    rtx::Parsing parser;
+    std::vector<rtx::Parsing::PlaneTriangleInfo> plane = parser.parsePlane(_conf);
 
     for (int i = 0; i != plane.size(); i++) {
         auto material1 = std::make_shared<rtx::Dielectric>(plane[i].extra);
@@ -105,5 +106,26 @@ void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
             world.add(createShape<rtx::Plane>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z),material3));
         if (plane[i].material == "Light")
             world.add(createShape<rtx::Plane>(rtx::Point3D(plane[i].x, plane[i].y, plane[i].z), rtx::Vector3D(plane[i].size_x, plane[i].size_y, plane[i].size_z), rtx::Vector3D(plane[i].height_x, plane[i].height_y, plane[i].height_z), material4));
+    }
+}
+
+void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world)
+{
+    rtx::Parsing parser;
+    std::vector<rtx::Parsing::PlaneTriangleInfo> triangle = parser.parseTriangles(_conf);
+
+    for (int i = 0; i != triangle.size(); i++) {
+        auto material1 = std::make_shared<rtx::Dielectric>(triangle[i].extra);
+        auto material2 = std::make_shared<rtx::Matte>(rtx::Color(triangle[i].r, triangle[i].g, triangle[i].b));
+        auto material3 = std::make_shared<rtx::Metal>(rtx::Color(triangle[i].r, triangle[i].g, triangle[i].b), triangle[i].extra);
+        auto material4 = std::make_shared<rtx::Light>(rtx::Color(triangle[i].r, triangle[i].g, triangle[i].b));
+        if (triangle[i].material == "Dielectric")
+            world.add(createShape<rtx::Triangle>(rtx::Point3D(triangle[i].x, triangle[i].y, triangle[i].z), rtx::Vector3D(triangle[i].size_x, triangle[i].size_y, triangle[i].size_z), rtx::Vector3D(triangle[i].height_x, triangle[i].height_y, triangle[i].height_z),material1));
+        if (triangle[i].material == "Matte")
+            world.add(createShape<rtx::Triangle>(rtx::Point3D(triangle[i].x, triangle[i].y, triangle[i].z), rtx::Vector3D(triangle[i].size_x, triangle[i].size_y, triangle[i].size_z), rtx::Vector3D(triangle[i].height_x, triangle[i].height_y, triangle[i].height_z),material2));
+        if (triangle[i].material == "Metal")
+            world.add(createShape<rtx::Triangle>(rtx::Point3D(triangle[i].x, triangle[i].y, triangle[i].z), rtx::Vector3D(triangle[i].size_x, triangle[i].size_y, triangle[i].size_z), rtx::Vector3D(triangle[i].height_x, triangle[i].height_y, triangle[i].height_z),material3));
+        if (triangle[i].material == "Light")
+            world.add(createShape<rtx::Triangle>(rtx::Point3D(triangle[i].x, triangle[i].y, triangle[i].z), rtx::Vector3D(triangle[i].size_x, triangle[i].size_y, triangle[i].size_z), rtx::Vector3D(triangle[i].height_x, triangle[i].height_y, triangle[i].height_z), material4));
     }
 }

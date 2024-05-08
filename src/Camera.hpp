@@ -42,7 +42,7 @@ namespace rtx
 
     public:
         Camera();
-        Camera(std::size_t imageWidth, std::size_t imageHeight);
+        Camera(int imageWidth, int imageHeight);
         ~Camera() = default;
 
         std::size_t samplesPerPixel = 250;
@@ -54,7 +54,7 @@ namespace rtx
         rtx::Vector3D _cameraAngle = rtx::Vector3D(0.0, 1.0, 0.0);
         double _defocusAngle = 0.0;
         double _focusDist = 10.0;
-        rtx::Color backgroundColor;
+        rtx::Color _backgroundColor;
 
         void processPixels(std::stringstream &str, std::size_t yMin, std::size_t yMax, const rtx::IShape &shape);
         rtx::Ray getRay(double u, double v) const;

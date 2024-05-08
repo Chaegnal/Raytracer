@@ -13,61 +13,67 @@
 #include <vector>
 #include <tuple>
 
-class Parsing {
+namespace rtx
+{
+    class Parsing {
 
-    private:
-    public:
-        Parsing();
-        ~Parsing();
+        private:
+        public:
+            Parsing();
+            ~Parsing();
 
-        struct SphereInfo {
-            double x, y, z;
-            double radius;
-            double extra;
-            double r, g, b;
-            std::string material;
-        };
+            struct SphereInfo {
+                double x, y, z;
+                double radius;
+                double extra;
+                double r, g, b;
+                std::string material;
+            };
 
-        struct CylinderConeInfo {
-            double x, y, z;
-            double height;
-            double radius;
-            double extra;
-            double r, g, b;
-            std::string material;
-        };
+            struct CylinderConeInfo {
+                double x, y, z;
+                double height;
+                double radius;
+                double extra;
+                double r, g, b;
+                std::string material;
+            };
 
-        struct PlaneInfo {
-            double x, y, z;
-            double size_x, size_y, size_z;
-            double height_x, height_y, height_z;
-            double r, g, b;
-            double extra;
-            std::string material;
-        };
+            struct PlaneTriangleInfo {
+                double x, y, z;
+                double size_x, size_y, size_z;
+                double height_x, height_y, height_z;
+                double r, g, b;
+                double extra;
+                std::string material;
+            };
 
-        double parseCamFOV(libconfig::Config &conf);
-        std::tuple<double, double, double> parseCamPosition(libconfig::Config &conf);
-        int parseCamSample(libconfig::Config &conf);
-        int parseCamDepth(libconfig::Config &conf);
-        std::tuple<double, double, double> parseCamLookAt(libconfig::Config &conf);
-        std::tuple<double, double, double> parseCamAngle(libconfig::Config &conf);
-        float parseCamFocus(libconfig::Config &conf);
-        float parseCamDefocus(libconfig::Config &conf);
+            double parseCamFOV(libconfig::Config &conf);
+            std::tuple<double, double, double> parseCamPosition(libconfig::Config &conf);
+            int parseCamSample(libconfig::Config &conf);
+            int parseCamDepth(libconfig::Config &conf);
+            std::tuple<double, double, double> parseCamLookAt(libconfig::Config &conf);
+            std::tuple<double, double, double> parseCamAngle(libconfig::Config &conf);
+            float parseCamFocus(libconfig::Config &conf);
+            float parseCamDefocus(libconfig::Config &conf);
+            std::tuple<double, double, double> parseCamColor(libconfig::Config &conf);
+            std::tuple<int, int> parseCamRatio(libconfig::Config &conf);
 
-        std::vector<SphereInfo> parseSphere(libconfig::Config &conf);
+            std::vector<SphereInfo> parseSphere(libconfig::Config &conf);
 
-        std::vector<CylinderConeInfo> parseCylinder(libconfig::Config &conf);
-        std::vector<CylinderConeInfo> parseCone(libconfig::Config &conf);
+            std::vector<CylinderConeInfo> parseCylinder(libconfig::Config &conf);
+            std::vector<CylinderConeInfo> parseCone(libconfig::Config &conf);
 
-        std::vector<PlaneInfo> parsePlane(libconfig::Config &conf);
+            std::vector<PlaneTriangleInfo> parsePlane(libconfig::Config &conf);
+            std::vector<PlaneTriangleInfo> parseTriangles(libconfig::Config &conf);
 
-        void parseAmbientDiffuse(libconfig::Config &conf);
-        void parsePointLight(libconfig::Config &conf);
-        void parseLights(libconfig::Config &conf);
+            void parseAmbientDiffuse(libconfig::Config &conf);
+            void parsePointLight(libconfig::Config &conf);
+            void parseLights(libconfig::Config &conf);
 
-    protected:
+        protected:
 
-};
+    };
+}
 
 #endif /* !PARSING_HPP_ */

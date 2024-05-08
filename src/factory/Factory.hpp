@@ -22,6 +22,7 @@
 #include "Sphere.hpp"
 #include "Cone.hpp"
 #include "Cylinder.hpp"
+#include "Triangle.hpp"
 #include "Error.hpp"
 #include "Light.hpp"
 
@@ -82,6 +83,7 @@ namespace rtx {
             void createWorldFromConfFile(rtx::Scene &world);
             void createSphereFromConfFile(rtx::Scene &world);
             void createPlaneFromConfFile(rtx::Scene &world);
+            void createTriangleFromConfFile(rtx::Scene &world);
             void createConeFromConfFile(rtx::Scene &world);
             void createCylinderFromConfFile(rtx::Scene &world);
     };
