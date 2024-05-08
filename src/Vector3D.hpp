@@ -23,6 +23,32 @@ namespace rtx
         Vector3D(Vector3D &&other) = default;
         ~Vector3D() = default;
 
+        double &operator[](std::size_t i)
+        {
+            switch (i) {
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+            default:
+                throw std::out_of_range("Invalid index " + std::to_string(i));
+            }
+        }
+        double operator[](std::size_t i) const
+        {
+            switch (i) {
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+            default:
+                throw std::out_of_range("Invalid index " + std::to_string(i));
+            }
+        }
         Vector3D operator-() const {return Vector3D(-x, -y, -z);}
         Vector3D &operator=(const Vector3D &other)
         {
