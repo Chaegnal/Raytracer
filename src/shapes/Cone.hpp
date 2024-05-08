@@ -13,6 +13,7 @@
     #include "AShape.hpp"
     #include "Interval.hpp"
     #include "IMaterial.hpp"
+    #include "ITransformation.hpp"
     #include <memory>
 
 namespace rtx
@@ -22,6 +23,7 @@ namespace rtx
         public:
             Cone();
             Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<IMaterial> material);
+            Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<IMaterial> material, std::shared_ptr<ITransformation> transformation);
             bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
 
         protected:

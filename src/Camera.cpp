@@ -68,13 +68,13 @@ rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::I
 
     rtx::Ray reflected;
     rtx::Color attenuation;
-    rtx::Color color_from_emission = rec.material->lightEmition(rec.u, rec.v, rec.point);
+    rtx::Color colorFromEmission = rec.material->lightEmition(rec.u, rec.v, rec.point);
 
     if (!rec.material->reflect(ray, rec, attenuation, reflected)) {
-        return color_from_emission;
+        return colorFromEmission;
     }
 
-    return color_from_emission + (attenuation * getRayColor(reflected, depth - 1, shape));
+    return colorFromEmission + (attenuation * getRayColor(reflected, depth - 1, shape));
 }
 
 rtx::Ray rtx::Camera::getRay(double u, double v) const
@@ -113,11 +113,6 @@ void rtx::Camera::processPixels(std::stringstream &str, std::size_t yMin, std::s
             str << std::to_string(short(pixelColor.x)) + ' ' + std::to_string(short(pixelColor.y)) + ' ' + std::to_string(short(pixelColor.z)) + '\n';
         }
     }
-}
-
-void test(std::stringstream &str, std::size_t yMin, std::size_t yMax, const rtx::IShape &shape, rtx::Camera &cam)
-{
-    cam.processPixels(str, yMin, yMax, shape);
 }
 
 int rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileName)

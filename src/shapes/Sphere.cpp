@@ -25,11 +25,22 @@ rtx::Sphere::Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IM
         center = _center;
     }
 
+rtx::Sphere::Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IMaterial> material, std::shared_ptr<rtx::ITransformation> _transformation)
+    : _radius(radius >= 0.0 ? radius : 0.0)
+    , _material(material)
+    {
+        center = _center;
+        transformation = _transformation;
+    }
+
 bool rtx::Sphere::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
 {
-    rtx::Vector3D diff = center - ray.origin;
-    double a = ray.direction.lengthSquared();
-    double b = ray.direction.dot(diff);
+    rtx::Ray tmpRay(ray);
+    if (transformation != nullptr)
+        transformation->transform(tmpRay);
+    rtx::Vector3D diff = center - tmpRay.origin;
+    double a = tmpRay.direction.lengthSquared();
+    double b = tmpRay.direction.dot(diff);
     double c = diff.lengthSquared() - (_radius * _radius);
     double d = (b * b) - a * c;
 
@@ -44,9 +55,9 @@ bool rtx::Sphere::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &
             return false;
     }
     rec.t = root;
-    rec.point = ray.at(rec.t);
+    rec.point = tmpRay.at(rec.t);
     rtx::Vector3D outwardNormal = (rec.point - center) / _radius;
-    rec.setFaceNormal(ray, outwardNormal);
+    rec.setFaceNormal(tmpRay, outwardNormal);
     sphereHitsAngle(outwardNormal, rec.u, rec.v);
     rec.material = _material;
     return true;

@@ -13,6 +13,7 @@
     #include "AShape.hpp"
     #include "Interval.hpp"
     #include "IMaterial.hpp"
+    #include "ITransformation.hpp"
     #include <memory>
 
 namespace rtx
@@ -27,6 +28,7 @@ namespace rtx
     public:
         Sphere();
         Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IMaterial> material);
+        Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IMaterial> material, std::shared_ptr<rtx::ITransformation> _transformation);
         ~Sphere() = default;
 
         bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
