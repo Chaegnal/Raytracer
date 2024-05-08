@@ -22,13 +22,16 @@ namespace rtx
     {
     private:
         double _radius;
-        std::shared_ptr<rtx::IMaterial> _material;
+        bool _moving;
+        rtx::Vector3D _centerVect;
 
         static void sphereHitsAngle(const rtx::Point3D& p, double& u, double& v);
+        rtx::Point3D getSphereCenter(double time) const {return center + (_centerVect * time);}
+
     public:
         Sphere();
         Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IMaterial> material);
-        Sphere(rtx::Point3D _center, double radius, std::shared_ptr<rtx::IMaterial> material, std::shared_ptr<rtx::ITransformation> _transformation);
+        Sphere(rtx::Point3D center1, rtx::Point3D center2, double radius, std::shared_ptr<rtx::IMaterial> material);
         ~Sphere() = default;
 
         bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;

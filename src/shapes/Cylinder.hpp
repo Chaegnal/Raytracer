@@ -26,7 +26,6 @@ namespace rtx
         private:
             double _radius;
             double _height;
-            std::shared_ptr<rtx::IMaterial> _material;
     };
 }
 

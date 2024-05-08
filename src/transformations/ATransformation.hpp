@@ -9,6 +9,7 @@
     #define ATRANSFORMATION_HPP_
 
     #include "ITransformation.hpp"
+    #include "BoundingBox.hpp"
 
 namespace rtx
 {
@@ -16,11 +17,14 @@ namespace rtx
     {
     protected:
         rtx::Vector3D _axis;
+        rtx::BoundingBox _bBox;
+        std::shared_ptr<rtx::IShape> _shape;
 
     public:
         virtual ~ATransformation() = default;
 
-        virtual void transform(rtx::Ray &ray) = 0;
+        virtual bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const = 0;
+        virtual rtx::BoundingBox getBoundingBox() const override {return _bBox;}
     };
 }
 

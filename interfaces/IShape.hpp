@@ -11,6 +11,7 @@
     #include "Ray.hpp"
     #include "HitRecord.hpp"
     #include "Interval.hpp"
+    #include "BoundingBox.hpp"
 
 namespace rtx
 {
@@ -20,6 +21,7 @@ namespace rtx
         virtual ~IShape() = default;
 
         virtual bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const = 0;
+        virtual rtx::BoundingBox getBoundingBox() const = 0;
     };
 }
 

@@ -14,7 +14,10 @@ SRC		=	main.cpp								\
 			src/Matrix3D.cpp						\
 			src/Interval.cpp						\
 			src/IPC.cpp								\
+			src/BoundingBox.cpp						\
+			src/BoundingVolume.cpp					\
 			src/shapes/Scene.cpp					\
+			src/shapes/Box.cpp						\
 			src/shapes/AShape.cpp					\
 			src/shapes/Sphere.cpp					\
 			src/shapes/HitRecord.cpp				\

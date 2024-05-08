@@ -8,17 +8,19 @@
 #include "Translation.hpp"
 #include "Matrix3D.hpp"
 
-rtx::Translation::Translation()
-{
-    _axis = rtx::Vector3D();
-}
-
-rtx::Translation::Translation(const rtx::Vector3D &axis)
+rtx::Translation::Translation(std::shared_ptr<rtx::IShape> shape, const rtx::Vector3D &axis)
 {
     _axis = axis;
+    _shape = shape;
+    _bBox = shape->getBoundingBox() + axis;
 }
 
-void rtx::Translation::transform(rtx::Ray &ray)
+bool rtx::Translation::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
 {
-    ray.direction += _axis;
+    rtx::Ray offsetRay(ray.origin - _axis, ray.direction);
+
+    if (_shape->hits(offsetRay, rayT, rec) == false)
+        return false;
+    rec.point += _axis;
+    return true;
 }

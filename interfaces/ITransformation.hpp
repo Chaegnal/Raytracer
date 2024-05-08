@@ -8,18 +8,11 @@
 #ifndef ITRANSFORMATION_HPP_
     #define ITRANSFORMATION_HPP_
 
-    #include "Ray.hpp"
-    #include "Vector3D.hpp"
+    #include "IShape.hpp"
 
 namespace rtx
 {
-    class ITransformation
-    {
-    public:
-        virtual ~ITransformation() = default;
-
-        virtual void transform(rtx::Ray &ray) = 0;
-    };
+    using ITransformation = IShape;
 }
 
 #endif

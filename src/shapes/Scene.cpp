@@ -9,6 +9,7 @@
 #include "IShape.hpp"
 #include "HitRecord.hpp"
 #include "Interval.hpp"
+#include "BoundingBox.hpp"
 #include <memory>
 
 rtx::Scene::Scene() {}
@@ -32,6 +33,12 @@ bool rtx::Scene::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &r
         }
     }
     return hitsShape;
+}
+
+void rtx::Scene::add(std::shared_ptr<rtx::IShape> shape)
+{
+    shapes.push_back(shape);
+    _bBox = rtx::BoundingBox(_bBox, shape->getBoundingBox());
 }
 
 void rtx::Scene::add(rtx::Scene &scene)

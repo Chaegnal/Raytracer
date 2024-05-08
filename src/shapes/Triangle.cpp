@@ -10,9 +10,9 @@
 rtx::Triangle::Triangle(rtx::Point3D p0, rtx::Point3D p1, rtx::Point3D p2, std::shared_ptr<rtx::IMaterial> material) :
     _p0(p0),
     _p1(p1),
-    _p2(p2),
-    _material(material)
+    _p2(p2)
 {
+    _material = material;
 }
 
 bool rtx::Triangle::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const

@@ -7,14 +7,16 @@
 
 #include "Cylinder.hpp"
 
-rtx::Cylinder::Cylinder() : _radius(1.0), _height(1.0), _material(nullptr)
+rtx::Cylinder::Cylinder() : _radius(1.0), _height(1.0)
 {
     center = rtx::Point3D();
+    _material = nullptr;
 }
 
-rtx::Cylinder::Cylinder(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material) : _radius(radius), _height(height), _material(material)
+rtx::Cylinder::Cylinder(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material) : _radius(radius), _height(height)
 {
     this->center = center;
+    _material = material;
 }
 
 bool rtx::Cylinder::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const

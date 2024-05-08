@@ -14,7 +14,7 @@ namespace rtx
 {
     class Plane : public virtual rtx::AShape {
         public:
-            Plane(rtx::Point3D position, rtx::Vector3D xVector, rtx::Vector3D yVector, std::shared_ptr<rtx::IMaterial> mat);
+            Plane(const rtx::Point3D &position, const rtx::Vector3D &xVector, const rtx::Vector3D &yVector, std::shared_ptr<rtx::IMaterial> mat);
 
             bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
 
@@ -23,7 +23,6 @@ namespace rtx
             rtx::Vector3D _xVector;
             rtx::Vector3D _yVector;
             rtx::Vector3D _w;
-            std::shared_ptr<rtx::IMaterial> _material;
             rtx::Vector3D normal;
             double D;
     };

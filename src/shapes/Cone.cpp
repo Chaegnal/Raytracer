@@ -7,31 +7,25 @@
 
 #include "Cone.hpp"
 
-rtx::Cone::Cone() : _radius(1.0), _height(1.0), _material(nullptr)
+rtx::Cone::Cone() : _radius(1.0), _height(1.0)
 {
     center = rtx::Point3D();
+    _material = nullptr;
 }
 
-rtx::Cone::Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material) : _radius(radius), _height(height), _material(material)
+rtx::Cone::Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material) : _radius(radius), _height(height)
 {
     this->center = center;
-}
-
-rtx::Cone::Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material, std::shared_ptr<ITransformation> transformation) : _radius(radius), _height(height), _material(material)
-{
-    this->center = center;
-    this->transformation = transformation;
+    _material = material;
+    _bBox = rtx::BoundingBox(center - rtx::Vector3D(_radius, 0.0, _radius), center + rtx::Vector3D(_radius, _height, _radius));
 }
 
 bool rtx::Cone::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
 {
-    rtx::Ray tmpRay(ray);
-    if (transformation != nullptr)
-        transformation->transform(tmpRay);
-    rtx::Vector3D diff = tmpRay.origin - center;
+    rtx::Vector3D diff = ray.origin - center;
     double k = _radius / _height;
-    double a = std::pow(tmpRay.direction.x, 2) + std::pow(tmpRay.direction.z, 2) - (std::pow(k, 2) * std::pow(tmpRay.direction.y, 2));
-    double b = 2 * ((tmpRay.direction.x * diff.x) + (tmpRay.direction.z * diff.z) - (std::pow(k, 2) * tmpRay.direction.y * (tmpRay.origin.y - center.y)));
+    double a = std::pow(ray.direction.x, 2) + std::pow(ray.direction.z, 2) - (std::pow(k, 2) * std::pow(ray.direction.y, 2));
+    double b = 2 * ((ray.direction.x * diff.x) + (ray.direction.z * diff.z) - (std::pow(k, 2) * ray.direction.y * (ray.origin.y - center.y)));
     double c = std::pow(diff.x, 2) + std::pow(diff.z, 2) - (std::pow(k, 2) * std::pow(diff.y, 2));
     double d = (b * b) - 4 * (a * c);
 
@@ -41,13 +35,13 @@ bool rtx::Cone::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &re
     double root = (-b - std::sqrt(d)) / (2 * a);
 
     if (!rayT.surrounds(root)) {
-        root = (- b + std::sqrt(d)) / (2 * a);
+        root = (-b + std::sqrt(d)) / (2 * a);
         if (!rayT.surrounds(root))
             return false;
     }
 
     rec.t = root;
-    rec.point = tmpRay.at(rec.t);
+    rec.point = ray.at(rec.t);
 
     double len_max = std::sqrt(std::pow(_height / 2, 2) + std::pow(_radius, 2));
     rtx::Vector3D distance = rec.point - center;
@@ -55,14 +49,14 @@ bool rtx::Cone::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &re
     if (distance.length() > len_max) {
         root = (- b + std::sqrt(d)) / (2 * a);
         rec.t = root;
-        rec.point = tmpRay.at(rec.t);
+        rec.point = ray.at(rec.t);
         distance = rec.point - center;
         if (distance.length() > len_max)
             return false;
     }
 
     rtx::Vector3D outwardNormal = rec.point - center;
-    rec.setFaceNormal(tmpRay, outwardNormal);
+    rec.setFaceNormal(ray, outwardNormal);
     rec.material = _material;
     if (rec.point.y >= center.y && rec.point.y <= center.y + _height)
         return true;

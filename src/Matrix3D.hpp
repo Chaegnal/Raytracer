@@ -67,7 +67,7 @@ namespace rtx
             z = std::move(other.z);
             return *this;
         }
-        Matrix3D operator*(const Matrix3D &other)
+        Matrix3D operator*(const Matrix3D &other) const
         {
             rtx::Matrix3D res;
 
@@ -84,7 +84,7 @@ namespace rtx
             *this = *this * other;
             return *this;
         }
-        rtx::Vector3D operator*(const rtx::Vector3D &other)
+        rtx::Vector3D operator*(const rtx::Vector3D &other) const
         {
             rtx::Vector3D res;
 

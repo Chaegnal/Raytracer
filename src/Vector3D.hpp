@@ -68,6 +68,10 @@ namespace rtx
         {
             return Vector3D(x + other.x, y + other.y, z + other.z);
         }
+        Vector3D operator+(double n) const
+        {
+            return Vector3D(x + n, y + n, z + n);
+        }
         Vector3D &operator+=(const Vector3D &other)
         {
             x += other.x;
@@ -75,15 +79,33 @@ namespace rtx
             z += other.z;
             return *this;
         }
+        Vector3D &operator+=(double n)
+        {
+            x += n;
+            y += n;
+            z += n;
+            return *this;
+        }
         Vector3D operator-(const Vector3D &other) const
         {
             return Vector3D(x - other.x, y - other.y, z - other.z);
+        }
+        Vector3D operator-(double n) const
+        {
+            return Vector3D(x - n, y - n, z - n);
         }
         Vector3D &operator-=(const Vector3D &other)
         {
             x -= other.x;
             y -= other.y;
             z -= other.z;
+            return *this;
+        }
+        Vector3D &operator-=(double n)
+        {
+            x -= n;
+            y -= n;
+            z -= n;
             return *this;
         }
         Vector3D operator*(const Vector3D &other) const

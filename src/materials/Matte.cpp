@@ -24,7 +24,7 @@ bool rtx::Matte::reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::
 
     if (reflectDir.closeToZero())
         reflectDir = rec.normal;
-    reflected = rtx::Ray(rec.point, reflectDir);
+    reflected = rtx::Ray(rec.point, reflectDir, rayIn.time);
     attenuation = texture->textureColor(rec.u, rec.v, rec.point);
     return true;
 }

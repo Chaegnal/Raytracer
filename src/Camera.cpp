@@ -81,15 +81,10 @@ rtx::Ray rtx::Camera::getRay(double u, double v) const
 {
     auto offset = getSampleSquare();
     rtx::Point3D pixelSample = _pixelOrigin + (_pixelU * (offset.x + u)) + (_pixelV * (offset.y + v));
-    rtx::Point3D rayOrigin;
+    rtx::Point3D rayOrigin = (_defocusAngle <= 0.0) ? _origin : defocusDiskSample();
     rtx::Vector3D rayDirection = pixelSample - _origin;
 
-    if (_defocusAngle <= 0.0) {
-        rayOrigin = _origin;
-    } else {
-        rayOrigin = defocusDiskSample();
-    }
-    return rtx::Ray(_origin, rayDirection);
+    return rtx::Ray(rayOrigin, rayDirection);
 }
 
 rtx::Point3D rtx::Camera::defocusDiskSample() const
