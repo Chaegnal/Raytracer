@@ -17,7 +17,6 @@ rtx::Cone::Cone(rtx::Point3D center, double radius, double height, std::shared_p
 {
     this->center = center;
     _material = material;
-    _bBox = rtx::BoundingBox(center - rtx::Vector3D(_radius, 0.0, _radius), center + rtx::Vector3D(_radius, _height, _radius));
 }
 
 bool rtx::Cone::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
