@@ -96,7 +96,15 @@ int main(int ac, const char *av[])
     rtx::Scene scene = getScene(conf);
     rtx::Camera cam = getCam(conf);
 
-    if (ac == 3 && std::string(av[1]) == "-g")
-        return cam.renderGraphical(scene, av[2]);
-    return cam.render(scene, av[1]);
+    try {
+        if (ac == 3 && std::string(av[1]) == "-g") {
+        cam.renderGraphical(scene, av[2]);
+        } else {
+            cam.render(scene, av[1]);
+        }
+    } catch(const rtx::Camera::InvalidFileExtension &err) {
+        std::cerr << err.what() << std::endl;
+        return 84;
+    }
+    return 0;
 }

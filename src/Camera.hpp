@@ -12,6 +12,7 @@
     #include "Vector3D.hpp"
     #include "IShape.hpp"
     #include "macros.hpp"
+    #include "Error.hpp"
     #include <vector>
     #include <mutex>
     #include <fstream>
@@ -40,6 +41,16 @@ namespace rtx
         rtx::Point3D defocusDiskSample() const;
 
     public:
+        class InvalidFileExtension : public virtual rtx::Error
+        {
+        public:
+            InvalidFileExtension() noexcept
+            {
+                _message = "invalid file extension";
+            }
+
+            const char *what() const noexcept override {return _message.c_str();}
+        };
         Camera();
         Camera(int imageWidth, int imageHeight);
         ~Camera() = default;
@@ -57,8 +68,8 @@ namespace rtx
 
         void processPixels(std::stringstream &str, std::size_t yMin, std::size_t yMax, const rtx::IShape &shape);
         rtx::Ray getRay(double u, double v) const;
-        int render(const rtx::IShape &shape, const std::string& sceneFileName);
-        int renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName);
+        void render(const rtx::IShape &shape, const std::string& sceneFileName);
+        void renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName);
     };
 }
 

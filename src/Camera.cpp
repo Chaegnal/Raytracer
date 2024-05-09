@@ -110,7 +110,7 @@ void rtx::Camera::processPixels(std::stringstream &str, std::size_t yMin, std::s
     }
 }
 
-int rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileName)
+void rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileName)
 {
     initialize();
 
@@ -119,33 +119,29 @@ int rtx::Camera::render(const rtx::IShape &shape, const std::string &sceneFileNa
     std::ofstream ppmFile;
     rtx::IPC process(std::thread::hardware_concurrency() * 3);
 
-    if (firstExtensionChar == std::string::npos) {
-        std::cerr << "invalid file extension" << std::endl;
-        return 84;
-    }
+    if (firstExtensionChar == std::string::npos)
+        throw rtx::Camera::InvalidFileExtension();
     configFileName.erase(firstExtensionChar, configFileName.length());
     process.launch<rtx::Camera>(&rtx::Camera::processPixels, *this, shape, imageSize.second);
     ppmFile.open(configFileName + ".ppm", std::ios::trunc);
     ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     ppmFile << process.recoverValues(BUFSIZ).str();
-    return 0;
+    ppmFile.close();
 }
 
-int rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName)
+void rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sceneFileName)
 {
     initialize();
 
-    sf::RenderWindow win(sf::VideoMode(imageSize.first, imageSize.second), "Raytracer", sf::Style::Titlebar | sf::Style::Close);
-    sf::VertexArray pixels(sf::Points, imageSize.first * imageSize.second);
     std::size_t firstExtensionChar = sceneFileName.find(".cfg");
     std::string configFileName = sceneFileName;
     std::ofstream ppmFile;
 
-    if (firstExtensionChar == std::string::npos) {
-        std::cerr << "invalid file extension" << std::endl;
-        return 84;
-    }
+    if (firstExtensionChar == std::string::npos)
+        throw rtx::Camera::InvalidFileExtension();
     configFileName.erase(firstExtensionChar, configFileName.length());
+    sf::RenderWindow win(sf::VideoMode(imageSize.first, imageSize.second), "Raytracer", sf::Style::Titlebar | sf::Style::Close);
+    sf::VertexArray pixels(sf::Points, imageSize.first * imageSize.second);
     ppmFile.open(configFileName + ".ppm", std::ios::trunc);
     ppmFile << "P3\n" << imageSize.first << ' ' << imageSize.second << "\n255\n";
     while (win.isOpen()) {
@@ -156,7 +152,8 @@ int rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sc
                 while (win.pollEvent(evt)) {
                     if (evt.type == sf::Event::Closed) {
                         win.close();
-                        return 0;
+                        ppmFile.close();
+                        return;
                     }
                 }
                 for (std::size_t sample = 0; sample < samplesPerPixel; ++sample) {
@@ -179,12 +176,12 @@ int rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& sc
                 if (evt.type == sf::Event::Closed ||
                     evt.type == sf::Event::KeyPressed) {
                     win.close();
-                    return 0;
+                    ppmFile.close();
+                    return;
                 }
             }
         }
     }
-    return 0;
 }
 
 void rtx::Camera::initialize()
