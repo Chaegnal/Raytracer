@@ -38,7 +38,6 @@ namespace rtx
         rtx::Color getRayColor(const rtx::Ray &ray, int depth, const rtx::IShape &shape) const;
         rtx::Vector3D getSampleSquare() const {return rtx::Vector3D(randomValue() - 0.5, randomValue() - 0.5, 0.0);}
         rtx::Point3D defocusDiskSample() const;
-        void processPixels(const rtx::IShape &shape, std::size_t yMin, std::size_t yMax, std::stringstream &str);
 
     public:
         Camera();
