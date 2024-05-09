@@ -49,10 +49,11 @@ static rtx::Scene getScene(libconfig::Config &conf)
 
 static rtx::Camera getCam(libconfig::Config &conf)
 {
-    Parsing parser;
-    rtx::Camera cam(1920/7, 1080/7);
-    //cam.backgroundColor = rtx::Color(0.70, 0.80, 1.00);
-    cam.backgroundColor = rtx::Color(0.01, 0.01, 0.01);
+    rtx::Parsing parser;
+    std::tuple<int, int> ratio = parser.parseCamRatio(conf);
+    rtx::Camera cam(std::get<0>(ratio), std::get<1>(ratio));
+    std::tuple<double, double, double> color = parser.parseCamColor(conf);
+    cam._backgroundColor = rtx::Color(std::get<0>(color), std::get<1>(color), std::get<2>(color));
     std::tuple<double, double, double> pos = parser.parseCamPosition(conf);
     std::tuple<double, double, double> lookAt = parser.parseCamLookAt(conf);
     std::tuple<double, double, double> angle = parser.parseCamAngle(conf);
@@ -71,6 +72,7 @@ static rtx::Camera getCam(libconfig::Config &conf)
 int main(int ac, const char *av[])
 {
     srand(time(NULL));
+    libconfig::Config conf;
 
     if (ac == 2 && std::string(av[1]) == "--help") {
         displayUsage();
@@ -79,8 +81,6 @@ int main(int ac, const char *av[])
         displayUsage();
         return 84;
     }
-
-    libconfig::Config conf;
 
     try {
         conf.readFile(av[ac - 1]);

@@ -7,17 +7,15 @@
 
 #include "Parsing.hpp"
 
-Parsing::Parsing()
+rtx::Parsing::Parsing()
 {
 }
 
-Parsing::~Parsing()
+rtx::Parsing::~Parsing()
 {
 }
 
-//cam
-
-double Parsing::parseCamFOV(libconfig::Config &conf)
+double rtx::Parsing::parseCamFOV(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     const libconfig::Setting &camera = root["camera"];
@@ -29,7 +27,7 @@ double Parsing::parseCamFOV(libconfig::Config &conf)
     return 0;
 }
 
-int Parsing::parseCamSample(libconfig::Config &conf)
+int rtx::Parsing::parseCamSample(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     const libconfig::Setting &camera = root["camera"];
@@ -41,7 +39,7 @@ int Parsing::parseCamSample(libconfig::Config &conf)
     return 0;
 }
 
-int Parsing::parseCamDepth(libconfig::Config &conf)
+int rtx::Parsing::parseCamDepth(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     const libconfig::Setting &camera = root["camera"];
@@ -53,7 +51,7 @@ int Parsing::parseCamDepth(libconfig::Config &conf)
     return 0;
 }
 
-float Parsing::parseCamDefocus(libconfig::Config &conf)
+float rtx::Parsing::parseCamDefocus(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     const libconfig::Setting &camera = root["camera"];
@@ -65,7 +63,7 @@ float Parsing::parseCamDefocus(libconfig::Config &conf)
     return 0;
 }
 
-float Parsing::parseCamFocus(libconfig::Config &conf)
+float rtx::Parsing::parseCamFocus(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     const libconfig::Setting &camera = root["camera"];
@@ -77,7 +75,7 @@ float Parsing::parseCamFocus(libconfig::Config &conf)
     return 0;
 }
 
-std::tuple<double, double, double> Parsing::parseCamPosition(libconfig::Config &conf)
+std::tuple<double, double, double> rtx::Parsing::parseCamPosition(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     std::tuple<double, double, double> pos;
@@ -97,7 +95,7 @@ std::tuple<double, double, double> Parsing::parseCamPosition(libconfig::Config &
     return std::make_tuple(x, y, z);
 }
 
-std::tuple<double, double, double> Parsing::parseCamLookAt(libconfig::Config &conf)
+std::tuple<double, double, double> rtx::Parsing::parseCamLookAt(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     std::tuple<double, double, double> pos;
@@ -117,7 +115,7 @@ std::tuple<double, double, double> Parsing::parseCamLookAt(libconfig::Config &co
     return std::make_tuple(x, y, z);
 }
 
-std::tuple<double, double, double> Parsing::parseCamAngle(libconfig::Config &conf)
+std::tuple<double, double, double> rtx::Parsing::parseCamAngle(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     std::tuple<double, double, double> pos;
@@ -131,16 +129,52 @@ std::tuple<double, double, double> Parsing::parseCamAngle(libconfig::Config &con
         if(!(camera.lookupValue("x", x)
             && camera.lookupValue("y", y)
             && camera.lookupValue("z", z)))
-                return std::make_tuple(0, 0, 0);
+            return std::make_tuple(0, 0, 0);
     } catch (const libconfig::SettingNotFoundException &) {
     }
     return std::make_tuple(x, y, z);
 }
 
+std::tuple<double, double, double> rtx::Parsing::parseCamColor(libconfig::Config &conf)
+{
+    const libconfig::Setting &root = conf.getRoot();
+    std::tuple<double, double, double> col;
+    double r = 0.0;
+    double g = 0.0;
+    double b = 0.0;
 
-//sphere
+    try {
+        const libconfig::Setting &camera = root["camera"]["color"];
 
-std::vector<Parsing::SphereInfo> Parsing::parseSphere(libconfig::Config &conf)
+        if(!(camera.lookupValue("r", r)
+            && camera.lookupValue("g", g)
+            && camera.lookupValue("b", b)))
+            return std::make_tuple(0, 0, 0);
+    } catch (const libconfig::SettingNotFoundException &) {
+    }
+    return std::make_tuple(r, g, b);
+}
+
+std::tuple<int, int> rtx::Parsing::parseCamRatio(libconfig::Config &conf)
+{
+    const libconfig::Setting &root = conf.getRoot();
+    std::tuple<int, int> ratio;
+    int x = 0.0;
+    int y = 0.0;
+
+    try {
+        const libconfig::Setting &camera = root["camera"]["ratio"];
+
+        if(!(camera.lookupValue("x", x)
+            && camera.lookupValue("y", y)))
+            return std::make_tuple(0, 0);
+    } catch (const libconfig::SettingNotFoundException &) {
+    }
+    return std::make_tuple(x, y);
+}
+
+
+std::vector<rtx::Parsing::SphereInfo> rtx::Parsing::parseSphere(libconfig::Config &conf)
 {
     std::vector<SphereInfo> sphereParsed;
     const libconfig::Setting &root = conf.getRoot();
@@ -174,7 +208,7 @@ std::vector<Parsing::SphereInfo> Parsing::parseSphere(libconfig::Config &conf)
     return sphereParsed;
 }
 
-std::vector<Parsing::CylinderConeInfo> Parsing::parseCylinder(libconfig::Config &conf)
+std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfig::Config &conf)
 {
     std::vector<CylinderConeInfo> cylinderParsed;
     const libconfig::Setting &root = conf.getRoot();
@@ -209,7 +243,7 @@ std::vector<Parsing::CylinderConeInfo> Parsing::parseCylinder(libconfig::Config 
     return cylinderParsed;
 }
 
-std::vector<Parsing::CylinderConeInfo> Parsing::parseCone(libconfig::Config &conf)
+std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCone(libconfig::Config &conf)
 {
     std::vector<CylinderConeInfo> cylinderParsed;
     const libconfig::Setting &root = conf.getRoot();
@@ -244,9 +278,9 @@ std::vector<Parsing::CylinderConeInfo> Parsing::parseCone(libconfig::Config &con
     return cylinderParsed;
 }
 
-std::vector<Parsing::PlaneInfo> Parsing::parsePlane(libconfig::Config &conf)
+std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parsePlane(libconfig::Config &conf)
 {
-    std::vector<PlaneInfo> planeParsed;
+    std::vector<PlaneTriangleInfo> planeParsed;
     const libconfig::Setting &root = conf.getRoot();
 
     try {
@@ -260,7 +294,7 @@ std::vector<Parsing::PlaneInfo> Parsing::parsePlane(libconfig::Config &conf)
             const libconfig::Setting &sizePlane = onePlane["size"];
             const libconfig::Setting &anglePlane = onePlane["angle"];
             const libconfig::Setting &colorPlane = onePlane["color"];
-            PlaneInfo infoPlane;
+            PlaneTriangleInfo infoPlane;
 
             if(!(onePlane.lookupValue("x", infoPlane.x)
                 && onePlane.lookupValue("y", infoPlane.y)
@@ -285,7 +319,49 @@ std::vector<Parsing::PlaneInfo> Parsing::parsePlane(libconfig::Config &conf)
     return planeParsed;
 }
 
-void Parsing::parseAmbientDiffuse(libconfig::Config &conf)
+std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libconfig::Config &conf)
+{
+    std::vector<PlaneTriangleInfo> triangleParsed;
+    const libconfig::Setting &root = conf.getRoot();
+
+    try {
+        const libconfig::Setting &triangles = root["primitives"]["triangles"];
+
+        int count = triangles.getLength();
+
+        for(int i = 0; i < count; ++i)
+        {
+            const libconfig::Setting &oneTriangle = triangles[i];
+            const libconfig::Setting &firstSummit = oneTriangle["first"];
+            const libconfig::Setting &secondSummit = oneTriangle["second"];
+            const libconfig::Setting &thirdSummit = oneTriangle["third"];
+            const libconfig::Setting &color = oneTriangle["color"];
+            PlaneTriangleInfo infoTriangle;
+
+            if(!(oneTriangle.lookupValue("extra", infoTriangle.extra)
+                && oneTriangle.lookupValue("material", infoTriangle.material)
+                && firstSummit.lookupValue("x", infoTriangle.x)
+                && firstSummit.lookupValue("y", infoTriangle.y)
+                && firstSummit.lookupValue("z", infoTriangle.z)
+                && secondSummit.lookupValue("x", infoTriangle.size_x)
+                && secondSummit.lookupValue("y", infoTriangle.size_y)
+                && secondSummit.lookupValue("z", infoTriangle.size_z)
+                && thirdSummit.lookupValue("x", infoTriangle.height_x)
+                && thirdSummit.lookupValue("y", infoTriangle.height_y)
+                && thirdSummit.lookupValue("z", infoTriangle.height_z)
+                && color.lookupValue("r", infoTriangle.r)
+                && color.lookupValue("g", infoTriangle.g)
+                && color.lookupValue("b", infoTriangle.b)))
+                continue;
+
+            triangleParsed.push_back(infoTriangle);
+        }
+    } catch(const libconfig::SettingNotFoundException &) {
+    }
+    return triangleParsed;
+}
+
+void rtx::Parsing::parseAmbientDiffuse(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
     const libconfig::Setting &lights = root["lights"];
@@ -300,7 +376,7 @@ void Parsing::parseAmbientDiffuse(libconfig::Config &conf)
     }
 }
 
-void Parsing::parsePointLight(libconfig::Config &conf)
+void rtx::Parsing::parsePointLight(libconfig::Config &conf)
 {
     double x, y, z;
     const libconfig::Setting &root = conf.getRoot();
@@ -323,7 +399,7 @@ void Parsing::parsePointLight(libconfig::Config &conf)
     }
 }
 
-void Parsing::parseLights(libconfig::Config &conf)
+void rtx::Parsing::parseLights(libconfig::Config &conf)
 {
     parseAmbientDiffuse(conf);
     parsePointLight(conf);
