@@ -7,8 +7,11 @@
 
 #include "Rotation.hpp"
 #include "Matrix3D.hpp"
+#include "macros.hpp"
+#include <iostream>
 
 rtx::Rotation::Rotation(std::shared_ptr<rtx::IShape> shape, const rtx::Vector3D &axis, double angle)
+    : _theta(degToRad(angle))
 {
     _axis = axis;
     _shape = shape;
@@ -17,49 +20,93 @@ rtx::Rotation::Rotation(std::shared_ptr<rtx::IShape> shape, const rtx::Vector3D 
     rtx::Point3D min(infinity, infinity, infinity);
     rtx::Point3D max(-infinity, -infinity, -infinity);
 
-    double theta = degToRad(angle);
-    double cosTheta = cos(theta);
-    double sinTheta = sin(theta);
-    double oneMinT = 1.0 - theta;
-    double ux = _axis.x;
-    double uy = _axis.y;
-    double uz = _axis.z;
-    _rotationMatrix = rtx::Matrix3D(
-        rtx::Vector3D(cosTheta + (ux * ux) * oneMinT, uy * ux * oneMinT + uz * sinTheta, uz * ux * oneMinT - uy * sinTheta),
-        rtx::Vector3D(ux * uz * oneMinT - uz * sinTheta, cosTheta + (uy * uy) * oneMinT, uz * uy * oneMinT + ux * sinTheta),
-        rtx::Vector3D(ux * uz * oneMinT + uy * sinTheta, uy * uz * oneMinT - ux * sinTheta, cosTheta + (uz * uz) * oneMinT)
-    );
+    for (std::size_t i = 0; i < 3; ++i) {
+        if (axis[i] != 0.0)
+            _rotationMatrix = getRotationMatrix(i);
+    }
+    for (std::size_t i = 0; i < 3; ++i) {
+        for (std::size_t j = 0; j < 3; ++j) {
+            for (std::size_t k = 0; k < 3; ++k) {
+                rtx::Vector3D tmp(
+                    i * _bBox.x.max + (1 - i) * _bBox.x.min,
+                    j * _bBox.y.max + (1 - j) * _bBox.y.min,
+                    k * _bBox.z.max + (1 - k) * _bBox.z.min
+                );
+                tmp = _rotationMatrix * tmp;
+                for (std::size_t l = 0; l < 3; ++l) {
+                    min[l] = std::fmin(min[l], tmp[l]);
+                    max[l] = std::fmax(max[l], tmp[l]);
+                }
+            }
+        }
+    }
+    _bBox = rtx::BoundingBox(min, max);
 }
 
-rtx::Rotation::Rotation(std::shared_ptr<rtx::IShape> shape, const rtx::Vector3D &axis)
+rtx::Matrix3D rtx::Rotation::getRotationMatrix(std::size_t axis) const
 {
-    _axis = axis;
-    _shape = shape;
+    switch (axis) {
+    case 0:
+        return rtx::Matrix3D(
+            rtx::Vector3D(1.0, 0.0, 0.0),
+            rtx::Vector3D(0.0, cos(_theta), sin(_theta)),
+            rtx::Vector3D(0.0, -sin(_theta), cos(_theta))
+        );
+    case 1:
+        return rtx::Matrix3D(
+            rtx::Vector3D(cos(_theta), 0.0, -sin(_theta)),
+            rtx::Vector3D(0.0, 1.0, 0.0),
+            rtx::Vector3D(sin(_theta), 0.0, cos(_theta))
+        );
+    case 2:
+        return rtx::Matrix3D(
+            rtx::Vector3D(cos(_theta), sin(_theta), 0.0),
+            rtx::Vector3D(-sin(_theta), cos(_theta), 0.0),
+            rtx::Vector3D(0.0, 0.0, 1.0)
+        );
+    default:
+        throw std::out_of_range("Invalid index " + std::to_string(axis));
+    }
+}
 
-    double theta = atan2(_axis.unitVector().y, _axis.unitVector().x);
-    if (theta < 0.0)
-        theta += 2.0 * M_PI;
-    double cosTheta = cos(theta);
-    double sinTheta = sin(theta);
-    double oneMinT = 1.0 - theta;
-    double ux = _axis.x;
-    double uy = _axis.y;
-    double uz = _axis.z;
-    _rotationMatrix = rtx::Matrix3D(
-        rtx::Vector3D(cosTheta + (ux * ux) * oneMinT, uy * ux * oneMinT + uz * sinTheta, uz * ux * oneMinT - uy * sinTheta),
-        rtx::Vector3D(ux * uz * oneMinT - uz * sinTheta, cosTheta + (uy * uy) * oneMinT, uz * uy * oneMinT + ux * sinTheta),
-        rtx::Vector3D(ux * uz * oneMinT + uy * sinTheta, uy * uz * oneMinT - ux * sinTheta, cosTheta + (uz * uz) * oneMinT)
-    );
+rtx::Matrix3D rtx::Rotation::getInvertedRotationMatrix(std::size_t axis) const
+{
+    switch (axis) {
+    case 0:
+        return rtx::Matrix3D(
+            rtx::Vector3D(1.0, 0.0, 0.0),
+            rtx::Vector3D(0.0, cos(_theta), -sin(_theta)),
+            rtx::Vector3D(0.0, sin(_theta), cos(_theta))
+        );
+    case 1:
+        return rtx::Matrix3D(
+            rtx::Vector3D(cos(_theta), 0.0, sin(_theta)),
+            rtx::Vector3D(0.0, 1.0, 0.0),
+            rtx::Vector3D(-sin(_theta), 0.0, cos(_theta))
+        );
+    case 2:
+        return rtx::Matrix3D(
+            rtx::Vector3D(cos(_theta), -sin(_theta), 0.0),
+            rtx::Vector3D(sin(_theta), cos(_theta), 0.0),
+            rtx::Vector3D(0.0, 0.0, 1.0)
+        );
+    default:
+        throw std::out_of_range("Invalid index " + std::to_string(axis));
+    }
 }
 
 bool rtx::Rotation::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
 {
-    rtx::Ray rotatedRay(_rotationMatrix * ray.origin, _rotationMatrix * ray.direction);
+    rtx::Ray rotatedRay(_rotationMatrix * ray.origin, _rotationMatrix * ray.direction, ray.time);
 
     if (_shape->hits(rotatedRay, rayT, rec) == false)
         return false;
-
-    rec.point = _rotationMatrix * rec.point;
-    rec.normal = _rotationMatrix * rec.normal;
+    rtx::Matrix3D invRotationMatrix;
+    for (std::size_t i = 0; i < 3; ++i) {
+        if (_axis[i] != 0.0)
+            invRotationMatrix = getInvertedRotationMatrix(i);
+    }
+    rec.point = invRotationMatrix * rec.point;
+    rec.normal = invRotationMatrix * rec.normal;
     return true;
 }

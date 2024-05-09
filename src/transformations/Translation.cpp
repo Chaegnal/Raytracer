@@ -17,7 +17,7 @@ rtx::Translation::Translation(std::shared_ptr<rtx::IShape> shape, const rtx::Vec
 
 bool rtx::Translation::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
 {
-    rtx::Ray offsetRay(ray.origin - _axis, ray.direction);
+    rtx::Ray offsetRay(ray.origin - _axis, ray.direction, ray.time);
 
     if (_shape->hits(offsetRay, rayT, rec) == false)
         return false;

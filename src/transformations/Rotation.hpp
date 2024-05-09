@@ -22,11 +22,14 @@ namespace rtx
     {
     private:
         rtx::Matrix3D _rotationMatrix;
+        double _theta;
+
+        rtx::Matrix3D getRotationMatrix(std::size_t axis) const;
+        rtx::Matrix3D getInvertedRotationMatrix(std::size_t axis) const;
 
     public:
         Rotation() = delete;
         Rotation(std::shared_ptr<rtx::IShape> shape, const rtx::Vector3D &axis, double angle);
-        Rotation(std::shared_ptr<rtx::IShape> shape, const rtx::Vector3D &axis);
         ~Rotation() = default;
 
         bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
