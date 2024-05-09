@@ -38,9 +38,12 @@ static void displayUsage()
 static rtx::Scene getScene(libconfig::Config &conf)
 {
     rtx::Scene world;
+    rtx::Scene tmp;
     rtx::Factory factory(conf);
 
+    tmp.add(factory.createShape<rtx::Cone>(rtx::Point3D(-10, 0.0, 1), 2.0, 2.0, factory.createMaterial<rtx::Matte>(rtx::Color(1, 0, 0))));
     factory.createWorldFromConfFile(world);
+    world.add(tmp);
     return world;
 }
 

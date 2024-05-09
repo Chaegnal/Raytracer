@@ -13,6 +13,7 @@
     #include "AShape.hpp"
     #include "Interval.hpp"
     #include "IMaterial.hpp"
+    #include "ITransformation.hpp"
     #include <memory>
 
 namespace rtx
@@ -28,7 +29,6 @@ namespace rtx
         private:
             double _radius;
             double _height;
-            std::shared_ptr<rtx::IMaterial> _material;
     };
 }
 

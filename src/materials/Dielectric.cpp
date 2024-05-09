@@ -30,6 +30,6 @@ bool rtx::Dielectric::reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, 
     else
         dir = unitDir.refract(rec.normal, ri);
     attenuation = rtx::Color(1.0, 1.0, 1.0);
-    reflected = rtx::Ray(rec.point, dir);
+    reflected = rtx::Ray(rec.point, dir, rayIn.time);
     return true;
 }

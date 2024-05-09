@@ -23,7 +23,6 @@ namespace rtx
             Triangle(rtx::Point3D p0, rtx::Point3D p1, rtx::Point3D p2, std::shared_ptr<rtx::IMaterial> material);
             bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
         private:
-            std::shared_ptr<rtx::IMaterial> _material;
             rtx::Point3D _p0;
             rtx::Point3D _p1;
             rtx::Point3D _p2;

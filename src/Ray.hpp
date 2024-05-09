@@ -17,6 +17,7 @@ namespace rtx
     public:
         Ray();
         Ray(rtx::Point3D origin, rtx::Vector3D direction);
+        Ray(rtx::Point3D origin, rtx::Vector3D direction, double time);
         Ray(const Ray &other);
         Ray(Ray &&other) = default;
         ~Ray() = default;
@@ -36,6 +37,7 @@ namespace rtx
 
         rtx::Point3D origin;
         rtx::Vector3D direction;
+        double time;
 
         rtx::Point3D at(double t) const;
     };

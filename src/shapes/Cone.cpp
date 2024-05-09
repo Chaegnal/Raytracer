@@ -7,14 +7,16 @@
 
 #include "Cone.hpp"
 
-rtx::Cone::Cone() : _radius(1.0), _height(1.0), _material(nullptr)
+rtx::Cone::Cone() : _radius(1.0), _height(1.0)
 {
     center = rtx::Point3D();
+    _material = nullptr;
 }
 
-rtx::Cone::Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material) : _radius(radius), _height(height), _material(material)
+rtx::Cone::Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material) : _radius(radius), _height(height)
 {
     this->center = center;
+    _material = material;
 }
 
 bool rtx::Cone::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const
@@ -32,7 +34,7 @@ bool rtx::Cone::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &re
     double root = (-b - std::sqrt(d)) / (2 * a);
 
     if (!rayT.surrounds(root)) {
-        root = (- b + std::sqrt(d)) / (2 * a);
+        root = (-b + std::sqrt(d)) / (2 * a);
         if (!rayT.surrounds(root))
             return false;
     }

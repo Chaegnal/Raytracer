@@ -11,11 +11,19 @@
 rtx::Ray::Ray()
     : origin()
     , direction()
+    , time(0)
     {}
 
 rtx::Ray::Ray(rtx::Point3D origin, rtx::Vector3D direction)
     : origin(origin)
     , direction(direction)
+    , time(0)
+    {}
+
+rtx::Ray::Ray(rtx::Point3D origin, rtx::Vector3D direction, double time)
+    : origin(origin)
+    , direction(direction)
+    , time(time)
     {}
 
 rtx::Ray::Ray(const Ray &other)

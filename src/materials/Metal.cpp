@@ -17,7 +17,7 @@ bool rtx::Metal::reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::
 {
     rtx::Vector3D reflectedRayIn = rayIn.direction.reflect(rec.normal).unitVector() + (rtx::Vector3D::randomUnitVector() * _grain);
 
-    reflected = rtx::Ray(rec.point, reflectedRayIn);
+    reflected = rtx::Ray(rec.point, reflectedRayIn, rayIn.time);
     attenuation = _albedo;
     return reflected.direction.dot(rec.normal) > 0.0;
 }
