@@ -48,28 +48,28 @@ namespace rtx
                 std::string material;
             };
 
-            double parseCamFOV(libconfig::Config &conf);
-            std::tuple<double, double, double> parseCamPosition(libconfig::Config &conf);
-            int parseCamSample(libconfig::Config &conf);
-            int parseCamDepth(libconfig::Config &conf);
-            std::tuple<double, double, double> parseCamLookAt(libconfig::Config &conf);
-            std::tuple<double, double, double> parseCamAngle(libconfig::Config &conf);
-            float parseCamFocus(libconfig::Config &conf);
-            float parseCamDefocus(libconfig::Config &conf);
-            std::tuple<double, double, double> parseCamColor(libconfig::Config &conf);
-            std::tuple<int, int> parseCamRatio(libconfig::Config &conf);
+            static double parseCamFOV(libconfig::Config &conf);
+            static std::tuple<double, double, double> parseCamPosition(libconfig::Config &conf);
+            static int parseCamSample(libconfig::Config &conf);
+            static int parseCamDepth(libconfig::Config &conf);
+            static std::tuple<double, double, double> parseCamLookAt(libconfig::Config &conf);
+            static std::tuple<double, double, double> parseCamAngle(libconfig::Config &conf);
+            static float parseCamFocus(libconfig::Config &conf);
+            static float parseCamDefocus(libconfig::Config &conf);
+            static std::tuple<double, double, double> parseCamColor(libconfig::Config &conf);
+            static std::tuple<int, int> parseCamRatio(libconfig::Config &conf);
 
-            std::vector<SphereInfo> parseSphere(libconfig::Config &conf);
+            static std::vector<SphereInfo> parseSphere(libconfig::Config &conf);
 
-            std::vector<CylinderConeInfo> parseCylinder(libconfig::Config &conf);
-            std::vector<CylinderConeInfo> parseCone(libconfig::Config &conf);
+            static std::vector<CylinderConeInfo> parseCylinder(libconfig::Config &conf);
+            static std::vector<CylinderConeInfo> parseCone(libconfig::Config &conf);
 
-            std::vector<PlaneTriangleInfo> parsePlane(libconfig::Config &conf);
-            std::vector<PlaneTriangleInfo> parseTriangles(libconfig::Config &conf);
+            static std::vector<PlaneTriangleInfo> parsePlane(libconfig::Config &conf);
+            static std::vector<PlaneTriangleInfo> parseTriangles(libconfig::Config &conf);
 
-            void parseAmbientDiffuse(libconfig::Config &conf);
-            void parsePointLight(libconfig::Config &conf);
-            void parseLights(libconfig::Config &conf);
+            static void parseAmbientDiffuse(libconfig::Config &conf);
+            static void parsePointLight(libconfig::Config &conf);
+            static void parseLights(libconfig::Config &conf);
 
         protected:
 

@@ -12,18 +12,10 @@
 #include <ctime>
 #include "Camera.hpp"
 #include "Scene.hpp"
-#include "Sphere.hpp"
-#include "Cylinder.hpp"
-#include "Cone.hpp"
 #include "memes.hpp"
 #include "macros.hpp"
-#include "Metal.hpp"
-#include "Matte.hpp"
-#include "Dielectric.hpp"
 #include "Factory.hpp"
-#include "Plane.hpp"
 #include "Parsing.hpp"
-#include "Triangle.hpp"
 
 static void displayUsage()
 {
@@ -38,49 +30,36 @@ static void displayUsage()
 static rtx::Scene getScene(libconfig::Config &conf)
 {
     rtx::Scene world;
-    rtx::Scene tmp;
     rtx::Factory factory(conf);
 
-    tmp.add(factory.createShape<rtx::Cone>(rtx::Point3D(-10, 0.0, 1), 2.0, 2.0, factory.createMaterial<rtx::Matte>(rtx::Color(1, 0, 0))));
     factory.createWorldFromConfFile(world);
-    world.add(tmp);
     return world;
 }
 
 static rtx::Camera getCam(libconfig::Config &conf)
 {
-    rtx::Parsing parser;
-    std::tuple<int, int> ratio = parser.parseCamRatio(conf);
+    std::tuple<int, int> ratio = rtx::Parsing::parseCamRatio(conf);
     rtx::Camera cam(std::get<0>(ratio), std::get<1>(ratio));
-    std::tuple<double, double, double> color = parser.parseCamColor(conf);
-    cam._backgroundColor = rtx::Color(std::get<0>(color), std::get<1>(color), std::get<2>(color));
-    std::tuple<double, double, double> pos = parser.parseCamPosition(conf);
-    std::tuple<double, double, double> lookAt = parser.parseCamLookAt(conf);
-    std::tuple<double, double, double> angle = parser.parseCamAngle(conf);
+    std::tuple<double, double, double> color = rtx::Parsing::parseCamColor(conf);
+    std::tuple<double, double, double> pos = rtx::Parsing::parseCamPosition(conf);
+    std::tuple<double, double, double> lookAt = rtx::Parsing::parseCamLookAt(conf);
+    std::tuple<double, double, double> angle = rtx::Parsing::parseCamAngle(conf);
 
-    cam.samplesPerPixel = parser.parseCamSample(conf);
-    cam.maxDepth = parser.parseCamDepth(conf);
-    cam._fov = parser.parseCamFOV(conf);
+    cam._backgroundColor = rtx::Color(std::get<0>(color), std::get<1>(color), std::get<2>(color));
+    cam.samplesPerPixel = rtx::Parsing::parseCamSample(conf);
+    cam.maxDepth = rtx::Parsing::parseCamDepth(conf);
+    cam._fov = rtx::Parsing::parseCamFOV(conf);
     cam._cameraPosition = rtx::Point3D(std::get<0>(pos),std::get<1>(pos),std::get<2>(pos));
     cam._lookAt = rtx::Point3D(std::get<0>(lookAt),std::get<1>(lookAt),std::get<2>(lookAt));
     cam._cameraAngle = rtx::Vector3D(std::get<0>(angle),std::get<1>(angle),std::get<2>(angle));
-    cam._defocusAngle = parser.parseCamDefocus(conf);
-    cam._focusDist = parser.parseCamFocus(conf);
+    cam._defocusAngle = rtx::Parsing::parseCamDefocus(conf);
+    cam._focusDist = rtx::Parsing::parseCamFocus(conf);
     return cam;
 }
 
-int main(int ac, const char *av[])
+static int launch(int ac, const char *av[])
 {
-    srand(time(NULL));
     libconfig::Config conf;
-
-    if (ac == 2 && std::string(av[1]) == "--help") {
-        displayUsage();
-        return 0;
-    } else if (ac != 2 && !(ac == 3 && std::string(av[1]) == "-g")) {
-        displayUsage();
-        return 84;
-    }
 
     try {
         conf.readFile(av[ac - 1]);
@@ -107,4 +86,18 @@ int main(int ac, const char *av[])
         return 84;
     }
     return 0;
+}
+
+int main(int ac, const char *av[])
+{
+    srand(time(NULL));
+
+    if (ac == 2 && std::string(av[1]) == "--help") {
+        displayUsage();
+        return 0;
+    } else if (ac != 2 && !(ac == 3 && std::string(av[1]) == "-g")) {
+        displayUsage();
+        return 84;
+    }
+    return launch(ac, av);
 }

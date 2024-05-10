@@ -35,6 +35,10 @@ namespace rtx
         ~Sphere() = default;
 
         bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
+
+        void setRadius(double radius) {_radius = radius;}
+        void setMoving(bool moving) {_moving = moving;}
+        void setCenterVect(rtx::Vector3D centerVect) {_centerVect = centerVect;}
     };
 }
 

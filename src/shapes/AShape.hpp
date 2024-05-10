@@ -20,12 +20,12 @@ namespace rtx
     {
     protected:
         rtx::BoundingBox _bBox;
-        std::shared_ptr<rtx::IMaterial> _material;
 
     public:
         virtual ~AShape() = default;
 
         rtx::Point3D center;
+        std::shared_ptr<rtx::IMaterial> _material;
 
         virtual bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const = 0;
         virtual rtx::BoundingBox getBoundingBox() const override {return _bBox;}

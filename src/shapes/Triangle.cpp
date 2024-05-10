@@ -7,12 +7,27 @@
 
 #include "Triangle.hpp"
 
+rtx::Triangle::Triangle() :
+    _p0(),
+    _p1(),
+    _p2()
+{
+    updateCenter();
+    _material = nullptr;
+}
+
 rtx::Triangle::Triangle(rtx::Point3D p0, rtx::Point3D p1, rtx::Point3D p2, std::shared_ptr<rtx::IMaterial> material) :
     _p0(p0),
     _p1(p1),
     _p2(p2)
 {
+    updateCenter();
     _material = material;
+}
+
+void rtx::Triangle::updateCenter()
+{
+    center = rtx::Point3D((_p0.x + _p1.x + _p2.x) / 3.0, (_p0.y + _p1.y + _p2.y) / 3.0, (_p0.z + _p1.z + _p2.z) / 3.0);
 }
 
 bool rtx::Triangle::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const

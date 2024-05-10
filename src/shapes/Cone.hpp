@@ -25,6 +25,9 @@ namespace rtx
             Cone(rtx::Point3D center, double radius, double height, std::shared_ptr<IMaterial> material);
             bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
 
+            void setRadius(double radius) {_radius = radius;}
+            void setHeight(double height) {_height = height;}
+
         protected:
         private:
             double _radius;

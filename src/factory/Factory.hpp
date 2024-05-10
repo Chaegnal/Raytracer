@@ -72,11 +72,11 @@ namespace rtx {
             ~Factory() = default;
 
             template<typename Shape, typename... Argument>
-            std::shared_ptr<rtx::IShape> createShape(Argument... args) {
+            static std::shared_ptr<rtx::IShape> createShape(Argument... args) {
                 return std::make_shared<Shape>(std::forward<Argument>(args)...);
             }
             template<typename Material, typename ...Argument>
-            std::shared_ptr<rtx::IMaterial> createMaterial(Argument... args) {
+            static std::shared_ptr<rtx::IMaterial> createMaterial(Argument... args) {
                 return std::make_shared<Material>(std::forward<Argument>(args)...);
             }
 

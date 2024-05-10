@@ -23,6 +23,9 @@ namespace rtx
             Cylinder();
             Cylinder(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material);
             bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
+
+            void setRadius(double radius) {_radius = radius;}
+            void setHeight(double height) {_height = _height;}
         private:
             double _radius;
             double _height;

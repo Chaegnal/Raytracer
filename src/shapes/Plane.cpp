@@ -8,14 +8,25 @@
 #include "Plane.hpp"
 #include "BoundingBox.hpp"
 
+rtx::Plane::Plane() : _position(), _xVector(), _yVector()
+{
+    _bBox = rtx::BoundingBox();
+    _material = nullptr;
+}
+
 rtx::Plane::Plane(const rtx::Point3D &position, const rtx::Vector3D &xVector, const rtx::Vector3D &yVector, std::shared_ptr<rtx::IMaterial> mat) : _position(position), _xVector(xVector), _yVector(yVector)
+{
+    update();
+    _material = mat;
+}
+
+void rtx::Plane::update()
 {
     auto n = _xVector.cross(_yVector);
     normal = n.unitVector();
     D = normal.dot(_position);
     _w = n / n.dot(n);
     _bBox = rtx::BoundingBox(rtx::BoundingBox(_position, _position + _xVector + _yVector), rtx::BoundingBox(_position + _xVector, _position + _yVector));
-    _material = mat;
 }
 
 bool rtx::Plane::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const

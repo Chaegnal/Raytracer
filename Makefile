@@ -34,9 +34,14 @@ SRC		=	main.cpp								\
 			src/textures/TextureChecker.cpp			\
 			src/parsing/Parsing.cpp					\
 			src/factory/Factory.cpp					\
+			src/factory/ConeBuilder.cpp				\
+			src/factory/CylinderBuilder.cpp			\
+			src/factory/SphereBuilder.cpp			\
+			src/factory/PlaneBuilder.cpp			\
+			src/factory/TriangleBuilder.cpp			\
 			src/transformations/ATransformation.cpp	\
 			src/transformations/Rotation.cpp		\
-			src/transformations/Translation.cpp		\
+			src/transformations/Translation.cpp
 
 OBJ		=	$(SRC:.cpp=.o)
 
