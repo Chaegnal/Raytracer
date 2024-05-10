@@ -361,24 +361,24 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libcon
     return triangleParsed;
 }
 
-void rtx::Parsing::parseAmbientDiffuse(libconfig::Config &conf)
+std::pair<double, double> rtx::Parsing::parseAmbientDiffuse(libconfig::Config &conf)
 {
     const libconfig::Setting &root = conf.getRoot();
-    const libconfig::Setting &lights = root["lights"];
-    float ambient = 0;
-    float diffuse = 0;
+    std::pair<double, double> lightInfo;
 
     try {
-        ambient = lights.lookup("ambient");
-        diffuse = lights.lookup("diffuse");
-        std::cout << "Ligths: " << "ambient = " << ambient << " diffuse =" << diffuse << std::endl;
+        const libconfig::Setting &lights = root["lights"];
+        
+        lightInfo.first = lights.lookup("ambient");
+        lightInfo.second = lights.lookup("diffuse");
     } catch (const libconfig::SettingNotFoundException &) {
     }
+    return lightInfo;
 }
 
-void rtx::Parsing::parsePointLight(libconfig::Config &conf)
+std::vector<rtx::Parsing::LightInfo> rtx::Parsing::parsePointLight(libconfig::Config &conf)
 {
-    double x, y, z;
+    std::vector<LightInfo> lightInfo;
     const libconfig::Setting &root = conf.getRoot();
 
     try {
@@ -388,19 +388,29 @@ void rtx::Parsing::parsePointLight(libconfig::Config &conf)
         for(int i = 0; i < count; ++i)
         {
             const libconfig::Setting &oneLight = point[i];
-            if(!(oneLight.lookupValue("x", x)
-                && oneLight.lookupValue("y", y)
-                && oneLight.lookupValue("z", z)))
+            const libconfig::Setting &colorLight = oneLight["color"];
+            LightInfo light;
+            if(!(oneLight.lookupValue("x", light.x)
+                && oneLight.lookupValue("y", light.y)
+                && oneLight.lookupValue("z", light.z)
+                && colorLight.lookupValue("r", light.r)
+                && colorLight.lookupValue("g", light.g)
+                && colorLight.lookupValue("b", light.b)
+                && oneLight.lookupValue("size", light.size)))
                 continue;
-            std::cout << "Point Lights: x = " << x << " y = " << y << " z = " << z << std::endl;
+
+            lightInfo.push_back(light);
         }
 
     } catch(const libconfig::SettingNotFoundException &) {
     }
+    return lightInfo;
 }
 
-void rtx::Parsing::parseLights(libconfig::Config &conf)
+std::pair<std::pair<double, double>, std::vector<rtx::Parsing::LightInfo>> rtx::Parsing::parseLights(libconfig::Config &conf)
 {
-    parseAmbientDiffuse(conf);
-    parsePointLight(conf);
+    std::pair<std::pair<double, double>, std::vector<rtx::Parsing::LightInfo>> allLightInfo;
+    allLightInfo.first = parseAmbientDiffuse(conf);
+    allLightInfo.second = parsePointLight(conf);
+    return allLightInfo;
 }

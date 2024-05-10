@@ -16,6 +16,8 @@
 #include "TriangleBuilder.hpp"
 #include <vector>
 #include <libconfig.h++>
+#include "Rotation.hpp"
+#include "Translation.hpp"
 
 rtx::Factory::Factory(libconfig::Config &conf) : _conf(conf)
 {
@@ -28,6 +30,7 @@ void rtx::Factory::createWorldFromConfFile(rtx::Scene &world)
     createCylinderFromConfFile(world);
     createSphereFromConfFile(world);
     createTriangleFromConfFile(world);
+    createLightFromConfFile(world);
 }
 
 void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
@@ -132,5 +135,15 @@ void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world)
         if (triangles[i].material == "Light")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(triangles[i].r, triangles[i].g, triangles[i].b)));
         world.add(builder.getProduct());
+    }
+}
+
+void rtx::Factory::createLightFromConfFile(rtx::Scene &world)
+{
+    std::vector<rtx::Parsing::LightInfo> lightPoint = rtx::Parsing::parsePointLight(_conf);
+
+    for (int i = 0; i != lightPoint.size(); i++) {
+        auto light = std::make_shared<rtx::Light>(rtx::Color(lightPoint[i].r, lightPoint[i].g, lightPoint[i].b), rtx::Point3D(lightPoint[i].x, lightPoint[i].y, lightPoint[i].z), rtx::Vector3D(0.0, 0.0, 0.0));
+        world.add(createShape<rtx::Sphere>(rtx::Point3D(lightPoint[i].x, lightPoint[i].y, lightPoint[i].z), lightPoint[i].size, light));
     }
 }

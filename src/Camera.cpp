@@ -16,6 +16,7 @@
 #include <vector>
 #include <iomanip>
 #include <thread>
+#include "Light.hpp"
 
 rtx::Camera::Camera(int imageWidth, int imageHeight)
     : imageSize(std::make_pair(imageWidth, imageHeight))
@@ -68,13 +69,16 @@ rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::I
 
     rtx::Ray reflected;
     rtx::Color attenuation;
-    rtx::Color colorFromEmission = rec.material->lightEmition(rec.u, rec.v, rec.point);
+    rtx::Light light;
+    rtx::Color color_from_emission = rec.material->lightEmition(rec.u, rec.v, rec.point);
 
-    if (!rec.material->reflect(ray, rec, attenuation, reflected)) {
-        return colorFromEmission;
+    if (rec.material->reflect(ray, rec, attenuation, reflected)) {
+        rtx::Color finalColor = attenuation * getRayColor(reflected, depth - 1, shape);
+        light.ambientLight(ambientLight, finalColor, attenuation);
+        return finalColor;
     }
 
-    return colorFromEmission + (attenuation * getRayColor(reflected, depth - 1, shape));
+    return color_from_emission;
 }
 
 rtx::Ray rtx::Camera::getRay(double u, double v) const

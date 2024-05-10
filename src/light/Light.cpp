@@ -6,6 +6,8 @@
 */
 
 #include "Light.hpp"
+#include "iostream"
+#include "Rotation.hpp"
 
 rtx::Light::Light(std::shared_ptr<rtx::ITextures> tex)
 {
@@ -15,6 +17,14 @@ rtx::Light::Light(std::shared_ptr<rtx::ITextures> tex)
 rtx::Light::Light(const rtx::Color& emit)
 {
     _texture = std::make_shared<rtx::SolidColor>(emit);
+}
+
+rtx::Light::Light(const rtx::Color& emit, rtx::Vector3D lookat, rtx::Point3D pos)
+{
+    _texture = std::make_shared<rtx::SolidColor>(emit);
+    _lookat = lookat;
+    _pos = pos;
+    isOriented = true;
 }
 
 rtx::Color rtx::Light::lightEmition(double u, double v, const rtx::Point3D& point) const

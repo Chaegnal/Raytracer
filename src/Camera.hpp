@@ -65,6 +65,7 @@ namespace rtx
         double _defocusAngle = 0.0;
         double _focusDist = 10.0;
         rtx::Color _backgroundColor;
+        double ambientLight;
 
         void processPixels(std::stringstream &str, std::size_t yMin, std::size_t yMax, const rtx::IShape &shape);
         rtx::Ray getRay(double u, double v) const;

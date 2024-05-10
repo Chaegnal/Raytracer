@@ -48,6 +48,14 @@ namespace rtx
                 std::string material;
             };
 
+            struct LightInfo {
+                double ambient;
+                double diffuse;
+                double x, y, z;
+                double r, g, b;
+                double size;
+            };
+
             static double parseCamFOV(libconfig::Config &conf);
             static std::tuple<double, double, double> parseCamPosition(libconfig::Config &conf);
             static int parseCamSample(libconfig::Config &conf);
@@ -67,9 +75,9 @@ namespace rtx
             static std::vector<PlaneTriangleInfo> parsePlane(libconfig::Config &conf);
             static std::vector<PlaneTriangleInfo> parseTriangles(libconfig::Config &conf);
 
-            static void parseAmbientDiffuse(libconfig::Config &conf);
-            static void parsePointLight(libconfig::Config &conf);
-            static void parseLights(libconfig::Config &conf);
+            static std::pair<double, double> parseAmbientDiffuse(libconfig::Config &conf);
+            static std::vector<LightInfo> parsePointLight(libconfig::Config &conf);
+            static std::pair<std::pair<double, double>, std::vector<LightInfo>> parseLights(libconfig::Config &conf);
 
         protected:
 

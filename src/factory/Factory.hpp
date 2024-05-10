@@ -50,6 +50,7 @@ namespace rtx {
             void createTriangleFromConfFile(rtx::Scene &world);
             void createConeFromConfFile(rtx::Scene &world);
             void createCylinderFromConfFile(rtx::Scene &world);
+            void createLightFromConfFile(rtx::Scene &world);
     };
 }
 

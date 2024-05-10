@@ -1,0 +1,30 @@
+/*
+** EPITECH PROJECT, 2024
+** merge
+** File description:
+** ILight
+*/
+
+#ifndef ILIGHT_HPP_
+    #define ILIGHT_HPP_
+
+    #include "Vector3D.hpp"
+    #include "IMaterial.hpp"
+
+namespace rtx
+{
+    class ILight : public virtual rtx::IMaterial {
+        public:
+            virtual ~ILight() = default;
+
+            virtual bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const {
+                return false;
+            }
+            virtual rtx::Color lightEmition(double u, double v, const rtx::Point3D& point) const {
+                return rtx::Color(0.0, 0.0, 0.0);
+            }
+            virtual rtx::Color ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const = 0;
+    };
+}
+
+#endif /* !ILIGHT_HPP_ */

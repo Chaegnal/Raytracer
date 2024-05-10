@@ -44,6 +44,7 @@ static rtx::Camera getCam(libconfig::Config &conf)
     std::tuple<double, double, double> pos = rtx::Parsing::parseCamPosition(conf);
     std::tuple<double, double, double> lookAt = rtx::Parsing::parseCamLookAt(conf);
     std::tuple<double, double, double> angle = rtx::Parsing::parseCamAngle(conf);
+    std::pair<double, double> light = rtx::Parsing::parseAmbientDiffuse(conf);
 
     cam._backgroundColor = rtx::Color(std::get<0>(color), std::get<1>(color), std::get<2>(color));
     cam.samplesPerPixel = rtx::Parsing::parseCamSample(conf);
@@ -54,6 +55,7 @@ static rtx::Camera getCam(libconfig::Config &conf)
     cam._cameraAngle = rtx::Vector3D(std::get<0>(angle),std::get<1>(angle),std::get<2>(angle));
     cam._defocusAngle = rtx::Parsing::parseCamDefocus(conf);
     cam._focusDist = rtx::Parsing::parseCamFocus(conf);
+    cam.ambientLight = light.first;
     return cam;
 }
 
