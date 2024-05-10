@@ -22,13 +22,17 @@ namespace rtx
             Parsing();
             ~Parsing();
 
+            struct TransfoInfo {
+                std::string transformation;
+                double x, y, z;
+                double angle;
+            };
+
             struct MaterialInfo {
                 std::string material;
                 double r, g, b;
                 double extra;
-                std::string transformation;
-                double x, y, z;
-                double angle;
+                std::vector<TransfoInfo> transfo;
             };
 
             struct SphereInfo {

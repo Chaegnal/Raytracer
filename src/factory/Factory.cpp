@@ -33,14 +33,14 @@ void rtx::Factory::createWorldFromConfFile(rtx::Scene &world)
     createLightFromConfFile(world);
 }
 
-// std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformation(rtx::Parsing::TransfoInfo &transfoInfo, std::shared_ptr<rtx::IShape> &shape) const
-// {
-//     if (transfoInfo.transformation == "translation")
-//         return rtx::Factory::createTransformation<rtx::Translation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z));
-//     if (transfoInfo.transformation == "rotation")
-//         return rtx::Factory::createTransformation<rtx::Rotation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z), transfoInfo.angle);
-//     return shape;
-// }
+std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformation(rtx::Parsing::TransfoInfo &transfoInfo, std::shared_ptr<rtx::IShape> &shape) const
+{
+    if (transfoInfo.transformation == "translation")
+        return rtx::Factory::createTransformation<rtx::Translation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z));
+    if (transfoInfo.transformation == "rotation")
+        return rtx::Factory::createTransformation<rtx::Rotation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z), transfoInfo.angle);
+    return shape;
+}
 
 void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
 {

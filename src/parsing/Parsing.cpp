@@ -173,7 +173,6 @@ std::tuple<int, int> rtx::Parsing::parseCamRatio(libconfig::Config &conf)
     return std::make_tuple(x, y);
 }
 
-
 std::vector<rtx::Parsing::SphereInfo> rtx::Parsing::parseSphere(libconfig::Config &conf)
 {
     std::vector<SphereInfo> sphereParsed;
@@ -187,8 +186,8 @@ std::vector<rtx::Parsing::SphereInfo> rtx::Parsing::parseSphere(libconfig::Confi
         {
             const libconfig::Setting &oneSphere = sphere[i];
             const libconfig::Setting &color = oneSphere["color"];
-            const libconfig::Setting &transfo = oneSphere["transformation"];
-            const libconfig::Setting &axis = transfo["axis"];
+            const libconfig::Setting &transformations = oneSphere["transformation"];
+            int countTransfo = transformations.getLength();
             SphereInfo infoSphere;
 
             if(!(oneSphere.lookupValue("x", infoSphere.x)
@@ -199,13 +198,22 @@ std::vector<rtx::Parsing::SphereInfo> rtx::Parsing::parseSphere(libconfig::Confi
                 && color.lookupValue("g", infoSphere.material.g)
                 && color.lookupValue("b", infoSphere.material.b)
                 && oneSphere.lookupValue("material", infoSphere.material.material)
-                && oneSphere.lookupValue("extra", infoSphere.material.extra)
-                && transfo.lookupValue("type", infoSphere.material.transformation)
-                && transfo.lookupValue("angle", infoSphere.material.angle)
-                && axis.lookupValue("x", infoSphere.material.x)
-                && axis.lookupValue("y", infoSphere.material.y)
-                && axis.lookupValue("z", infoSphere.material.z)))
+                && oneSphere.lookupValue("extra", infoSphere.material.extra)))
                 continue;
+
+                for (int y = 0; y < countTransfo; y++) {
+                    TransfoInfo transformation;
+                    const libconfig::Setting &transfo = transformations[y];
+                    const libconfig::Setting &axis = transfo["axis"];
+                    if(!(transfo.lookupValue("type", transformation.transformation)
+                    && transfo.lookupValue("angle", transformation.angle)
+                    && axis.lookupValue("x", transformation.x)
+                    && axis.lookupValue("y", transformation.y)
+                    && axis.lookupValue("z", transformation.z)))
+                        continue;
+                    infoSphere.material.transfo.push_back(transformation);
+                }
+
 
             sphereParsed.push_back(infoSphere);
         }
@@ -228,8 +236,8 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfi
         {
             const libconfig::Setting &oneCylinder = cylinder[i];
             const libconfig::Setting &color = oneCylinder["color"];
-            const libconfig::Setting &transfo = oneCylinder["transformation"];
-            const libconfig::Setting &axis = transfo["axis"];
+            const libconfig::Setting &transformations = oneCylinder["transformation"];
+            int countTransfo = transformations.getLength();
             CylinderConeInfo infoCylinder;
 
             if(!(oneCylinder.lookupValue("x", infoCylinder.x)
@@ -242,13 +250,21 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfi
                 && color.lookupValue("g", infoCylinder.material.g)
                 && color.lookupValue("b", infoCylinder.material.b)
                 && oneCylinder.lookupValue("material", infoCylinder.material.material)
-                && oneCylinder.lookupValue("extra", infoCylinder.material.extra)
-                && transfo.lookupValue("type", infoCylinder.material.transformation)
-                && transfo.lookupValue("angle", infoCylinder.material.angle)
-                && axis.lookupValue("x", infoCylinder.material.x)
-                && axis.lookupValue("y", infoCylinder.material.y)
-                && axis.lookupValue("z", infoCylinder.material.z)))
+                && oneCylinder.lookupValue("extra", infoCylinder.material.extra)))
                 continue;
+
+            for (int y = 0; y < countTransfo; y++) {
+                TransfoInfo transformation;
+                const libconfig::Setting &transfo = transformations[y];
+                const libconfig::Setting &axis = transfo["axis"];
+                if(!(transfo.lookupValue("type", transformation.transformation)
+                && transfo.lookupValue("angle", transformation.angle)
+                && axis.lookupValue("x", transformation.x)
+                && axis.lookupValue("y", transformation.y)
+                && axis.lookupValue("z", transformation.z)))
+                    continue;
+                infoCylinder.material.transfo.push_back(transformation);
+            }
 
             cylinderParsed.push_back(infoCylinder);
         }
@@ -271,8 +287,8 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCone(libconfig::C
         {
             const libconfig::Setting &oneCone = Cone[i];
             const libconfig::Setting &color = oneCone["color"];
-            const libconfig::Setting &transfo = oneCone["transformation"];
-            const libconfig::Setting &axis = transfo["axis"];
+            const libconfig::Setting &transformations = oneCone["transformation"];
+            int countTransfo = transformations.getLength();
             CylinderConeInfo infoCone;
 
             if(!(oneCone.lookupValue("x", infoCone.x)
@@ -284,13 +300,21 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCone(libconfig::C
                 && color.lookupValue("g", infoCone.material.g)
                 && color.lookupValue("b", infoCone.material.b)
                 && oneCone.lookupValue("material", infoCone.material.material)
-                && oneCone.lookupValue("extra", infoCone.material.extra)
-                && transfo.lookupValue("type", infoCone.material.transformation)
-                && transfo.lookupValue("angle", infoCone.material.angle)
-                && axis.lookupValue("x", infoCone.material.x)
-                && axis.lookupValue("y", infoCone.material.y)
-                && axis.lookupValue("z", infoCone.material.z)))
+                && oneCone.lookupValue("extra", infoCone.material.extra)))
                 continue;
+
+           for (int y = 0; y < countTransfo; y++) {
+                TransfoInfo transformation;
+                const libconfig::Setting &transfo = transformations[y];
+                const libconfig::Setting &axis = transfo["axis"];
+                if(!(transfo.lookupValue("type", transformation.transformation)
+                && transfo.lookupValue("angle", transformation.angle)
+                && axis.lookupValue("x", transformation.x)
+                && axis.lookupValue("y", transformation.y)
+                && axis.lookupValue("z", transformation.z)))
+                    continue;
+                infoCone.material.transfo.push_back(transformation);
+            }
 
             coneParsed.push_back(infoCone);
         }
@@ -316,8 +340,8 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parsePlane(libconfig:
             const libconfig::Setting &sizePlane = onePlane["size"];
             const libconfig::Setting &anglePlane = onePlane["angle"];
             const libconfig::Setting &colorPlane = onePlane["color"];
-            const libconfig::Setting &transfo = onePlane["transformation"];
-            const libconfig::Setting &axis = transfo["axis"];
+            const libconfig::Setting &transformations = onePlane["transformation"];
+            int countTransfo = transformations.getLength();
             PlaneTriangleInfo infoPlane;
 
             if(!(onePlane.lookupValue("x", infoPlane.x)
@@ -333,13 +357,21 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parsePlane(libconfig:
                 && onePlane.lookupValue("material", infoPlane.material.material)
                 && colorPlane.lookupValue("r", infoPlane.material.r)
                 && colorPlane.lookupValue("g", infoPlane.material.g)
-                && colorPlane.lookupValue("b", infoPlane.material.b)
-                && transfo.lookupValue("type", infoPlane.material.transformation)
-                && transfo.lookupValue("angle", infoPlane.material.angle)
-                && axis.lookupValue("x", infoPlane.material.x)
-                && axis.lookupValue("y", infoPlane.material.y)
-                && axis.lookupValue("z", infoPlane.material.z)))
+                && colorPlane.lookupValue("b", infoPlane.material.b)))
                 continue;
+
+            for (int y = 0; y < countTransfo; y++) {
+                TransfoInfo transformation;
+                const libconfig::Setting &transfo = transformations[y];
+                const libconfig::Setting &axis = transfo["axis"];
+                if(!(transfo.lookupValue("type", transformation.transformation)
+                && transfo.lookupValue("angle", transformation.angle)
+                && axis.lookupValue("x", transformation.x)
+                && axis.lookupValue("y", transformation.y)
+                && axis.lookupValue("z", transformation.z)))
+                    continue;
+                infoPlane.material.transfo.push_back(transformation);
+            }
 
             planeParsed.push_back(infoPlane);
         }
@@ -365,8 +397,8 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libcon
             const libconfig::Setting &secondSummit = oneTriangle["second"];
             const libconfig::Setting &thirdSummit = oneTriangle["third"];
             const libconfig::Setting &color = oneTriangle["color"];
-            const libconfig::Setting &transfo = oneTriangle["transformation"];
-            const libconfig::Setting &axis = transfo["axis"];
+            const libconfig::Setting &transformations = oneTriangle["transformation"];
+            int countTransfo = transformations.getLength();
             PlaneTriangleInfo infoTriangle;
 
             if(!(oneTriangle.lookupValue("extra", infoTriangle.material.extra)
@@ -382,13 +414,21 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libcon
                 && thirdSummit.lookupValue("z", infoTriangle.height_z)
                 && color.lookupValue("r", infoTriangle.material.r)
                 && color.lookupValue("g", infoTriangle.material.g)
-                && color.lookupValue("b", infoTriangle.material.b)
-                && transfo.lookupValue("type", infoTriangle.material.transformation)
-                && transfo.lookupValue("angle", infoTriangle.material.angle)
-                && axis.lookupValue("x", infoTriangle.material.x)
-                && axis.lookupValue("y", infoTriangle.material.y)
-                && axis.lookupValue("z", infoTriangle.material.z)))
+                && color.lookupValue("b", infoTriangle.material.b)))
                 continue;
+
+            for (int y = 0; y < countTransfo; y++) {
+                TransfoInfo transformation;
+                const libconfig::Setting &transfo = transformations[y];
+                const libconfig::Setting &axis = transfo["axis"];
+                if(!(transfo.lookupValue("type", transformation.transformation)
+                && transfo.lookupValue("angle", transformation.angle)
+                && axis.lookupValue("x", transformation.x)
+                && axis.lookupValue("y", transformation.y)
+                && axis.lookupValue("z", transformation.z)))
+                    continue;
+                infoTriangle.material.transfo.push_back(transformation);
+            }
 
             triangleParsed.push_back(infoTriangle);
         }
