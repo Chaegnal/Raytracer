@@ -33,12 +33,14 @@ void rtx::Factory::createWorldFromConfFile(rtx::Scene &world)
     createLightFromConfFile(world);
 }
 
-std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformation(rtx::Parsing::TransfoInfo &transfoInfo, std::shared_ptr<rtx::IShape> &shape) const
+std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformations(std::vector<rtx::Parsing::TransfoInfo> &transfoInfos, std::shared_ptr<rtx::IShape> shape) const
 {
-    if (transfoInfo.transformation == "translation")
-        return rtx::Factory::createTransformation<rtx::Translation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z));
-    if (transfoInfo.transformation == "rotation")
-        return rtx::Factory::createTransformation<rtx::Rotation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z), transfoInfo.angle);
+    for (auto &transfoInfo : transfoInfos) {
+        if (transfoInfo.transformation == "translation")
+            shape = rtx::Factory::createTransformation<rtx::Translation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z));
+        if (transfoInfo.transformation == "rotation")
+            shape = rtx::Factory::createTransformation<rtx::Rotation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z), transfoInfo.angle);
+    }
     return shape;
 }
 
@@ -58,7 +60,7 @@ void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(sphere.material.r, sphere.material.g, sphere.material.b)));
         if (sphere.material.material == "Metal")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(sphere.material.r, sphere.material.g, sphere.material.b), sphere.material.extra));
-        world.add(builder.getProduct());
+        world.add(applyTransformations(sphere.material.transfo, builder.getProduct()));
     }
 }
 
@@ -67,20 +69,20 @@ void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
     rtx::CylinderBuilder builder;
     std::vector<rtx::Parsing::CylinderConeInfo> cylinders = rtx::Parsing::parseCylinder(_conf);
 
-        for (int i = 0; i != cylinders.size(); i++) {
-            builder.setPosition(rtx::Point3D(cylinders[i].x, cylinders[i].y, cylinders[i].z));
-            builder.setRadius(cylinders[i].radius);
-            builder.setHeight(cylinders[i].height);
-            builder.setIsCapped(cylinders[i].isCapped);
-            if (cylinders[i].material.material == "Dielectric")
-                builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cylinders[i].material.extra));
-            if (cylinders[i].material.material == "Matte")
-                builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b)));
-            if (cylinders[i].material.material == "Light")
-                builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b)));
-            if (cylinders[i].material.material == "Metal")
-                builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b), cylinders[i].material.extra));
-            world.add(builder.getProduct());
+        for (auto &cylinder : cylinders) {
+            builder.setPosition(rtx::Point3D(cylinder.x, cylinder.y, cylinder.z));
+            builder.setRadius(cylinder.radius);
+            builder.setHeight(cylinder.height);
+            builder.setIsCapped(cylinder.isCapped);
+            if (cylinder.material.material == "Dielectric")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cylinder.material.extra));
+            if (cylinder.material.material == "Matte")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cylinder.material.r, cylinder.material.g, cylinder.material.b)));
+            if (cylinder.material.material == "Light")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cylinder.material.r, cylinder.material.g, cylinder.material.b)));
+            if (cylinder.material.material == "Metal")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cylinder.material.r, cylinder.material.g, cylinder.material.b), cylinder.material.extra));
+            world.add(applyTransformations(cylinder.material.transfo, builder.getProduct()));
     }
 }
 
@@ -101,7 +103,7 @@ void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cone.material.r, cone.material.g, cone.material.b)));
             if (cone.material.material == "Metal")
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cone.material.r, cone.material.g, cone.material.b), cone.material.extra));
-            world.add(builder.getProduct());
+            world.add(applyTransformations(cone.material.transfo, builder.getProduct()));
     }
 }
 
@@ -122,7 +124,7 @@ void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(plane.material.r, plane.material.g, plane.material.b)));
         if (plane.material.material == "Metal")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(plane.material.r, plane.material.g, plane.material.b), plane.material.extra));
-        world.add(builder.getProduct());
+        world.add(applyTransformations(plane.material.transfo, builder.getProduct()));
     }
 }
 
@@ -144,7 +146,7 @@ void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world)
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(triangle.material.r, triangle.material.g, triangle.material.b)));
         if (triangle.material.material == "Metal")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(triangle.material.r, triangle.material.g, triangle.material.b), triangle.material.extra));
-        world.add(builder.getProduct());
+        world.add(applyTransformations(triangle.material.transfo, builder.getProduct()));
     }
 }
 
