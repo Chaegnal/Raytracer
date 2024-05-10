@@ -22,30 +22,33 @@ namespace rtx
             Parsing();
             ~Parsing();
 
+            struct MaterialInfo {
+                std::string material;
+                double r, g, b;
+                double extra;
+                std::string transformation;
+                double x, y, z;
+                double angle;
+            };
+
             struct SphereInfo {
                 double x, y, z;
                 double radius;
-                double extra;
-                double r, g, b;
-                std::string material;
+                MaterialInfo material;
             };
 
             struct CylinderConeInfo {
                 double x, y, z;
                 double height;
                 double radius;
-                double extra;
-                double r, g, b;
-                std::string material;
+                MaterialInfo material;
             };
 
             struct PlaneTriangleInfo {
                 double x, y, z;
                 double size_x, size_y, size_z;
                 double height_x, height_y, height_z;
-                double r, g, b;
-                double extra;
-                std::string material;
+                MaterialInfo material;
             };
 
             struct LightInfo {

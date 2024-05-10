@@ -43,6 +43,10 @@ namespace rtx {
             static std::shared_ptr<rtx::IMaterial> createMaterial(Argument... args) {
                 return std::make_shared<Material>(std::forward<Argument>(args)...);
             }
+            template<typename Transfo, typename ...Argument>
+            static std::shared_ptr<rtx::ITransformation> createTransformation(Argument... args) {
+                return std::make_shared<Transfo>(std::forward<Argument>(args)...);
+            }
 
             void createWorldFromConfFile(rtx::Scene &world);
             void createSphereFromConfFile(rtx::Scene &world);

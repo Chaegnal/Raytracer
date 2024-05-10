@@ -41,14 +41,14 @@ void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
     for (int i = 0; i != spheres.size(); i++) {
         builder.setPosition(rtx::Point3D(spheres[i].x, spheres[i].y, spheres[i].z));
         builder.setRadius(spheres[i].radius);
-        if (spheres[i].material == "Dielectric")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(spheres[i].extra));
-        if (spheres[i].material == "Matte")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b)));
-        if (spheres[i].material == "Metal")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b), spheres[i].extra));
-        if (spheres[i].material == "Light")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(spheres[i].r, spheres[i].g, spheres[i].b)));
+        if (spheres[i].material.material == "Dielectric")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(spheres[i].material.extra));
+        if (spheres[i].material.material == "Matte")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(spheres[i].material.r, spheres[i].material.g, spheres[i].material.b)));
+        if (spheres[i].material.material == "Metal")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(spheres[i].material.r, spheres[i].material.g, spheres[i].material.b), spheres[i].material.extra));
+        if (spheres[i].material.material == "Light")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(spheres[i].material.r, spheres[i].material.g, spheres[i].material.b)));
         world.add(builder.getProduct());
     }
 }
@@ -58,19 +58,19 @@ void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
     rtx::CylinderBuilder builder;
     std::vector<rtx::Parsing::CylinderConeInfo> cylinders = rtx::Parsing::parseCylinder(_conf);
 
-    for (int i = 0; i != cylinders.size(); i++) {
-        builder.setPosition(rtx::Point3D(cylinders[i].x, cylinders[i].y, cylinders[i].z));
-        builder.setRadius(cylinders[i].radius);
-        builder.setHeight(cylinders[i].height);
-        if (cylinders[i].material == "Dielectric")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cylinders[i].extra));
-        if (cylinders[i].material == "Matte")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cylinders[i].r, cylinders[i].g, cylinders[i].b)));
-        if (cylinders[i].material == "Metal")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cylinders[i].r, cylinders[i].g, cylinders[i].b), cylinders[i].extra));
-        if (cylinders[i].material == "Light")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cylinders[i].r, cylinders[i].g, cylinders[i].b)));
-        world.add(builder.getProduct());
+        for (int i = 0; i != cylinders.size(); i++) {
+            builder.setPosition(rtx::Point3D(cylinders[i].x, cylinders[i].y, cylinders[i].z));
+            builder.setRadius(cylinders[i].radius);
+            builder.setHeight(cylinders[i].height);
+            if (cylinders[i].material.material == "Dielectric")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cylinders[i].material.extra));
+            if (cylinders[i].material.material == "Matte")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b)));
+            if (cylinders[i].material.material == "Metal")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b), cylinders[i].material.extra));
+            if (cylinders[i].material.material == "Light")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b)));
+            world.add(builder.getProduct());
     }
 }
 
@@ -79,19 +79,19 @@ void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
     rtx::ConeBuilder builder;
     std::vector<rtx::Parsing::CylinderConeInfo> cones = rtx::Parsing::parseCone(_conf);
 
-    for (int i = 0; i != cones.size(); i++) {
-        builder.setPosition(rtx::Point3D(cones[i].x, cones[i].y, cones[i].z));
-        builder.setRadius(cones[i].radius);
-        builder.setHeight(cones[i].height);
-        if (cones[i].material == "Dielectric")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cones[i].extra));
-        if (cones[i].material == "Matte")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cones[i].r, cones[i].g, cones[i].b)));
-        if (cones[i].material == "Metal")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cones[i].r, cones[i].g, cones[i].b), cones[i].extra));
-        if (cones[i].material == "Light")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cones[i].r, cones[i].g, cones[i].b)));
-        world.add(builder.getProduct());
+        for (int i = 0; i != cones.size(); i++) {
+            builder.setPosition(rtx::Point3D(cones[i].x, cones[i].y, cones[i].z));
+            builder.setRadius(cones[i].radius);
+            builder.setHeight(cones[i].height);
+            if (cones[i].material.material == "Dielectric")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cones[i].material.extra));
+            if (cones[i].material.material == "Matte")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cones[i].material.r, cones[i].material.g, cones[i].material.b)));
+            if (cones[i].material.material == "Metal")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cones[i].material.r, cones[i].material.g, cones[i].material.b), cones[i].material.extra));
+            if (cones[i].material.material == "Light")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cones[i].material.r, cones[i].material.g, cones[i].material.b)));
+            world.add(builder.getProduct());
     }
 }
 
@@ -104,14 +104,14 @@ void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
         builder.setPosition(rtx::Point3D(planes[i].x, planes[i].y, planes[i].z));
         builder.setWidth(rtx::Vector3D(planes[i].size_x, planes[i].size_y, planes[i].size_z));
         builder.setHeight(rtx::Vector3D(planes[i].height_x, planes[i].height_y, planes[i].height_z));
-        if (planes[i].material == "Dielectric")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(planes[i].extra));
-        if (planes[i].material == "Matte")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(planes[i].r, planes[i].g, planes[i].b)));
-        if (planes[i].material == "Metal")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(planes[i].r, planes[i].g, planes[i].b), planes[i].extra));
-        if (planes[i].material == "Light")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(planes[i].r, planes[i].g, planes[i].b)));
+        if (planes[i].material.material == "Dielectric")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(planes[i].material.extra));
+        if (planes[i].material.material == "Matte")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(planes[i].material.r, planes[i].material.g, planes[i].material.b)));
+        if (planes[i].material.material == "Metal")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(planes[i].material.r, planes[i].material.g, planes[i].material.b), planes[i].material.extra));
+        if (planes[i].material.material == "Light")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(planes[i].material.r, planes[i].material.g, planes[i].material.b)));
         world.add(builder.getProduct());
     }
 }
@@ -126,14 +126,14 @@ void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world)
         builder.setPoint1(rtx::Point3D(triangles[i].size_x, triangles[i].size_y, triangles[i].size_z));
         builder.setPoint2(rtx::Point3D(triangles[i].height_x, triangles[i].height_y, triangles[i].height_z));
         builder.setPosition(rtx::Point3D());
-        if (triangles[i].material == "Dielectric")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(triangles[i].extra));
-        if (triangles[i].material == "Matte")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(triangles[i].r, triangles[i].g, triangles[i].b)));
-        if (triangles[i].material == "Metal")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(triangles[i].r, triangles[i].g, triangles[i].b), triangles[i].extra));
-        if (triangles[i].material == "Light")
-            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(triangles[i].r, triangles[i].g, triangles[i].b)));
+        if (triangles[i].material.material == "Dielectric")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(triangles[i].material.extra));
+        if (triangles[i].material.material == "Matte")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(triangles[i].material.r, triangles[i].material.g, triangles[i].material.b)));
+        if (triangles[i].material.material == "Metal")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(triangles[i].material.r, triangles[i].material.g, triangles[i].material.b), triangles[i].material.extra));
+        if (triangles[i].material.material == "Light")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(triangles[i].material.r, triangles[i].material.g, triangles[i].material.b)));
         world.add(builder.getProduct());
     }
 }

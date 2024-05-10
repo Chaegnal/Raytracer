@@ -187,17 +187,24 @@ std::vector<rtx::Parsing::SphereInfo> rtx::Parsing::parseSphere(libconfig::Confi
         {
             const libconfig::Setting &oneSphere = sphere[i];
             const libconfig::Setting &color = oneSphere["color"];
+            const libconfig::Setting &transfo = oneSphere["transformation"];
+            const libconfig::Setting &axis = transfo["axis"];
             SphereInfo infoSphere;
 
             if(!(oneSphere.lookupValue("x", infoSphere.x)
                 && oneSphere.lookupValue("y", infoSphere.y)
                 && oneSphere.lookupValue("z", infoSphere.z)
-                && color.lookupValue("r", infoSphere.r)
-                && color.lookupValue("g", infoSphere.g)
-                && color.lookupValue("b", infoSphere.b)
                 && oneSphere.lookupValue("radius", infoSphere.radius)
-                && oneSphere.lookupValue("material", infoSphere.material)
-                && oneSphere.lookupValue("extra", infoSphere.extra)))
+                && color.lookupValue("r", infoSphere.material.r)
+                && color.lookupValue("g", infoSphere.material.g)
+                && color.lookupValue("b", infoSphere.material.b)
+                && oneSphere.lookupValue("material", infoSphere.material.material)
+                && oneSphere.lookupValue("extra", infoSphere.material.extra)
+                && transfo.lookupValue("type", infoSphere.material.transformation)
+                && transfo.lookupValue("angle", infoSphere.material.angle)
+                && axis.lookupValue("x", infoSphere.material.x)
+                && axis.lookupValue("y", infoSphere.material.y)
+                && axis.lookupValue("z", infoSphere.material.z)))
                 continue;
 
             sphereParsed.push_back(infoSphere);
@@ -221,18 +228,25 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfi
         {
             const libconfig::Setting &oneCylinder = cylinder[i];
             const libconfig::Setting &color = oneCylinder["color"];
+            const libconfig::Setting &transfo = oneCylinder["transformation"];
+            const libconfig::Setting &axis = transfo["axis"];
             CylinderConeInfo infoCylinder;
 
             if(!(oneCylinder.lookupValue("x", infoCylinder.x)
                 && oneCylinder.lookupValue("y", infoCylinder.y)
                 && oneCylinder.lookupValue("z", infoCylinder.z)
-                && color.lookupValue("r", infoCylinder.r)
-                && color.lookupValue("g", infoCylinder.g)
-                && color.lookupValue("b", infoCylinder.b)
+                && oneCylinder.lookupValue("heigt", infoCylinder.height)
                 && oneCylinder.lookupValue("radius", infoCylinder.radius)
-                && oneCylinder.lookupValue("material", infoCylinder.material)
-                && oneCylinder.lookupValue("extra", infoCylinder.extra)
-                && oneCylinder.lookupValue("heigt", infoCylinder.height)))
+                && color.lookupValue("r", infoCylinder.material.r)
+                && color.lookupValue("g", infoCylinder.material.g)
+                && color.lookupValue("b", infoCylinder.material.b)
+                && oneCylinder.lookupValue("material", infoCylinder.material.material)
+                && oneCylinder.lookupValue("extra", infoCylinder.material.extra)
+                && transfo.lookupValue("type", infoCylinder.material.transformation)
+                && transfo.lookupValue("angle", infoCylinder.material.angle)
+                && axis.lookupValue("x", infoCylinder.material.x)
+                && axis.lookupValue("y", infoCylinder.material.y)
+                && axis.lookupValue("z", infoCylinder.material.z)))
                 continue;
 
             cylinderParsed.push_back(infoCylinder);
@@ -245,37 +259,44 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfi
 
 std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCone(libconfig::Config &conf)
 {
-    std::vector<CylinderConeInfo> cylinderParsed;
+    std::vector<CylinderConeInfo> coneParsed;
     const libconfig::Setting &root = conf.getRoot();
 
     try {
-        const libconfig::Setting &cylinder = root["primitives"]["cones"];
-        int count = cylinder.getLength();
+        const libconfig::Setting &Cone = root["primitives"]["cones"];
+        int count = Cone.getLength();
 
         for(int i = 0; i < count; ++i)
         {
-            const libconfig::Setting &oneCylinder = cylinder[i];
-            const libconfig::Setting &color = oneCylinder["color"];
-            CylinderConeInfo infoCylinder;
+            const libconfig::Setting &oneCone = Cone[i];
+            const libconfig::Setting &color = oneCone["color"];
+            const libconfig::Setting &transfo = oneCone["transformation"];
+            const libconfig::Setting &axis = transfo["axis"];
+            CylinderConeInfo infoCone;
 
-            if(!(oneCylinder.lookupValue("x", infoCylinder.x)
-                && oneCylinder.lookupValue("y", infoCylinder.y)
-                && oneCylinder.lookupValue("z", infoCylinder.z)
-                && color.lookupValue("r", infoCylinder.r)
-                && color.lookupValue("g", infoCylinder.g)
-                && color.lookupValue("b", infoCylinder.b)
-                && oneCylinder.lookupValue("radius", infoCylinder.radius)
-                && oneCylinder.lookupValue("material", infoCylinder.material)
-                && oneCylinder.lookupValue("extra", infoCylinder.extra)
-                && oneCylinder.lookupValue("heigt", infoCylinder.height)))
+            if(!(oneCone.lookupValue("x", infoCone.x)
+                && oneCone.lookupValue("y", infoCone.y)
+                && oneCone.lookupValue("z", infoCone.z)
+                && oneCone.lookupValue("radius", infoCone.radius)
+                && oneCone.lookupValue("heigt", infoCone.height)
+                && color.lookupValue("r", infoCone.material.r)
+                && color.lookupValue("g", infoCone.material.g)
+                && color.lookupValue("b", infoCone.material.b)
+                && oneCone.lookupValue("material", infoCone.material.material)
+                && oneCone.lookupValue("extra", infoCone.material.extra)
+                && transfo.lookupValue("type", infoCone.material.transformation)
+                && transfo.lookupValue("angle", infoCone.material.angle)
+                && axis.lookupValue("x", infoCone.material.x)
+                && axis.lookupValue("y", infoCone.material.y)
+                && axis.lookupValue("z", infoCone.material.z)))
                 continue;
 
-            cylinderParsed.push_back(infoCylinder);
+            coneParsed.push_back(infoCone);
         }
     } catch(const libconfig::SettingNotFoundException &) {
     }
 
-    return cylinderParsed;
+    return coneParsed;
 }
 
 std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parsePlane(libconfig::Config &conf)
@@ -294,22 +315,29 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parsePlane(libconfig:
             const libconfig::Setting &sizePlane = onePlane["size"];
             const libconfig::Setting &anglePlane = onePlane["angle"];
             const libconfig::Setting &colorPlane = onePlane["color"];
+            const libconfig::Setting &transfo = onePlane["transformation"];
+            const libconfig::Setting &axis = transfo["axis"];
             PlaneTriangleInfo infoPlane;
 
             if(!(onePlane.lookupValue("x", infoPlane.x)
                 && onePlane.lookupValue("y", infoPlane.y)
                 && onePlane.lookupValue("z", infoPlane.z)
-                && onePlane.lookupValue("extra", infoPlane.extra)
-                && onePlane.lookupValue("material", infoPlane.material)
                 && sizePlane.lookupValue("x", infoPlane.size_x)
                 && sizePlane.lookupValue("y", infoPlane.size_y)
                 && sizePlane.lookupValue("z", infoPlane.size_z)
                 && anglePlane.lookupValue("x", infoPlane.height_x)
                 && anglePlane.lookupValue("y", infoPlane.height_y)
                 && anglePlane.lookupValue("z", infoPlane.height_z)
-                && colorPlane.lookupValue("r", infoPlane.r)
-                && colorPlane.lookupValue("g", infoPlane.g)
-                && colorPlane.lookupValue("b", infoPlane.b)))
+                && onePlane.lookupValue("extra", infoPlane.material.extra)
+                && onePlane.lookupValue("material", infoPlane.material.material)
+                && colorPlane.lookupValue("r", infoPlane.material.r)
+                && colorPlane.lookupValue("g", infoPlane.material.g)
+                && colorPlane.lookupValue("b", infoPlane.material.b)
+                && transfo.lookupValue("type", infoPlane.material.transformation)
+                && transfo.lookupValue("angle", infoPlane.material.angle)
+                && axis.lookupValue("x", infoPlane.material.x)
+                && axis.lookupValue("y", infoPlane.material.y)
+                && axis.lookupValue("z", infoPlane.material.z)))
                 continue;
 
             planeParsed.push_back(infoPlane);
@@ -336,10 +364,12 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libcon
             const libconfig::Setting &secondSummit = oneTriangle["second"];
             const libconfig::Setting &thirdSummit = oneTriangle["third"];
             const libconfig::Setting &color = oneTriangle["color"];
+            const libconfig::Setting &transfo = oneTriangle["transformation"];
+            const libconfig::Setting &axis = transfo["axis"];
             PlaneTriangleInfo infoTriangle;
 
-            if(!(oneTriangle.lookupValue("extra", infoTriangle.extra)
-                && oneTriangle.lookupValue("material", infoTriangle.material)
+            if(!(oneTriangle.lookupValue("extra", infoTriangle.material.extra)
+                && oneTriangle.lookupValue("material", infoTriangle.material.material)
                 && firstSummit.lookupValue("x", infoTriangle.x)
                 && firstSummit.lookupValue("y", infoTriangle.y)
                 && firstSummit.lookupValue("z", infoTriangle.z)
@@ -349,9 +379,14 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libcon
                 && thirdSummit.lookupValue("x", infoTriangle.height_x)
                 && thirdSummit.lookupValue("y", infoTriangle.height_y)
                 && thirdSummit.lookupValue("z", infoTriangle.height_z)
-                && color.lookupValue("r", infoTriangle.r)
-                && color.lookupValue("g", infoTriangle.g)
-                && color.lookupValue("b", infoTriangle.b)))
+                && color.lookupValue("r", infoTriangle.material.r)
+                && color.lookupValue("g", infoTriangle.material.g)
+                && color.lookupValue("b", infoTriangle.material.b)
+                && transfo.lookupValue("type", infoTriangle.material.transformation)
+                && transfo.lookupValue("angle", infoTriangle.material.angle)
+                && axis.lookupValue("x", infoTriangle.material.x)
+                && axis.lookupValue("y", infoTriangle.material.y)
+                && axis.lookupValue("z", infoTriangle.material.z)))
                 continue;
 
             triangleParsed.push_back(infoTriangle);
@@ -368,7 +403,7 @@ std::pair<double, double> rtx::Parsing::parseAmbientDiffuse(libconfig::Config &c
 
     try {
         const libconfig::Setting &lights = root["lights"];
-        
+
         lightInfo.first = lights.lookup("ambient");
         lightInfo.second = lights.lookup("diffuse");
     } catch (const libconfig::SettingNotFoundException &) {
