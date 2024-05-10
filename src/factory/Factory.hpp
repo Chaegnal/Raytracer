@@ -31,6 +31,8 @@ namespace rtx {
         private:
             libconfig::Config &_conf;
 
+            std::shared_ptr<rtx::IShape> applyTransformation(rtx::Parsing::TransfoInfo &transfoInfo, std::shared_ptr<rtx::IShape> &shape) const;
+
         public:
             Factory(libconfig::Config &conf);
             ~Factory() = default;
