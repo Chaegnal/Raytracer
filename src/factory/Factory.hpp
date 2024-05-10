@@ -28,42 +28,6 @@
 
 namespace rtx {
     class Factory {
-        public:
-            enum class MaterialTypes {
-                Metal,
-                Matte,
-                Dielectric
-            };
-
-            enum class ShapeTypes {
-                Sphere,
-                Cone,
-                Cylinder,
-                Plane
-            };
-
-            class UnknownShapeType : public virtual rtx::Error
-            {
-            public:
-                UnknownShapeType() noexcept
-                {
-                    _message = "unknown shape given";
-                }
-
-                const char *what() const noexcept override {return _message.c_str();}
-            };
-
-            class UnknownMaterialType : public virtual rtx::Error
-            {
-            public:
-                UnknownMaterialType() noexcept
-                {
-                    _message = "unknown material given";
-                }
-
-                const char *what() const noexcept override {return _message.c_str();}
-            };
-
         private:
             libconfig::Config &_conf;
 
