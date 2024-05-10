@@ -32,6 +32,7 @@ std::stringstream rtx::IPC::recoverValues(std::size_t buffsize)
             memset(buffer, 0, buffsize);
         }
         waitpid(_pids[i], &status, 0);
+        std::clog << "Process n°" << i << " done.\n";
         close(_pipefds[i][0]);
     }
     return out;

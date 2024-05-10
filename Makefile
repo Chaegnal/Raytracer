@@ -30,6 +30,7 @@ SRC		=	main.cpp								\
 			src/materials/Dielectric.cpp			\
 			src/materials/Metal.cpp					\
 			src/light/Light.cpp						\
+			src/obj/ObjParser.cpp					\
 			src/textures/SolidColor.cpp				\
 			src/textures/TextureChecker.cpp			\
 			src/parsing/Parsing.cpp					\
@@ -47,7 +48,7 @@ OBJ		=	$(SRC:.cpp=.o)
 
 NAME	=	raytracer
 
-CPPFLAGS	=	-std=c++20 -iquote ./interfaces -iquote ./src -iquote ./src/shapes -iquote ./include -iquote ./src/materials -iquote ./src/factory -iquote ./src/parsing -iquote ./src/textures -iquote ./src/transformations -iquote ./src/light
+CPPFLAGS	=	-std=c++20 -iquote ./interfaces -iquote ./src -iquote ./src/shapes -iquote ./include -iquote ./src/materials -iquote ./src/factory -iquote ./src/parsing -iquote ./src/textures -iquote ./src/transformations -iquote ./src/light -iquote ./src/obj
 
 LIBS	=	-lsfml-window -lsfml-system -lsfml-graphics -lconfig++
 

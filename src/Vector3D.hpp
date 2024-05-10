@@ -153,7 +153,8 @@ namespace rtx
             return *this;
         }
 
-        inline Vector3D cross(const Vector3D& v) {
+        Vector3D cross(const Vector3D& v) const
+        {
             return Vector3D(y * v.z - z * v.y,
                         z * v.x - x * v.z,
                         x * v.y - y * v.x);
