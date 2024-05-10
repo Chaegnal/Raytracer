@@ -60,6 +60,7 @@ void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
             builder.setPosition(rtx::Point3D(cylinders[i].x, cylinders[i].y, cylinders[i].z));
             builder.setRadius(cylinders[i].radius);
             builder.setHeight(cylinders[i].height);
+            builder.setIsCapped(cylinders[i].isCapped);
             if (cylinders[i].material.material == "Dielectric")
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cylinders[i].material.extra));
             if (cylinders[i].material.material == "Matte")

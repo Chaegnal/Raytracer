@@ -237,6 +237,7 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfi
                 && oneCylinder.lookupValue("z", infoCylinder.z)
                 && oneCylinder.lookupValue("heigt", infoCylinder.height)
                 && oneCylinder.lookupValue("radius", infoCylinder.radius)
+                && oneCylinder.lookupValue("isCapped", infoCylinder.isCapped)
                 && color.lookupValue("r", infoCylinder.material.r)
                 && color.lookupValue("g", infoCylinder.material.g)
                 && color.lookupValue("b", infoCylinder.material.b)

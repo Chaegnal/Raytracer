@@ -41,6 +41,7 @@ namespace rtx
                 double x, y, z;
                 double height;
                 double radius;
+                bool isCapped;
                 MaterialInfo material;
             };
 

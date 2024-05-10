@@ -21,14 +21,16 @@ namespace rtx
     {
         public:
             Cylinder();
-            Cylinder(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material);
+            Cylinder(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material, bool isCapped = 1);
             bool hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord &rec) const override;
 
             void setRadius(double radius) {_radius = radius;}
-            void setHeight(double height) {_height = _height;}
+            void setHeight(double height) {_height = height;}
+            void setIsCapped(double isCapped) {_isCapped = isCapped;}
         private:
             double _radius;
             double _height;
+            bool _isCapped;
     };
 }
 

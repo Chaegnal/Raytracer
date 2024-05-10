@@ -31,6 +31,7 @@ namespace rtx
 
         void setRadius(double radius) {_cylinder->setRadius(radius);}
         void setHeight(double height) {_cylinder->setHeight(height);}
+        void setIsCapped(bool isCapped) {_cylinder->setIsCapped(isCapped);}
         std::shared_ptr<rtx::Cylinder> getProduct();
     };
 }

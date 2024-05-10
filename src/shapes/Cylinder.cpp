@@ -13,7 +13,7 @@ rtx::Cylinder::Cylinder() : _radius(1.0), _height(1.0)
     _material = nullptr;
 }
 
-rtx::Cylinder::Cylinder(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material) : _radius(radius), _height(height)
+rtx::Cylinder::Cylinder(rtx::Point3D center, double radius, double height, std::shared_ptr<rtx::IMaterial> material, bool isCapped) : _radius(radius), _height(height), _isCapped(isCapped)
 {
     this->center = center;
     _material = material;
@@ -53,10 +53,13 @@ bool rtx::Cylinder::hits(const rtx::Ray &ray, rtx::Interval rayT, rtx::HitRecord
             return false;
     }
 
-    rtx::Vector3D outwardNormal = rec.point - center;
-    rec.setFaceNormal(ray, outwardNormal);
     rec.material = _material;
+    if (!_isCapped)
+        rec.setFaceNormal(ray, distance);
     if (rec.point.y >= center.y && rec.point.y <= center.y + _height)
         return true;
+    if (_isCapped)
+        if (ray.origin.x >= _height || ray.origin.x <= 0 || ray.origin.x >= 0 && ray.origin.x <= _height)
+            return true;
     return false;
 }
