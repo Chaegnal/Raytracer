@@ -155,7 +155,7 @@ void rtx::Factory::createLightFromConfFile(rtx::Scene &world)
     std::vector<rtx::Parsing::LightInfo> lightPoints = rtx::Parsing::parsePointLight(_conf);
 
     for (auto &lightPoint : lightPoints) {
-        auto light = std::make_shared<rtx::Light>(rtx::Color(lightPoint.r, lightPoint.g, lightPoint.b), rtx::Point3D(lightPoint.x, lightPoint.y, lightPoint.z), rtx::Vector3D(0.0, 0.0, 0.0));
+        auto light = std::make_shared<rtx::Light>(rtx::Color(lightPoint.r, lightPoint.g, lightPoint.b));
         world.add(createShape<rtx::Sphere>(rtx::Point3D(lightPoint.x, lightPoint.y, lightPoint.z), lightPoint.size, light));
     }
 }
