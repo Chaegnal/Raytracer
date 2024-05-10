@@ -33,14 +33,14 @@ void rtx::Factory::createWorldFromConfFile(rtx::Scene &world)
     createLightFromConfFile(world);
 }
 
-std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformation(rtx::Parsing::TransfoInfo &transfoInfo, std::shared_ptr<rtx::IShape> &shape) const
-{
-    if (transfoInfo.transformation == "translation")
-        return rtx::Factory::createTransformation<rtx::Translation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z));
-    if (transfoInfo.transformation == "rotation")
-        return rtx::Factory::createTransformation<rtx::Rotation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z), transfoInfo.angle);
-    return shape;
-}
+// std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformation(rtx::Parsing::TransfoInfo &transfoInfo, std::shared_ptr<rtx::IShape> &shape) const
+// {
+//     if (transfoInfo.transformation == "translation")
+//         return rtx::Factory::createTransformation<rtx::Translation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z));
+//     if (transfoInfo.transformation == "rotation")
+//         return rtx::Factory::createTransformation<rtx::Rotation>(shape, rtx::Vector3D(transfoInfo.x, transfoInfo.y, transfoInfo.z), transfoInfo.angle);
+//     return shape;
+// }
 
 void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
 {
@@ -54,6 +54,8 @@ void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(sphere.material.extra));
         if (sphere.material.material == "Matte")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(sphere.material.r, sphere.material.g, sphere.material.b)));
+        if (sphere.material.material == "Light")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(sphere.material.r, sphere.material.g, sphere.material.b)));
         if (sphere.material.material == "Metal")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(sphere.material.r, sphere.material.g, sphere.material.b), sphere.material.extra));
         world.add(builder.getProduct());
@@ -74,6 +76,8 @@ void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cylinders[i].material.extra));
             if (cylinders[i].material.material == "Matte")
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b)));
+            if (cylinders[i].material.material == "Light")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b)));
             if (cylinders[i].material.material == "Metal")
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cylinders[i].material.r, cylinders[i].material.g, cylinders[i].material.b), cylinders[i].material.extra));
             world.add(builder.getProduct());
@@ -93,6 +97,8 @@ void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(cone.material.extra));
             if (cone.material.material == "Matte")
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(cone.material.r, cone.material.g, cone.material.b)));
+            if (cone.material.material == "Light")
+                builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(cone.material.r, cone.material.g, cone.material.b)));
             if (cone.material.material == "Metal")
                 builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(cone.material.r, cone.material.g, cone.material.b), cone.material.extra));
             world.add(builder.getProduct());
@@ -112,6 +118,8 @@ void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(plane.material.extra));
         if (plane.material.material == "Matte")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(plane.material.r, plane.material.g, plane.material.b)));
+        if (plane.material.material == "Light")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(plane.material.r, plane.material.g, plane.material.b)));
         if (plane.material.material == "Metal")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(plane.material.r, plane.material.g, plane.material.b), plane.material.extra));
         world.add(builder.getProduct());
@@ -132,6 +140,8 @@ void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world)
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Dielectric>(triangle.material.extra));
         if (triangle.material.material == "Matte")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Matte>(rtx::Color(triangle.material.r, triangle.material.g, triangle.material.b)));
+        if (triangle.material.material == "Light")
+            builder.setMaterial(rtx::Factory::createMaterial<rtx::Light>(rtx::Color(triangle.material.r, triangle.material.g, triangle.material.b)));
         if (triangle.material.material == "Metal")
             builder.setMaterial(rtx::Factory::createMaterial<rtx::Metal>(rtx::Color(triangle.material.r, triangle.material.g, triangle.material.b), triangle.material.extra));
         world.add(builder.getProduct());
