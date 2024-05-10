@@ -26,7 +26,7 @@ namespace rtx
         ~PlaneBuilder() = default;
 
         void reset() override {_plane = std::make_unique<rtx::Plane>();}
-        void setPosition(rtx::Point3D position) override {_plane->center = position;}
+        void setPosition(rtx::Point3D position) override {_plane->setPosition(position);}
         void setMaterial(std::shared_ptr<rtx::IMaterial> material) override {_plane->_material = material;}
 
         void setWidth(rtx::Vector3D width) {_plane->setVectorX(width);}
