@@ -58,6 +58,7 @@ namespace rtx {
             void createConeFromConfFile(rtx::Scene &world) const noexcept;
             void createCylinderFromConfFile(rtx::Scene &world) const noexcept;
             void createLightFromConfFile(rtx::Scene &world) const noexcept;
+            void createDirectionalLightFromConfFile(rtx::Scene &world) const noexcept;
     };
 }
 

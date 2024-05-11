@@ -18,6 +18,7 @@
 #include <libconfig.h++>
 #include "Rotation.hpp"
 #include "Translation.hpp"
+#include <memory>
 
 rtx::Factory::Factory(libconfig::Config &conf) : _conf(conf)
 {
@@ -31,6 +32,7 @@ void rtx::Factory::createWorldFromConfFile(rtx::Scene &world) const noexcept
     createSphereFromConfFile(world);
     createTriangleFromConfFile(world);
     createLightFromConfFile(world);
+    createDirectionalLightFromConfFile(world);
 }
 
 std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformations(std::vector<rtx::Parsing::TransfoInfo> &transfoInfos, std::shared_ptr<rtx::IShape> shape) const
@@ -157,5 +159,32 @@ void rtx::Factory::createLightFromConfFile(rtx::Scene &world) const noexcept
     for (auto &lightPoint : lightPoints) {
         auto light = std::make_shared<rtx::Light>(rtx::Color(lightPoint.r, lightPoint.g, lightPoint.b));
         world.add(createShape<rtx::Sphere>(rtx::Point3D(lightPoint.x, lightPoint.y, lightPoint.z), lightPoint.size, light));
+    }
+}
+
+void rtx::Factory::createDirectionalLightFromConfFile(rtx::Scene &world) const noexcept
+{
+    std::vector<rtx::Parsing::DirectionalLightInfo> lightPoints = rtx::Parsing::parseDirectionalLight(_conf);
+    for (auto &lightPoint : lightPoints) {
+        auto light = std::make_shared<rtx::Light>(rtx::Color(lightPoint.r, lightPoint.g, lightPoint.b));
+        world.add(createShape<rtx::Sphere>(rtx::Point3D(lightPoint.x, lightPoint.y, lightPoint.z), lightPoint.size, light));
+        auto black = std::make_shared<rtx::Matte>(rtx::Color(0.0, 0.0, 0.0));
+        rtx::Point3D pos = rtx::Point3D(lightPoint.x, lightPoint.y, lightPoint.z);
+
+        rtx::Point3D lookat = rtx::Point3D(lightPoint.x2, lightPoint.y2, lightPoint.z2);
+
+        world.add(createShape<rtx::Sphere>(pos, lightPoint.size, light));
+
+        rtx::Vector3D tmp = rtx::Vector3D(lookat.x - lightPoint.x, lookat.y - lightPoint.y, lookat.z - lightPoint.z).unitVector();
+
+        double yaw = -std::atan2(tmp.y + (lightPoint.size / 2.0), tmp.x + (lightPoint.size / 2.0)) * (180.0 / M_PI);
+        double pitch = -std::asin(tmp.z) * (180.0 / M_PI);
+
+        auto cylinder = createShape<rtx::Cylinder>(rtx::Point3D(0.0, 0.0, 0.0), lightPoint.size, lightPoint.size * 10, black);
+
+        cylinder = std::make_shared<rtx::Rotation>(cylinder, rtx::Vector3D(0, 0, 1), yaw);
+        cylinder = std::make_shared<rtx::Rotation>(cylinder, rtx::Vector3D(1, 0, 0), pitch);
+        cylinder = std::make_shared<rtx::Translation>(cylinder, pos);
+        world.add(cylinder);
     }
 }

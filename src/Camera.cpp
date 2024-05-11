@@ -185,18 +185,15 @@ void rtx::Camera::initialize()
     _pixelSampleScale = 1.0 / double(samplesPerPixel);
     _origin = cameraPosition;
 
-    double theta = degToRad(fov);
-    double h = tan(theta/2);
-    double viewHeight = 2 * h * focusDist;
-    double viewWidth = viewHeight * (double(imageSize.first) / imageSize.second);
+    double vh = 2 * (tan(degToRad(fov)/2)) * focusDist;
 
     rtx::Vector3D w = (cameraPosition - lookAt).unitVector();
     rtx::Vector3D u = (cameraAngle).cross(w).unitVector();
     rtx::Vector3D v = w.cross(u);
 
-    rtx::Vector3D viewU = u * viewWidth;
+    rtx::Vector3D viewU = u * (vh * (double(imageSize.first) / imageSize.second));
     _pixelU = viewU / double(imageSize.first);
-    rtx::Vector3D viewV = -v * viewHeight;
+    rtx::Vector3D viewV = -v * vh;
     _pixelV = viewV / double(imageSize.second);
     rtx::Point3D viewportOrigin = _origin - (w * (focusDist)) - (viewU / 2.0) - (viewV / 2.0);
     _pixelOrigin = viewportOrigin + ((_pixelU + _pixelV) * 0.5);

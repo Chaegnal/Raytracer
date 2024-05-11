@@ -481,6 +481,42 @@ std::vector<rtx::Parsing::LightInfo> rtx::Parsing::parsePointLight(libconfig::Co
     return lightInfo;
 }
 
+std::vector<rtx::Parsing::DirectionalLightInfo> rtx::Parsing::parseDirectionalLight(libconfig::Config &conf)
+{
+    std::vector<DirectionalLightInfo> lightInfo;
+    const libconfig::Setting &root = conf.getRoot();
+
+    try {
+        const libconfig::Setting &point = root["lights"]["directional"];
+        int count = point.getLength();
+
+        for(int i = 0; i < count; ++i)
+        {
+            const libconfig::Setting &oneLight = point[i];
+            const libconfig::Setting &colorLight = oneLight["color"];
+            const libconfig::Setting &lightLookat = oneLight["lookat"];
+            const libconfig::Setting &lightPosition = oneLight["position"];
+            DirectionalLightInfo light;
+            if(!(lightPosition.lookupValue("x", light.x)
+                && lightPosition.lookupValue("y", light.y)
+                && lightPosition.lookupValue("z", light.z)
+                && lightLookat.lookupValue("x", light.x2)
+                && lightLookat.lookupValue("y", light.y2)
+                && lightLookat.lookupValue("z", light.z2)
+                && colorLight.lookupValue("r", light.r)
+                && colorLight.lookupValue("g", light.g)
+                && colorLight.lookupValue("b", light.b)
+                && oneLight.lookupValue("size", light.size)))
+                continue;
+
+            lightInfo.push_back(light);
+        }
+
+    } catch(const libconfig::SettingNotFoundException &) {
+    }
+    return lightInfo;
+}
+
 std::pair<std::pair<double, double>, std::vector<rtx::Parsing::LightInfo>> rtx::Parsing::parseLights(libconfig::Config &conf)
 {
     std::pair<std::pair<double, double>, std::vector<rtx::Parsing::LightInfo>> allLightInfo;

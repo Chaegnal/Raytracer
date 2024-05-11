@@ -64,6 +64,13 @@ namespace rtx
                 double size;
             };
 
+            struct DirectionalLightInfo {
+                double x, y, z;
+                double x2, y2, z2;
+                double r, g, b;
+                double size;
+            };
+
             static double parseCamFOV(libconfig::Config &conf);
             static std::tuple<double, double, double> parseCamPosition(libconfig::Config &conf);
             static int parseCamSample(libconfig::Config &conf);
@@ -85,6 +92,7 @@ namespace rtx
 
             static std::pair<double, double> parseAmbientDiffuse(libconfig::Config &conf);
             static std::vector<LightInfo> parsePointLight(libconfig::Config &conf);
+            static std::vector<DirectionalLightInfo> parseDirectionalLight(libconfig::Config &conf);
             static std::pair<std::pair<double, double>, std::vector<LightInfo>> parseLights(libconfig::Config &conf);
 
         protected:
