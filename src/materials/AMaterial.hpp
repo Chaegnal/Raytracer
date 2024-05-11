@@ -14,19 +14,13 @@ namespace rtx
 {
     class AMaterial : public virtual rtx::IMaterial
     {
-    protected:
-        rtx::Color _albedo;
+        protected:
+            rtx::Color _albedo;
 
-    public:
-        virtual ~AMaterial() = default;
-
-        virtual bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const
-            {
-                return false;
-            }
-        virtual rtx::Color lightEmition(double u, double v, const rtx::Point3D& point) const {
-            return rtx::Color(0,0,0);
-        }
+        public:
+            virtual ~AMaterial() = default;
+            virtual bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const;
+            virtual rtx::Color lightEmission(double u, double v, const rtx::Point3D& point) const;
     };
 }
 

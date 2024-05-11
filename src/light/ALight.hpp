@@ -14,26 +14,15 @@ namespace rtx
 {
     class ALight : public virtual rtx::ILight
     {
-    protected:
-        rtx::Color _albedo;
+        protected:
+            rtx::Color _albedo;
 
-    public:
-        virtual ~ALight() = default;
+        public:
+            virtual ~ALight() = default;
 
-        bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const override{
-            return false;
-        }
-        virtual rtx::Color lightEmition(double u, double v, const rtx::Point3D& point) const {
-            return rtx::Color(0,0,0);
-        }
-        virtual rtx::Color ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const {
-            if (actualColor.x == 0.00 && actualColor.y == 0.00 && actualColor.z == 0.00) {
-                actualColor.x = defaultColor.x * ambient;
-                actualColor.y = defaultColor.y * ambient;
-                actualColor.z = defaultColor.z * ambient;
-            }
-            return actualColor;
-        }
+            bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const override;
+            virtual rtx::Color lightEmission(double u, double v, const rtx::Point3D& point) const;
+            virtual rtx::Color ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const;
     };
 }
 

@@ -51,13 +51,13 @@ namespace rtx {
                 return std::make_shared<Transfo>(std::forward<Argument>(args)...);
             }
 
-            void createWorldFromConfFile(rtx::Scene &world);
-            void createSphereFromConfFile(rtx::Scene &world);
-            void createPlaneFromConfFile(rtx::Scene &world);
-            void createTriangleFromConfFile(rtx::Scene &world);
-            void createConeFromConfFile(rtx::Scene &world);
-            void createCylinderFromConfFile(rtx::Scene &world);
-            void createLightFromConfFile(rtx::Scene &world);
+            void createWorldFromConfFile(rtx::Scene &world) const noexcept;
+            void createSphereFromConfFile(rtx::Scene &world) const noexcept;
+            void createPlaneFromConfFile(rtx::Scene &world) const noexcept;
+            void createTriangleFromConfFile(rtx::Scene &world) const noexcept;
+            void createConeFromConfFile(rtx::Scene &world) const noexcept;
+            void createCylinderFromConfFile(rtx::Scene &world) const noexcept;
+            void createLightFromConfFile(rtx::Scene &world) const noexcept;
     };
 }
 

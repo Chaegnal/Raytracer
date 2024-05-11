@@ -20,15 +20,8 @@ namespace rtx
             Light(std::shared_ptr<rtx::ITextures> tex);
             Light(const rtx::Color& emit);
 
-            rtx::Color lightEmition(double u, double v, const rtx::Point3D& point) const override;
-            rtx::Color ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const override {
-                if (actualColor.x == 0.00 && actualColor.y == 0.00 && actualColor.z == 0.00) {
-                    actualColor.x = defaultColor.x * ambient;
-                    actualColor.y = defaultColor.y * ambient;
-                    actualColor.z = defaultColor.z * ambient;
-                }
-                return actualColor;
-            }
+            rtx::Color lightEmission(double u, double v, const rtx::Point3D& point) const override;
+            rtx::Color ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const override;
 
         private:
             std::shared_ptr<rtx::ITextures> _texture;

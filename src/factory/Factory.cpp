@@ -23,7 +23,7 @@ rtx::Factory::Factory(libconfig::Config &conf) : _conf(conf)
 {
 }
 
-void rtx::Factory::createWorldFromConfFile(rtx::Scene &world)
+void rtx::Factory::createWorldFromConfFile(rtx::Scene &world) const noexcept
 {
     createPlaneFromConfFile(world);
     createConeFromConfFile(world);
@@ -44,7 +44,7 @@ std::shared_ptr<rtx::IShape> rtx::Factory::applyTransformations(std::vector<rtx:
     return shape;
 }
 
-void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
+void rtx::Factory::createSphereFromConfFile(rtx::Scene &world) const noexcept
 {
     rtx::SphereBuilder builder;
     std::vector<rtx::Parsing::SphereInfo> spheres = rtx::Parsing::parseSphere(_conf);
@@ -64,7 +64,7 @@ void rtx::Factory::createSphereFromConfFile(rtx::Scene &world)
     }
 }
 
-void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
+void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world) const noexcept
 {
     rtx::CylinderBuilder builder;
     std::vector<rtx::Parsing::CylinderConeInfo> cylinders = rtx::Parsing::parseCylinder(_conf);
@@ -86,7 +86,7 @@ void rtx::Factory::createCylinderFromConfFile(rtx::Scene &world)
     }
 }
 
-void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
+void rtx::Factory::createConeFromConfFile(rtx::Scene &world) const noexcept
 {
     rtx::ConeBuilder builder;
     std::vector<rtx::Parsing::CylinderConeInfo> cones = rtx::Parsing::parseCone(_conf);
@@ -107,7 +107,7 @@ void rtx::Factory::createConeFromConfFile(rtx::Scene &world)
     }
 }
 
-void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
+void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world) const noexcept
 {
     rtx::PlaneBuilder builder;
     std::vector<rtx::Parsing::PlaneTriangleInfo> planes = rtx::Parsing::parsePlane(_conf);
@@ -128,7 +128,7 @@ void rtx::Factory::createPlaneFromConfFile(rtx::Scene &world)
     }
 }
 
-void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world)
+void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world) const noexcept
 {
     rtx::TriangleBuilder builder;
     std::vector<rtx::Parsing::PlaneTriangleInfo> triangles = rtx::Parsing::parseTriangles(_conf);
@@ -150,7 +150,7 @@ void rtx::Factory::createTriangleFromConfFile(rtx::Scene &world)
     }
 }
 
-void rtx::Factory::createLightFromConfFile(rtx::Scene &world)
+void rtx::Factory::createLightFromConfFile(rtx::Scene &world) const noexcept
 {
     std::vector<rtx::Parsing::LightInfo> lightPoints = rtx::Parsing::parsePointLight(_conf);
 

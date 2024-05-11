@@ -89,7 +89,7 @@ std::tuple<double, double, double> rtx::Parsing::parseCamPosition(libconfig::Con
         if(!(camera.lookupValue("x", x)
             && camera.lookupValue("y", y)
             && camera.lookupValue("z", z)))
-                return std::make_tuple(0, 0, 0);
+            return std::make_tuple(0, 0, 0);
     } catch (const libconfig::SettingNotFoundException &) {
     }
     return std::make_tuple(x, y, z);
@@ -109,7 +109,7 @@ std::tuple<double, double, double> rtx::Parsing::parseCamLookAt(libconfig::Confi
         if(!(camera.lookupValue("x", x)
             && camera.lookupValue("y", y)
             && camera.lookupValue("z", z)))
-                return std::make_tuple(0, 0, 0);
+            return std::make_tuple(0, 0, 0);
     } catch (const libconfig::SettingNotFoundException &) {
     }
     return std::make_tuple(x, y, z);
@@ -182,7 +182,7 @@ std::vector<rtx::Parsing::SphereInfo> rtx::Parsing::parseSphere(libconfig::Confi
         const libconfig::Setting &sphere = root["primitives"]["spheres"];
         int count = sphere.getLength();
 
-        for(int i = 0; i < count; ++i)
+        for(std::size_t i = 0; i < count; ++i)
         {
             const libconfig::Setting &oneSphere = sphere[i];
             const libconfig::Setting &color = oneSphere["color"];
@@ -201,7 +201,7 @@ std::vector<rtx::Parsing::SphereInfo> rtx::Parsing::parseSphere(libconfig::Confi
                 && oneSphere.lookupValue("extra", infoSphere.material.extra)))
                 continue;
 
-                for (int y = 0; y < countTransfo; y++) {
+                for (std::size_t y = 0; y < countTransfo; y++) {
                     TransfoInfo transformation;
                     const libconfig::Setting &transfo = transformations[y];
                     const libconfig::Setting &axis = transfo["axis"];
@@ -232,7 +232,7 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfi
         const libconfig::Setting &cylinder = root["primitives"]["cylinder"];
         int count = cylinder.getLength();
 
-        for(int i = 0; i < count; ++i)
+        for(std::size_t i = 0; i < count; ++i)
         {
             const libconfig::Setting &oneCylinder = cylinder[i];
             const libconfig::Setting &color = oneCylinder["color"];
@@ -253,7 +253,7 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCylinder(libconfi
                 && oneCylinder.lookupValue("extra", infoCylinder.material.extra)))
                 continue;
 
-            for (int y = 0; y < countTransfo; y++) {
+            for (std::size_t y = 0; y < countTransfo; y++) {
                 TransfoInfo transformation;
                 const libconfig::Setting &transfo = transformations[y];
                 const libconfig::Setting &axis = transfo["axis"];
@@ -283,7 +283,7 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCone(libconfig::C
         const libconfig::Setting &Cone = root["primitives"]["cones"];
         int count = Cone.getLength();
 
-        for(int i = 0; i < count; ++i)
+        for(std::size_t i = 0; i < count; ++i)
         {
             const libconfig::Setting &oneCone = Cone[i];
             const libconfig::Setting &color = oneCone["color"];
@@ -303,7 +303,7 @@ std::vector<rtx::Parsing::CylinderConeInfo> rtx::Parsing::parseCone(libconfig::C
                 && oneCone.lookupValue("extra", infoCone.material.extra)))
                 continue;
 
-           for (int y = 0; y < countTransfo; y++) {
+           for (std::size_t y = 0; y < countTransfo; y++) {
                 TransfoInfo transformation;
                 const libconfig::Setting &transfo = transformations[y];
                 const libconfig::Setting &axis = transfo["axis"];
@@ -334,7 +334,7 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parsePlane(libconfig:
 
         int count = planes.getLength();
 
-        for(int i = 0; i < count; ++i)
+        for(std::size_t i = 0; i < count; ++i)
         {
             const libconfig::Setting &onePlane = planes[i];
             const libconfig::Setting &sizePlane = onePlane["size"];
@@ -360,7 +360,7 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parsePlane(libconfig:
                 && colorPlane.lookupValue("b", infoPlane.material.b)))
                 continue;
 
-            for (int y = 0; y < countTransfo; y++) {
+            for (std::size_t y = 0; y < countTransfo; y++) {
                 TransfoInfo transformation;
                 const libconfig::Setting &transfo = transformations[y];
                 const libconfig::Setting &axis = transfo["axis"];
@@ -390,7 +390,7 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libcon
 
         int count = triangles.getLength();
 
-        for(int i = 0; i < count; ++i)
+        for(std::size_t i = 0; i < count; ++i)
         {
             const libconfig::Setting &oneTriangle = triangles[i];
             const libconfig::Setting &firstSummit = oneTriangle["first"];
@@ -417,15 +417,15 @@ std::vector<rtx::Parsing::PlaneTriangleInfo> rtx::Parsing::parseTriangles(libcon
                 && color.lookupValue("b", infoTriangle.material.b)))
                 continue;
 
-            for (int y = 0; y < countTransfo; y++) {
+            for (std::size_t y = 0; y < countTransfo; y++) {
                 TransfoInfo transformation;
                 const libconfig::Setting &transfo = transformations[y];
                 const libconfig::Setting &axis = transfo["axis"];
                 if(!(transfo.lookupValue("type", transformation.transformation)
-                && transfo.lookupValue("angle", transformation.angle)
-                && axis.lookupValue("x", transformation.x)
-                && axis.lookupValue("y", transformation.y)
-                && axis.lookupValue("z", transformation.z)))
+                    && transfo.lookupValue("angle", transformation.angle)
+                    && axis.lookupValue("x", transformation.x)
+                    && axis.lookupValue("y", transformation.y)
+                    && axis.lookupValue("z", transformation.z)))
                     continue;
                 infoTriangle.material.transfo.push_back(transformation);
             }
@@ -461,8 +461,7 @@ std::vector<rtx::Parsing::LightInfo> rtx::Parsing::parsePointLight(libconfig::Co
         const libconfig::Setting &point = root["lights"]["point"];
         int count = point.getLength();
 
-        for(int i = 0; i < count; ++i)
-        {
+        for(std::size_t i = 0; i < count; ++i) {
             const libconfig::Setting &oneLight = point[i];
             const libconfig::Setting &colorLight = oneLight["color"];
             LightInfo light;
@@ -477,7 +476,6 @@ std::vector<rtx::Parsing::LightInfo> rtx::Parsing::parsePointLight(libconfig::Co
 
             lightInfo.push_back(light);
         }
-
     } catch(const libconfig::SettingNotFoundException &) {
     }
     return lightInfo;

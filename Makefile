@@ -29,6 +29,7 @@ SRC		=	main.cpp								\
 			src/materials/Matte.cpp					\
 			src/materials/Dielectric.cpp			\
 			src/materials/Metal.cpp					\
+			src/light/ALight.cpp					\
 			src/light/Light.cpp						\
 			src/obj/ObjParser.cpp					\
 			src/textures/SolidColor.cpp				\

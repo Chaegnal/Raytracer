@@ -6,14 +6,9 @@
 */
 
 #include "Camera.hpp"
-#include "Ray.hpp"
-#include "Vector3D.hpp"
-#include "macros.hpp"
-#include "IShape.hpp"
 #include "IPC.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include <iomanip>
 #include <thread>
 #include "Light.hpp"
@@ -58,34 +53,31 @@ void rtx::Camera::writeColor(const rtx::Color &color, std::ofstream &ppmFile) co
 
 rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::IShape &shape) const
 {
-    if (depth <= 0)
-        return rtx::Color();
-
     rtx::HitRecord rec;
 
-    if (!shape.hits(ray, rtx::Interval(0.001, infinity), rec)) {
-        return _backgroundColor;
-    }
+    if (depth <= 0)
+        return rtx::Color();
+    if (!shape.hits(ray, rtx::Interval(0.001, infinity), rec))
+        return backgroundColor;
 
     rtx::Ray reflected;
     rtx::Color attenuation;
     rtx::Light light;
-    rtx::Color color_from_emission = rec.material->lightEmition(rec.u, rec.v, rec.point);
+    rtx::Color colorFromEmission = rec.material->lightEmission(rec.u, rec.v, rec.point);
 
     if (rec.material->reflect(ray, rec, attenuation, reflected)) {
         rtx::Color finalColor = attenuation * getRayColor(reflected, depth - 1, shape);
         light.ambientLight(ambientLight, finalColor, attenuation);
         return finalColor;
     }
-
-    return color_from_emission;
+    return colorFromEmission;
 }
 
 rtx::Ray rtx::Camera::getRay(double u, double v) const
 {
     auto offset = getSampleSquare();
     rtx::Point3D pixelSample = _pixelOrigin + (_pixelU * (offset.x + u)) + (_pixelV * (offset.y + v));
-    rtx::Point3D rayOrigin = (_defocusAngle <= 0.0) ? _origin : defocusDiskSample();
+    rtx::Point3D rayOrigin = (defocusAngle <= 0.0) ? _origin : defocusDiskSample();
     rtx::Vector3D rayDirection = pixelSample - _origin;
 
     return rtx::Ray(rayOrigin, rayDirection);
@@ -191,24 +183,24 @@ void rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& s
 void rtx::Camera::initialize()
 {
     _pixelSampleScale = 1.0 / double(samplesPerPixel);
-    _origin = _cameraPosition;
+    _origin = cameraPosition;
 
-    double theta = degToRad(_fov);
+    double theta = degToRad(fov);
     double h = tan(theta/2);
-    double viewHeight = 2 * h * _focusDist;
+    double viewHeight = 2 * h * focusDist;
     double viewWidth = viewHeight * (double(imageSize.first) / imageSize.second);
 
-    rtx::Vector3D w = (_cameraPosition - _lookAt).unitVector();
-    rtx::Vector3D u = (_cameraAngle).cross(w).unitVector();
+    rtx::Vector3D w = (cameraPosition - lookAt).unitVector();
+    rtx::Vector3D u = (cameraAngle).cross(w).unitVector();
     rtx::Vector3D v = w.cross(u);
 
     rtx::Vector3D viewU = u * viewWidth;
     _pixelU = viewU / double(imageSize.first);
     rtx::Vector3D viewV = -v * viewHeight;
     _pixelV = viewV / double(imageSize.second);
-    rtx::Point3D viewportOrigin = _origin - (w * (_focusDist)) - (viewU / 2.0) - (viewV / 2.0);
+    rtx::Point3D viewportOrigin = _origin - (w * (focusDist)) - (viewU / 2.0) - (viewV / 2.0);
     _pixelOrigin = viewportOrigin + ((_pixelU + _pixelV) * 0.5);
-    double defocusRad = _focusDist * tan(degToRad(_defocusAngle / 2.0));
+    double defocusRad = focusDist * tan(degToRad(defocusAngle / 2.0));
     _defocusX = u * defocusRad;
     _defocusY = v * defocusRad;
 }

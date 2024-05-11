@@ -46,15 +46,15 @@ static rtx::Camera getCam(libconfig::Config &conf)
     std::tuple<double, double, double> angle = rtx::Parsing::parseCamAngle(conf);
     std::pair<double, double> light = rtx::Parsing::parseAmbientDiffuse(conf);
 
-    cam._backgroundColor = rtx::Color(std::get<0>(color), std::get<1>(color), std::get<2>(color));
+    cam.backgroundColor = rtx::Color(std::get<0>(color), std::get<1>(color), std::get<2>(color));
     cam.samplesPerPixel = rtx::Parsing::parseCamSample(conf);
     cam.maxDepth = rtx::Parsing::parseCamDepth(conf);
-    cam._fov = rtx::Parsing::parseCamFOV(conf);
-    cam._cameraPosition = rtx::Point3D(std::get<0>(pos),std::get<1>(pos),std::get<2>(pos));
-    cam._lookAt = rtx::Point3D(std::get<0>(lookAt),std::get<1>(lookAt),std::get<2>(lookAt));
-    cam._cameraAngle = rtx::Vector3D(std::get<0>(angle),std::get<1>(angle),std::get<2>(angle));
-    cam._defocusAngle = rtx::Parsing::parseCamDefocus(conf);
-    cam._focusDist = rtx::Parsing::parseCamFocus(conf);
+    cam.fov = rtx::Parsing::parseCamFOV(conf);
+    cam.cameraPosition = rtx::Point3D(std::get<0>(pos),std::get<1>(pos),std::get<2>(pos));
+    cam.lookAt = rtx::Point3D(std::get<0>(lookAt),std::get<1>(lookAt),std::get<2>(lookAt));
+    cam.cameraAngle = rtx::Vector3D(std::get<0>(angle),std::get<1>(angle),std::get<2>(angle));
+    cam.defocusAngle = rtx::Parsing::parseCamDefocus(conf);
+    cam.focusDist = rtx::Parsing::parseCamFocus(conf);
     cam.ambientLight = light.first;
     return cam;
 }

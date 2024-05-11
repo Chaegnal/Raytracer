@@ -25,7 +25,7 @@ namespace rtx
         virtual ~IMaterial() = default;
 
         virtual bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const = 0;
-        virtual rtx::Color lightEmition(double u, double v, const rtx::Point3D& point) const = 0;
+        virtual rtx::Color lightEmission(double u, double v, const rtx::Point3D& point) const = 0;
     };
 }
 
