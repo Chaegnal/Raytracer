@@ -9,6 +9,7 @@
     #define RAY_HPP_
 
     #include "Vector3D.hpp"
+    #include <memory>
 
 namespace rtx
 {

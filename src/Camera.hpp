@@ -10,6 +10,7 @@
 
     #include "Ray.hpp"
     #include "Vector3D.hpp"
+    #include "Color.hpp"
     #include "IShape.hpp"
     #include "macros.hpp"
     #include "Error.hpp"
@@ -32,10 +33,6 @@ namespace rtx
             rtx::Vector3D _defocusY;
 
             void initialize();
-            double toGamma(double linear);
-            void addGamma(rtx::Color &color);
-            void smoothenPixels(rtx::Color &color);
-            void writeColor(const rtx::Color &color, std::ofstream &ppmFile) const;
             rtx::Color getRayColor(const rtx::Ray &ray, int depth, const rtx::IShape &shape) const;
             rtx::Vector3D getSampleSquare() const {return rtx::Vector3D(randomValue() - 0.5, randomValue() - 0.5, 0.0);}
             rtx::Point3D defocusDiskSample() const;
@@ -63,8 +60,8 @@ namespace rtx
             rtx::Vector3D cameraAngle = rtx::Vector3D(0.0, 1.0, 0.0);
             double defocusAngle = 0.0;
             double focusDist = 10.0;
-            rtx::Color backgroundColor;
-            double ambientLight;
+            rtx::Color backgroundColor = rtx::Color();
+            double ambientLight = 0.0;
 
             void processPixels(std::stringstream &str, std::size_t yMin, std::size_t yMax, const rtx::IShape &shape);
             rtx::Ray getRay(double u, double v) const;

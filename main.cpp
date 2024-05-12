@@ -10,6 +10,8 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include "Color.hpp"
+#include "Vector3D.hpp"
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "memes.hpp"

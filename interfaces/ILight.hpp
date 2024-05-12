@@ -10,6 +10,7 @@
 
     #include "Vector3D.hpp"
     #include "IMaterial.hpp"
+    #include "Color.hpp"
 
 namespace rtx
 {

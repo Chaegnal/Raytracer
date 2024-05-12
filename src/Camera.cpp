@@ -25,32 +25,6 @@ rtx::Camera::Camera() : _intensity(rtx::Interval(0.0, 0.9))
     initialize();
 }
 
-double rtx::Camera::toGamma(double linear)
-{
-    if (linear > 0.0)
-        return sqrt(linear);
-    return 0.0;
-}
-
-void rtx::Camera::smoothenPixels(rtx::Color &color)
-{
-    color.x = short(256.0 * _intensity.clamp(color.x));
-    color.y = short(256.0 * _intensity.clamp(color.y));
-    color.z = short(256.0 * _intensity.clamp(color.z));
-}
-
-void rtx::Camera::addGamma(rtx::Color &color)
-{
-    color.x = toGamma(color.x);
-    color.y = toGamma(color.y);
-    color.z = toGamma(color.z);
-}
-
-void rtx::Camera::writeColor(const rtx::Color &color, std::ofstream &ppmFile) const
-{
-    ppmFile << short(color.x) << ' ' << short(color.y) << ' ' << short(color.z) << '\n';
-}
-
 rtx::Color rtx::Camera::getRayColor(const rtx::Ray &ray, int depth, const rtx::IShape &shape) const
 {
     rtx::HitRecord rec;
@@ -86,6 +60,7 @@ rtx::Ray rtx::Camera::getRay(double u, double v) const
 rtx::Point3D rtx::Camera::defocusDiskSample() const
 {
     rtx::Vector3D vect = rtx::Vector3D::randomInUnitDisk();
+
     return _origin + (_defocusX * vect.x) + (_defocusY * vect.y);
 }
 
@@ -99,9 +74,9 @@ void rtx::Camera::processPixels(std::stringstream &str, std::size_t yMin, std::s
                 pixelColor += getRayColor(ray, maxDepth, shape);
             }
             pixelColor *= _pixelSampleScale;
-            addGamma(pixelColor);
-            smoothenPixels(pixelColor);
-            str << std::to_string(short(pixelColor.x)) + ' ' + std::to_string(short(pixelColor.y)) + ' ' + std::to_string(short(pixelColor.z)) + '\n';
+            pixelColor.correctGamma();
+            pixelColor.smoothenPixels(_intensity);
+            str << pixelColor << '\n';
         }
     }
 }
@@ -157,8 +132,8 @@ void rtx::Camera::renderGraphical(const rtx::IShape &shape, const std::string& s
                     pixelColor += getRayColor(ray, maxDepth, shape);
                 }
                 pixelColor *= _pixelSampleScale;
-                smoothenPixels(pixelColor);
-                writeColor(pixelColor, ppmFile);
+                pixelColor.smoothenPixels(_intensity);
+                ppmFile << pixelColor << '\n';
                 pixels[y * imageSize.first + x].position = sf::Vector2f(x, y);
                 pixels[y * imageSize.first + x].color = sf::Color(pixelColor.x, pixelColor.y, pixelColor.z, 255);
             }
@@ -185,7 +160,7 @@ void rtx::Camera::initialize()
     _pixelSampleScale = 1.0 / double(samplesPerPixel);
     _origin = cameraPosition;
 
-    double vh = 2 * (tan(degToRad(fov)/2)) * focusDist;
+    double vh = 2.0 * (std::tan(degToRad(fov) / 2.0)) * focusDist;
 
     rtx::Vector3D w = (cameraPosition - lookAt).unitVector();
     rtx::Vector3D u = (cameraAngle).cross(w).unitVector();
@@ -197,7 +172,7 @@ void rtx::Camera::initialize()
     _pixelV = viewV / double(imageSize.second);
     rtx::Point3D viewportOrigin = _origin - (w * (focusDist)) - (viewU / 2.0) - (viewV / 2.0);
     _pixelOrigin = viewportOrigin + ((_pixelU + _pixelV) * 0.5);
-    double defocusRad = focusDist * tan(degToRad(defocusAngle / 2.0));
+    double defocusRad = focusDist * std::tan(degToRad(defocusAngle / 2.0));
     _defocusX = u * defocusRad;
     _defocusY = v * defocusRad;
 }

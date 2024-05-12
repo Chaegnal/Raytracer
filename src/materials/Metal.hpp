@@ -9,6 +9,7 @@
     #define METAL_HPP_
 
     #include "AMaterial.hpp"
+    #include "Color.hpp"
 
 namespace rtx
 {

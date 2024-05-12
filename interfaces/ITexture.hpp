@@ -1,12 +1,12 @@
 /*
 ** EPITECH PROJECT, 2024
-** backup
+** ITexture.hpp
 ** File description:
-** ITextures
+** texture interface
 */
 
-#ifndef ITEXTURES_HPP_
-    #define ITEXTURES_HPP_
+#ifndef ITEXTURE_HPP_
+    #define ITEXTURE_HPP_
 
     #include "Ray.hpp"
     #include "HitRecord.hpp"
@@ -14,12 +14,12 @@
 
 namespace rtx
 {
-    class ITextures {
+    class ITexture {
         public:
-            virtual ~ITextures() = default;
+            virtual ~ITexture() = default;
 
             virtual rtx::Color textureColor(double u, double v, const rtx::Point3D& p) const = 0;
     };
 };
 
-#endif /* !ITEXTURES_HPP_ */
+#endif /* !ITEXTURE_HPP_ */

@@ -13,7 +13,7 @@ rtx::Matte::Matte(const rtx::Color &albedo)
     texture = std::make_shared<SolidColor>(albedo);
 }
 
-rtx::Matte::Matte(std::shared_ptr<ITextures> tex)
+rtx::Matte::Matte(std::shared_ptr<ITexture> tex)
 {
     texture = tex;
 }

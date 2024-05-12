@@ -8,11 +8,12 @@
 #ifndef SOLIDCOLOR_HPP_
     #define SOLIDCOLOR_HPP_
 
-    #include "ATextures.hpp"
+    #include "ITexture.hpp"
+    #include "Color.hpp"
 
 namespace rtx
 {
-    class SolidColor : public rtx::ATextures {
+    class SolidColor : public rtx::ITexture {
         public:
             SolidColor(const rtx::Color& albedo);
             SolidColor(double r, double g, double b);

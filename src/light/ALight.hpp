@@ -9,6 +9,7 @@
     #define ALIGHT_HPP_
 
     #include "ILight.hpp"
+    #include "Color.hpp"
 
 namespace rtx
 {
@@ -21,8 +22,8 @@ namespace rtx
             virtual ~ALight() = default;
 
             bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const override;
-            virtual rtx::Color lightEmission(double u, double v, const rtx::Point3D& point) const;
-            virtual rtx::Color ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const;
+            virtual rtx::Color lightEmission(double u, double v, const rtx::Point3D& point) const override;
+            virtual rtx::Color ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const override;
     };
 }
 

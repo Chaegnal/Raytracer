@@ -9,7 +9,7 @@
     #define MATTE_HPP_
 
     #include "AMaterial.hpp"
-    #include "ITextures.hpp"
+    #include "ITexture.hpp"
     #include "Vector3D.hpp"
     #include "SolidColor.hpp"
 
@@ -19,12 +19,12 @@ namespace rtx
     {
     public:
         Matte(const rtx::Color &albedo);
-        Matte(std::shared_ptr<ITextures> tex);
+        Matte(std::shared_ptr<ITexture> tex);
         ~Matte() = default;
 
         bool reflect(const rtx::Ray &rayIn, const rtx::HitRecord &rec, rtx::Color &attenuation, rtx::Ray &reflected) const override;
     private:
-        std::shared_ptr<ITextures> texture;
+        std::shared_ptr<ITexture> texture;
     };
 }
 

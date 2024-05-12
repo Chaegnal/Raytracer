@@ -19,7 +19,7 @@ rtx::Color rtx::ALight::lightEmission(double u, double v, const rtx::Point3D& po
 
 rtx::Color rtx::ALight::ambientLight(double ambient, rtx::Color& actualColor, rtx::Color& defaultColor) const
 {
-    if (actualColor.x == 0.00 && actualColor.y == 0.00 && actualColor.z == 0.00) {
+    if (actualColor.x == 0.0 && actualColor.y == 0.0 && actualColor.z == 0.0) {
         actualColor.x = defaultColor.x * ambient;
         actualColor.y = defaultColor.y * ambient;
         actualColor.z = defaultColor.z * ambient;

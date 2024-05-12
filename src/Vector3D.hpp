@@ -10,6 +10,7 @@
 
     #include <memory>
     #include <cmath>
+    #include <ostream>
     #include "macros.hpp"
 
 namespace rtx
@@ -181,7 +182,8 @@ namespace rtx
     };
 
     using Point3D = Vector3D;
-    using Color = Vector3D;
 }
+
+std::ostream &operator<<(std::ostream &out, const rtx::Vector3D &vect);
 
 #endif

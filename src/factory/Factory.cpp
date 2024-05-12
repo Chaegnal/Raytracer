@@ -165,6 +165,7 @@ void rtx::Factory::createLightFromConfFile(rtx::Scene &world) const noexcept
 void rtx::Factory::createDirectionalLightFromConfFile(rtx::Scene &world) const noexcept
 {
     std::vector<rtx::Parsing::DirectionalLightInfo> lightPoints = rtx::Parsing::parseDirectionalLight(_conf);
+
     for (auto &lightPoint : lightPoints) {
         auto light = std::make_shared<rtx::Light>(rtx::Color(lightPoint.r, lightPoint.g, lightPoint.b));
         world.add(createShape<rtx::Sphere>(rtx::Point3D(lightPoint.x, lightPoint.y, lightPoint.z), lightPoint.size, light));

@@ -7,7 +7,7 @@
 
 #include "TextureChecker.hpp"
 
-rtx::TextureChecker::TextureChecker(double scale, std::shared_ptr<rtx::ITextures> even, std::shared_ptr<rtx::ITextures> odd)
+rtx::TextureChecker::TextureChecker(double scale, std::shared_ptr<rtx::ITexture> even, std::shared_ptr<rtx::ITexture> odd)
 {
     _scale = 1.0 / scale;
     _even = even;

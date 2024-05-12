@@ -16,6 +16,7 @@ namespace rtx
     #include "Ray.hpp"
     #include "HitRecord.hpp"
     #include "Vector3D.hpp"
+    #include "Color.hpp"
 
 namespace rtx
 {

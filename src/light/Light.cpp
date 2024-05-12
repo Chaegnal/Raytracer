@@ -9,7 +9,7 @@
 #include "iostream"
 #include "Rotation.hpp"
 
-rtx::Light::Light(std::shared_ptr<rtx::ITextures> tex)
+rtx::Light::Light(std::shared_ptr<rtx::ITexture> tex)
 {
     _texture = tex;
 }

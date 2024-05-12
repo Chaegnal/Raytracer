@@ -9,6 +9,7 @@
     #define AMATERIAL_HPP_
 
     #include "IMaterial.hpp"
+    #include "Color.hpp"
 
 namespace rtx
 {

@@ -28,12 +28,12 @@ rtx::Vector3D::Vector3D(const rtx::Vector3D &other)
 
 rtx::Vector3D rtx::Vector3D::randomVectInSphere()
 {
-    while (true) {
-        rtx::Vector3D point = rtx::Vector3D::random(-1.0, 1.0);
+    rtx::Vector3D point;
 
-        if (point.lengthSquared() < 1.0)
-            return point;
-    }
+    do {
+        point = rtx::Vector3D::random(-1.0, 1.0);
+    } while (point.lengthSquared() >= 1.0);
+    return point;
 }
 
 rtx::Vector3D rtx::Vector3D::randomVectOnSphere(const rtx::Vector3D &normal)
@@ -42,31 +42,36 @@ rtx::Vector3D rtx::Vector3D::randomVectOnSphere(const rtx::Vector3D &normal)
 
     if (randomUnitVect.dot(normal) > 0.0)
         return randomUnitVect;
-    return randomUnitVect * -1.0;
+    return -randomUnitVect;
 }
 
 bool rtx::Vector3D::closeToZero() const
 {
-    double tolerance = 0.00000001;
+    static const double tolerance = 0.00000001;
 
-    return (fabs(x) < tolerance) && (fabs(y) < tolerance) && (fabs(z) < tolerance);
+    return (std::fabs(x) < tolerance) && (std::fabs(y) < tolerance) && (std::fabs(z) < tolerance);
 }
 
 rtx::Vector3D rtx::Vector3D::refract(const rtx::Vector3D &other, double etaIOverEtaT)
 {
-    double cosTheta = fmin((*this * (-1.0)).dot(other), 1.0);
+    double cosTheta = std::fmin(-(*this).dot(other), 1.0);
     rtx::Vector3D rayOutPerPoint = ((other * cosTheta) + *this) * etaIOverEtaT;
-    rtx::Vector3D rayOutParallel = other * (-sqrt(fabs(rayOutPerPoint.lengthSquared() - 1.0)));
+    rtx::Vector3D rayOutParallel = other * (-sqrt(std::fabs(rayOutPerPoint.lengthSquared() - 1.0)));
 
     return rayOutPerPoint + rayOutParallel;
 }
 
 rtx::Vector3D rtx::Vector3D::randomInUnitDisk()
 {
-    while (true) {
-        rtx::Vector3D vect = rtx::Vector3D(randomValue(-1.0, 1.0), randomValue(-1.0, 1.0), 0.0);
+    rtx::Vector3D vect;
 
-        if (vect.lengthSquared() < 1.0)
-            return vect;
-    }
+    do {
+        vect = rtx::Vector3D(randomValue(-1.0, 1.0), randomValue(-1.0, 1.0), 0.0);
+    } while (vect.lengthSquared() >= 1.0);
+    return vect;
+}
+
+std::ostream &operator<<(std::ostream &out, const rtx::Vector3D &vect)
+{
+    return out << '(' << vect.x << ", " << vect.y << ", " << vect.z << ')';
 }
